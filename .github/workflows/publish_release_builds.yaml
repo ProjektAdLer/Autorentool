@@ -226,85 +226,33 @@ jobs:
           name: authoringtool-linux
           path: ./AuthoringTool/bin/Desktop_Publish/
 
-#      - name: Pack linux-unpacked into xz
-#        working-directory: ./AuthoringTool/bin/Desktop_Publish
-#        run: tar cf - ./linux-unpacked | xz -8 -T0 > ${{ github.ref_name }}-linux-unpacked.tar.xz
-#
-#      - name: Upload linux snap to release
-#        uses: svenstaro/upload-release-action@v2
-#        with:
-#          repo_token: ${{ secrets.GITHUB_TOKEN }}
-#          file: AuthoringTool/bin/Desktop_Publish/authoring-tool_${{ github.ref_name }}_amd64.snap
-#          asset_name: AuthoringTool-${{ github.ref_name }}-linux.snap
-#          tag: ${{ github.ref }}
-#
-#      - name: Upload linux appimage to release
-#        uses: svenstaro/upload-release-action@v2
-#        with:
-#          repo_token: ${{ secrets.GITHUB_TOKEN }}
-#          file: AuthoringTool/bin/Desktop_Publish/AuthoringTool-${{ github.ref_name }}.AppImage
-#          asset_name: AuthoringTool-${{ github.ref_name }}-linux.AppImage
-#          tag: ${{ github.ref }}
-#
-#      - name: Upload linux-unpacked tar.xz to release
-#        uses: svenstaro/upload-release-action@v2
-#        with:
-#          repo_token: ${{ secrets.GITHUB_TOKEN }}
-#          file: AuthoringTool/bin/Desktop_Publish/${{ github.ref_name }}-linux-unpacked.tar.xz
-#          asset_name: AuthoringTool-${{ github.ref_name }}-linux-unpacked.tar.xz
-#          tag: ${{ github.ref }}
+      - name: Pack linux-unpacked into xz
+        working-directory: ./AuthoringTool/bin/Desktop_Publish
+        run: tar cf - ./linux-unpacked | xz -8 -T0 > ${{ github.ref_name }}-linux-unpacked.tar.xz
 
-  publish-docker:
-    needs: test
-    name: Build and Push Multi-Architecture Docker Images
-    runs-on: ubuntu-22.04
-    permissions:
-      packages: write
-    steps:
-      - uses: actions/checkout@v4
+      - name: Upload linux snap to release
+        uses: svenstaro/upload-release-action@v2
         with:
-          submodules: 'true'
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: AuthoringTool/bin/Desktop_Publish/authoring-tool_${{ github.ref_name }}_amd64.snap
+          asset_name: AuthoringTool-${{ github.ref_name }}-linux.snap
+          tag: ${{ github.ref }}
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Log in to the Container registry
-        uses: docker/login-action@v3
+      - name: Upload linux appimage to release
+        uses: svenstaro/upload-release-action@v2
         with:
-          registry: "ghcr.io"
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: AuthoringTool/bin/Desktop_Publish/AuthoringTool-${{ github.ref_name }}.AppImage
+          asset_name: AuthoringTool-${{ github.ref_name }}-linux.AppImage
+          tag: ${{ github.ref }}
 
-      - name: Extract metadata (tags) - release
-        if: github.event_name == 'release'
-        id: meta_release
-        uses: docker/metadata-action@v4
+      - name: Upload linux-unpacked tar.xz to release
+        uses: svenstaro/upload-release-action@v2
         with:
-          images: ghcr.io/projektadler/autorentool
-          tags: |
-            type=raw,value=latest
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}
-
-      - name: Extract metadata (tags) - branch push
-        if: github.event_name == 'push'
-        id: meta_push
-        uses: docker/metadata-action@v4
-        with:
-          images: ghcr.io/projektadler/autorentool
-          tags: |
-            type=ref,event=branch
-
-      - name: Build and push multi-architecture Docker image
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          platforms: linux/amd64,linux/arm64
-          push: true
-          tags: ${{ github.event_name == 'release' && steps.meta_release.outputs.tags || steps.meta_push.outputs.tags }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: AuthoringTool/bin/Desktop_Publish/${{ github.ref_name }}-linux-unpacked.tar.xz
+          asset_name: AuthoringTool-${{ github.ref_name }}-linux-unpacked.tar.xz
+          tag: ${{ github.ref }}
 
   publish-linux-arm64:
     needs: test
@@ -358,40 +306,92 @@ jobs:
           name: authoringtool-linux-arm64
           path: ./AuthoringTool/bin/Desktop_Publish/
 
-#      - name: Pack linux-unpacked into xz tarball
-#        working-directory: ./AuthoringTool/bin/Desktop_Publish
-#        run: tar cf - ./linux-arm64-unpacked | xz -8 -T0 > ${{ github.ref_name }}-linux-arm64-unpacked.tar.xz
-#
-#      - name: Upload linux appimage to release
-#        uses: svenstaro/upload-release-action@v2
-#        with:
-#          repo_token: ${{ secrets.GITHUB_TOKEN }}
-#          file: AuthoringTool/bin/Desktop_Publish/AuthoringTool-${{ github.ref_name }}-arm64.AppImage
-#          asset_name: AuthoringTool-${{ github.ref_name }}-linux-arm64.AppImage
-#          tag: ${{ github.ref }}
-#
-#      - name: Upload linux-unpacked tar to release
-#        uses: svenstaro/upload-release-action@v2
-#        with:
-#          repo_token: ${{ secrets.GITHUB_TOKEN }}
-#          file: AuthoringTool/bin/Desktop_Publish/${{ github.ref_name }}-linux-arm64-unpacked.tar.xz
-#          asset_name: AuthoringTool-${{ github.ref_name }}-linux-arm64-unpacked.tar.xz
-#          tag: ${{ github.ref }}
+      - name: Pack linux-unpacked into xz tarball
+        working-directory: ./AuthoringTool/bin/Desktop_Publish
+        run: tar cf - ./linux-arm64-unpacked | xz -8 -T0 > ${{ github.ref_name }}-linux-arm64-unpacked.tar.xz
 
-#  discord-notification:
-#    needs: [test, publish-osx, publish-windows, publish-linux, publish-linux-arm64]
-#    runs-on: ubuntu-22.04
-#    steps:
-#      - name: Prepare release body (description)
-#        id: prep_body
-#        run: |
-#          echo "${{ github.event.release.body }}" > changes.md
-#
-#      - name: Discord notification
-#        uses: appleboy/discord-action@master
-#        with:
-#          webhook_id: ${{ secrets.DISCORD_RELEASE_CHANNEL_WEBHOOK_ID }}
-#          webhook_token: ${{ secrets.DISCORD_RELEASE_CHANNEL_WEBHOOK_TOKEN }}
-#          username: GitHub Releases
-#          message: "New release of **${{ github.repository }}**\nVersion: ${{ github.ref_name }} (${{github.event.release.name}})\n<${{ github.event.release.html_url }}>"
-#          file: changes.md
+      - name: Upload linux appimage to release
+       uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: AuthoringTool/bin/Desktop_Publish/AuthoringTool-${{ github.ref_name }}-arm64.AppImage
+          asset_name: AuthoringTool-${{ github.ref_name }}-linux-arm64.AppImage
+          tag: ${{ github.ref }}
+
+      - name: Upload linux-unpacked tar to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: AuthoringTool/bin/Desktop_Publish/${{ github.ref_name }}-linux-arm64-unpacked.tar.xz
+          asset_name: AuthoringTool-${{ github.ref_name }}-linux-arm64-unpacked.tar.xz
+          tag: ${{ github.ref }}
+
+  publish-docker:
+    needs: test
+    name: Build and Push Multi-Architecture Docker Images
+    runs-on: ubuntu-22.04
+    permissions:
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: 'true'
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: "ghcr.io"
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags) - release
+        if: github.event_name == 'release'
+        id: meta_release
+        uses: docker/metadata-action@v4
+        with:
+          images: ghcr.io/projektadler/autorentool
+          tags: |
+            type=raw,value=latest
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+
+      - name: Extract metadata (tags) - branch push
+        if: github.event_name == 'push'
+        id: meta_push
+        uses: docker/metadata-action@v4
+        with:
+          images: ghcr.io/projektadler/autorentool
+          tags: |
+            type=ref,event=branch
+
+      - name: Build and push multi-architecture Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ github.event_name == 'release' && steps.meta_release.outputs.tags || steps.meta_push.outputs.tags }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  discord-notification:
+    needs: [test, publish-osx, publish-windows, publish-linux, publish-linux-arm64, publish-docker]
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Prepare release body (description)
+        id: prep_body
+        run: |
+          echo "${{ github.event.release.body }}" > changes.md
+
+      - name: Discord notification
+        uses: appleboy/discord-action@master
+        with:
+          webhook_id: ${{ secrets.DISCORD_RELEASE_CHANNEL_WEBHOOK_ID }}
+          webhook_token: ${{ secrets.DISCORD_RELEASE_CHANNEL_WEBHOOK_TOKEN }}
+          username: GitHub Releases
+          message: "New release of **${{ github.repository }}**\nVersion: ${{ github.ref_name }} (${{github.event.release.name}})\n<${{ github.event.release.html_url }}>"
+          file: changes.md
