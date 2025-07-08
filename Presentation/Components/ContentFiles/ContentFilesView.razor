@@ -76,7 +76,7 @@
                     </MudTh>
                     @if (_showFilepath)
                     {
-                        <MudTh>@Localizer["Content.MudTh.FilepathOrLink"]</MudTh>
+                        <MudTh Class="px-0 p-1 h-8">@Localizer["Content.MudTh.FilepathOrLink"]</MudTh>
                     }
                 </MudTHeadRow>
             </HeaderContent>
@@ -103,7 +103,7 @@
                         <MudCheckBox T="bool" Value="_deletionCandidates.Contains(context)" ValueChanged="b => OnCheckedChange(context, b)" Class="flex justify-center m-0 py-1.5"></MudCheckBox>
                     </div>
                 </MudTd>
-                <MudTd Class="py-0 pl-2" Style="max-width: 600px;" DataLabel="Name">
+                <MudTd Class="py-0 pl-2" Style="max-width: 575px;" DataLabel="Name">
                     <MudTooltip Text="@context.Name"
                                 Arrow="true"
                                 Placement="Placement.Top"
@@ -146,7 +146,7 @@
 
                 @if (_showFilepath)
                 {
-                    <MudTd Class="py-0" DataLabel="Filepath/Link">
+                    <MudTd Class="py-0 pl-0" DataLabel="Filepath/Link">
                         @switch (context)
                         {
                             case FileContentViewModel fileContentContext:
