@@ -44,10 +44,10 @@ public class H5PPlayerDialogViewModel : IH5PPlayerDialogViewModel
         };
         var options = new DialogOptions
         {
-            BackdropClick = true,
+            BackdropClick = false,
             MaxWidth = MaxWidth.Large,
             FullWidth = true,
-            CloseButton = true,
+            CloseButton = false,
         };
     
         
@@ -57,8 +57,9 @@ public class H5PPlayerDialogViewModel : IH5PPlayerDialogViewModel
         
         var javaScriptAdapter = new CallJavaScriptAdapter(JSRuntime);
         var dataAccess = new FileSystemDataAccess();
-        ITerminateH5pPlayerUcPort terminateH5pPlayer = new TerminateH5pPlayerUc(javaScriptAdapter, dataAccess);
-        await terminateH5pPlayer.TerminateH5pPlayer();
+       // if terminate H5pPlayer is in VAlidateH5pUc delet:
+        // ITerminateH5pPlayerUcPort terminateH5pPlayer = new TerminateH5pPlayerUc(javaScriptAdapter, dataAccess);
+       // await terminateH5pPlayer.TerminateH5pPlayer();
         
         try
         {

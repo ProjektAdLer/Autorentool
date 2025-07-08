@@ -1,0 +1,23 @@
+﻿@using H5pPlayer.Presentation.PresentationLogic.ValidateH5p
+
+
+<div class="flex flex-col justify-between h-full p-4">
+    <!-- Top content -->
+    <div>
+        <p class="mb-4">Bei einer späteren Validierung, 
+            wird der Stand des H5Ps auf den zuletzt gespeicherten Zustand zurückgesetzt.</p>
+    </div>
+
+    <!-- Button group aligned to the bottom right -->
+    <div class="flex justify-end gap-4 mt-6">
+        <NotUsableH5pButton ValidateH5pController="@ValidateH5pController" />
+        <PrimitiveH5pButton ValidateH5pController="@ValidateH5pController" />
+        <ValidateH5pLaterButton ValidateH5pController="@ValidateH5pController" />
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public required IValidateH5pController ValidateH5pController { get; set; }
+  
+}

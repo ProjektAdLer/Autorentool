@@ -10,4 +10,5 @@ public interface IValidateH5pController
     void SetActiveH5pStateToNotUsable();
     void SetActiveH5pStateToPrimitive();
     void SetActiveH5pStateToCompletable();
+    void TerminateValidateH5p();
 }

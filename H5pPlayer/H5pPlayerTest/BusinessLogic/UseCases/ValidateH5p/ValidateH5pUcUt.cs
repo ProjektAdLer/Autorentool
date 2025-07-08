@@ -1,6 +1,7 @@
 ﻿using H5pPlayer.BusinessLogic.Api.JavaScript;
 using H5pPlayer.BusinessLogic.Entities;
 using H5pPlayer.BusinessLogic.UseCases.DisplayH5p;
+using H5pPlayer.BusinessLogic.UseCases.TerminateH5pPlayer;
 using H5pPlayer.BusinessLogic.UseCases.ValidateH5p;
 using NSubstitute;
 
@@ -147,12 +148,17 @@ public class ValidateH5pUcUt
 
 
     private static ValidateH5pUc CreateValidateH5PUc(
-        IValidateH5pUcOutputPort? mockValidateH5PUcOutputPort = null,
-        ICallJavaScriptAdapter? mockJavaScriptAdapter = null)
+        IValidateH5pUcOutputPort? fakeValidateH5PUcOutputPort = null,
+        ICallJavaScriptAdapter? fakeJavaScriptAdapter = null,
+        ITerminateH5pPlayerUcPort? fakeTerminateH5pPlayerUc = null)
     {
-        mockValidateH5PUcOutputPort ??= Substitute.For<IValidateH5pUcOutputPort>();
-        mockJavaScriptAdapter ??= Substitute.For<ICallJavaScriptAdapter>();
-        return new ValidateH5pUc(mockValidateH5PUcOutputPort, mockJavaScriptAdapter);
+        fakeValidateH5PUcOutputPort ??= Substitute.For<IValidateH5pUcOutputPort>();
+        fakeJavaScriptAdapter ??= Substitute.For<ICallJavaScriptAdapter>();
+        fakeTerminateH5pPlayerUc ??= Substitute.For<ITerminateH5pPlayerUcPort>();
+        return new ValidateH5pUc(
+            fakeValidateH5PUcOutputPort, 
+            fakeJavaScriptAdapter,
+            fakeTerminateH5pPlayerUc);
     }
 
 

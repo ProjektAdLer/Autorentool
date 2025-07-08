@@ -1,4 +1,6 @@
 ﻿@using H5pPlayer.Presentation.PresentationLogic.ValidateH5p
+@using MudBlazor
+@inject IDialogService DialogService
 
 <div class="flex justify-between items-center text-2xl text-adlergrey-800 adler">
     <div>H5P-Validierung</div>
@@ -28,6 +30,9 @@
         <PrimitiveH5pButton ValidateH5pController="@ValidateH5pController" />
         <CompletableH5pButton IsEnabled="@ValidateH5pVm.IsCompletable"
                               ValidateH5pController="@ValidateH5pController" />
+        <CancelValidateH5pButton ValidateH5pController="ValidateH5pController"
+                                 DialogService="@DialogService"></CancelValidateH5pButton>
+        
     </div>
 
 }
@@ -45,6 +50,8 @@
     {
         ValidateH5pVm.OnChange += StateHasChanged;
     }
+    
+  
 
 
 }
