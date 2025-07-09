@@ -1,8 +1,6 @@
 ﻿using H5pPlayer.Api;
-using H5pPlayer.BusinessLogic.Api.JavaScript;
 using H5pPlayer.BusinessLogic.Entities;
 using H5pPlayer.BusinessLogic.UseCases.TerminateH5pPlayer;
-using H5pPlayer.DataAccess.FileSystem;
 using Microsoft.JSInterop;
 using MudBlazor;
 
@@ -22,26 +20,27 @@ public class H5PPlayerDialogViewModel : IH5PPlayerDialogViewModel
         DialogService = dialogService;
     }
 
-    public async void OpenH5pPlayerDialog(
-        string h5pZipSourcePath, 
-        string unzippedH5psPath, 
+    public async Task<H5pPlayerResultTO?> OpenH5pPlayerDialogAsync(
+        string h5pZipSourcePath,
+        string unzippedH5psPath,
         H5pDisplayMode displayMode)
     {
-        
-        H5pPlayerResultTO? finalResult = null;
+        var tcs = new TaskCompletionSource<H5pPlayerResultTO?>();
 
         var parameters = new DialogParameters
         {
             { "H5pZipSourcePath", h5pZipSourcePath },
             { "UnzippedH5psPath", unzippedH5psPath },
             { "DisplayMode", displayMode },
+            { "Logger", Logger },
             { "OnPlayerFinished", new Action<H5pPlayerResultTO>(result =>
                 {
-                    finalResult = result;
                     Logger.LogInformation("Ergebnis erhalten vom Player: {@result}", result);
+                    tcs.TrySetResult(result);
                 })
             }
         };
+
         var options = new DialogOptions
         {
             BackdropClick = false,
@@ -49,38 +48,29 @@ public class H5PPlayerDialogViewModel : IH5PPlayerDialogViewModel
             FullWidth = true,
             CloseButton = false,
         };
-    
-        
-        var dialog = await DialogService.ShowAsync<PlayerH5p>("H5P-Player", parameters, options);
 
-        var result = await dialog.Result;
-        
-        var javaScriptAdapter = new CallJavaScriptAdapter(JSRuntime);
-        var dataAccess = new FileSystemDataAccess();
-       // if terminate H5pPlayer is in VAlidateH5pUc delet:
-        // ITerminateH5pPlayerUcPort terminateH5pPlayer = new TerminateH5pPlayerUc(javaScriptAdapter, dataAccess);
-       // await terminateH5pPlayer.TerminateH5pPlayer();
-        
+        var dialog = await DialogService.ShowAsync<PlayerH5p>("H5P-Player", parameters, options);
+        var dialogResult = await dialog.Result;
+
         try
         {
             await JSRuntime.InvokeVoidAsync("terminateH5pStandalone");
-
         }
         catch (JSException ex)
         {
             Logger.LogError("JSException: Could not call 'terminateH5pStandalone': {Message}", ex.Message);
         }
-        
-        
-        if (result?.Canceled == true)
+
+        if (dialogResult is { Canceled: true })
         {
             Logger.LogInformation("Dialog wurde abgebrochen.");
+            return null;
         }
-        else if (result != null)
-        {
-            Logger.LogInformation("Dialog wurde mit Ergebnis geschlossen: {@Data}", result.Data);
-        }
+
+        return await tcs.Task;
     }
+
+
     
     
     public ILogger<H5PPlayerDialogViewModel> Logger { get;  }

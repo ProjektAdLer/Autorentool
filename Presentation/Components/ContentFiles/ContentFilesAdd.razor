@@ -7,13 +7,18 @@
 @using System.Diagnostics.CodeAnalysis
 @using System.IO.Compression
 @using BusinessLogic.Entities.LearningContent
+@using BusinessLogic.Entities.LearningContent.FileContent
 @using BusinessLogic.ErrorManagement.DataAccess
 @using H5pPlayer.Api
 @using H5pPlayer.BusinessLogic.Api.JavaScript
 @using H5pPlayer.BusinessLogic.Entities
 @using H5pPlayer.BusinessLogic.UseCases.TerminateH5pPlayer
 @using H5pPlayer.DataAccess.FileSystem
+@using MudBlazor.Extensions
 @using Presentation.Components.Dialogues
+@using Presentation.PresentationLogic.LearningContent
+@using Presentation.PresentationLogic.LearningContent.FileContent
+@using Shared.H5P
 @using Shared.Configuration
 @inject IJSRuntime JsRuntime
 @inject NavigationManager Navigation
@@ -99,8 +104,10 @@
     private string HoverClass { get; set; } = "";
     
     private bool Working { get; set; } = false;
+    private H5pPlayerResultTO? h5PPlayerResultTo { get; set; }
 
     private MudFileUpload<IReadOnlyList<IBrowserFile>> _fileUpload = null!;
+    private IFileContentViewModel? fileContentVm;
 
     /// <summary>
     /// Iterates all files, copies them into a new stream and passes said stream to presentation logic
@@ -146,8 +153,44 @@
                                      "h5pZipSourcePath: " + h5pZipSourcePath + Environment.NewLine +
                                       "unzippedH5psPath: " + unzippedH5ps.AbsoluteUri );
 
-                     H5PPlayerDialogViewModel.OpenH5pPlayerDialog(h5pZipSourcePath, unzippedH5ps.AbsoluteUri,H5pDisplayMode.Validate);
+                     var result = await H5PPlayerDialogViewModel.OpenH5pPlayerDialogAsync(h5pZipSourcePath, unzippedH5ps.AbsoluteUri,H5pDisplayMode.Validate);
+                     if (result != null)
+                     {
+                         Logger.LogTrace("H5P dialog result != null werte werden gesetzt:");
+                         h5PPlayerResultTo = result.Value;
+                         
+                         // in case of H5P Content:
+                         if (h5PPlayerResultTo != null)
+                         {
+                             Logger.LogTrace("H5P: Set ActiveH5pState in LearningContentViewModel ");
+                             if (fileContentVm != null)
+                             {
+                                 fileContentVm.IsH5P = true;
+                                 switch (h5PPlayerResultTo.Value.ActiveH5pState)
+                                 {
+                        
+                                     case "Completable": 
+                                         fileContentVm.H5PState = H5PContentState.Completable;
+                                         break;
+                                     case "Primitive": 
+                                         fileContentVm.H5PState = H5PContentState.Primitive;
+                                         break;
+                                     case "NotUsable": 
+                                         fileContentVm.H5PState = H5PContentState.NotUsable;
+                                         break;
+                                     case "NotValidated": 
+                                         fileContentVm.H5PState = H5PContentState.NotValidated;
+                                         break;
+                                 }
+                             }
+
+                          
+               
+
+                         }
+                     }
                  }
+                
 #endif
             }
 
@@ -287,7 +330,8 @@
         Logger.LogTrace("Calling LoadLearningContentViewModel");
         try
         {
-            await PresentationLogic.LoadLearningContentViewModelAsync(fileName, memoryStream);
+            var learningContentVm  = await PresentationLogic.LoadLearningContentViewModelAsync(fileName, memoryStream);
+            fileContentVm = learningContentVm as IFileContentViewModel;
             Snackbar.Add(@Localizer["ContentFilesAdd.AddedMaterial.Success"]);
         }
         catch (IOException e)

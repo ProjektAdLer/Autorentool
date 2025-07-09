@@ -1,4 +1,3 @@
-using BusinessLogic.Entities.LearningContent.H5P;
 using Shared.H5P;
 
 namespace Presentation.Components.Forms.Models;
@@ -13,7 +12,7 @@ public class FileContentFormModel : IFileContentFormModel, IEquatable<FileConten
         Name = "";
         Type = "";
         Filepath = "";
-        H5PState = H5PContentState.Unknown;
+        H5PState = H5PContentState.NotUsable;
     }
 
     public FileContentFormModel(string name, string type, string filepath)
@@ -21,7 +20,7 @@ public class FileContentFormModel : IFileContentFormModel, IEquatable<FileConten
         Name = name;
         Type = type;
         Filepath = filepath;
-        H5PState = H5PContentState.Unknown;
+        H5PState = H5PContentState.NotUsable;
     }
 
     public string Name { get; set; }

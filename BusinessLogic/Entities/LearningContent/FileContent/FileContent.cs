@@ -1,4 +1,3 @@
-using BusinessLogic.Entities.LearningContent.H5P;
 using JetBrains.Annotations;
 using Shared.H5P;
 
@@ -13,7 +12,7 @@ public class FileContent : IFileContent
         Filepath = filepath;
         UnsavedChanges = true;
         IsH5P = false;
-        H5PState = H5PContentState.Unknown;
+        H5PState = H5PContentState.NotUsable;
     }
 
     /// <summary>
@@ -27,7 +26,7 @@ public class FileContent : IFileContent
         Filepath = "";
         UnsavedChanges = false;
         IsH5P = false;
-        H5PState = H5PContentState.Unknown;
+        H5PState = H5PContentState.NotUsable;
     }
 
     public string Name { get; set; }
