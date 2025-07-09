@@ -29,6 +29,17 @@ public class LearningWorldPropertyValidator : AbstractValidator<LearningWorld>
             .Length(0, 1200);
         RuleFor(x => x.StoryEnd)
             .Length(0, 1200);
+        RuleFor(x => x.EvaluationLink)
+            .NotEmpty()
+            .When(x => !string.IsNullOrEmpty(x.EvaluationLinkName))
+            .WithMessage(localizer["LearningWorldValidator.EvaluationLink.Required"]);
+        RuleFor(x => x.EvaluationLinkName)
+            .NotEmpty()
+            .When(x => !string.IsNullOrEmpty(x.EvaluationLink))
+            .WithMessage(localizer["LearningWorldValidator.EvaluationLinkName.Required"])
+            .Length(0, 50);
+        RuleFor(x => x.EvaluationLinkText)
+            .Length(0, 200);
     }
 
     private bool IsUniqueName(Guid id, string name) =>

@@ -71,6 +71,7 @@
                                   DebounceInterval="DebounceInterval"/>
                     <MudTextField @bind-Value="FormDataContainer.FormModel.EvaluationLinkName"
                                   For="@(() => FormModel.EvaluationLinkName)"
+                                  @ref="_evaluationLinkNameField"
                                   DebounceInterval="DebounceInterval"
                                   OnKeyUp="HandleKeyEvent"
                                   Placeholder="@Localizer["CreateWorldForm.Finalization.Field.EvaluationLinkName.Placeholder.Text"]"
@@ -78,6 +79,7 @@
                                   Margin="Margin.Normal"/>
                     <MudTextField @bind-Value="FormDataContainer.FormModel.EvaluationLink"
                                   For="@(() => FormModel.EvaluationLink)"
+                                  @ref="_evaluationLinkField"
                                   DebounceInterval="DebounceInterval"
                                   OnKeyUp="HandleKeyEvent"
                                   Placeholder="@Localizer["CreateWorldForm.Finalization.Field.EvaluationLink.Placeholder.Text"]"
@@ -208,6 +210,8 @@
 
     private BaseForm<LearningWorldFormModel, LearningWorld> _form = null!;
     private MudTextField<string> _nameField = null!;
+    private MudTextField<string> _evaluationLinkNameField = null!;
+    private MudTextField<string> _evaluationLinkField = null!;
 
     private WorldTheme[] _themes = (WorldTheme[])Enum.GetValues(typeof(WorldTheme));
 
@@ -236,6 +240,17 @@
         if (arg.Key == "Enter")
         {
             await _form.SubmitAsync();
+        }
+        else
+        {
+            // ReSharper disable ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
+            if (_evaluationLinkField != null && _evaluationLinkNameField != null)
+                // ReSharper restore ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
+            {
+                await Task.Delay(DebounceInterval);
+                await _evaluationLinkField.Validate();
+                await _evaluationLinkNameField.Validate();
+            }
         }
     }
 

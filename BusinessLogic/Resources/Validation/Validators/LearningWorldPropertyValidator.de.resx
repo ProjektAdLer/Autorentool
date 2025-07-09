@@ -30,4 +30,10 @@
     <data name="LearningWorldValidator.Shortname.Valid" xml:space="preserve">
         <value>Darf nur Buchstaben, Ziffern, Leerzeichen, Bindestriche und Unterstriche enthalten.</value>
     </data>
+    <data name="LearningWorldValidator.EvaluationLinkName.Required" xml:space="preserve">
+        <value>EvaluationLinkName darf nicht leer sein, wenn EvaluationLink gesetzt ist.</value>
+    </data>
+    <data name="LearningWorldValidator.EvaluationLink.Required" xml:space="preserve">
+        <value>EvaluationLink darf nicht leer sein, wenn EvaluationLinkName gesetzt ist.</value>
+    </data>
 </root>
