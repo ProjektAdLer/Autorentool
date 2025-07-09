@@ -41,20 +41,20 @@ public class D40X3715LViewModel : IFloorPlanViewModel
         new() { X = 4, Y = 15 },
         new() { X = 4, Y = 9 },
         new() { X = 4, Y = 4 },
-        new() { X = 9, Y = 4 },
-        new() { X = 14, Y = 4 },
+        new() { X = 10, Y = 4 },
+        new() { X = 15, Y = 4 },
         new() { X = 20, Y = 4 },
         new() { X = 26, Y = 9 },
         new() { X = 30, Y = 14 },
         new() { X = 30, Y = 23 },
         new() { X = 26, Y = 27 },
         new() { X = 20, Y = 32 },
-        new() { X = 14, Y = 32 }
+        new() { X = 15, Y = 32 }
     };
 
     public IList<Point> StoryElementSlotPositions { get; } = new List<Point>
     {
-        new() { X = 9, Y = 32 },
+        new() { X = 10, Y = 32 },
         new() { X = 30, Y = 18 }
     };
 

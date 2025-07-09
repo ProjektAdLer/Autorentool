@@ -33,19 +33,19 @@ public class R20X308LViewModel : IFloorPlanViewModel
 
     public IList<Point> ElementSlotPositions { get; } = new List<Point>
     {
-        new() { X = 4, Y = 5 },
-        new() { X = 11, Y = 5 },
-        new() { X = 18, Y = 5 },
-        new() { X = 30, Y = 5 },
-        new() { X = 30, Y = 19 },
+        new() { X = 5, Y = 5 },
+        new() { X = 13, Y = 5 },
+        new() { X = 22, Y = 5 },
+        new() { X = 29, Y = 5 },
+        new() { X = 29, Y = 19 },
         new() { X = 18, Y = 19 },
         new() { X = 11, Y = 19 },
-        new() { X = 4, Y = 19 }
+        new() { X = 5, Y = 19 }
     };
 
     public IList<Point> StoryElementSlotPositions { get; } = new List<Point>
     {
-        new() { X = 4, Y = 12 },
+        new() { X = 5, Y = 12 },
         new() { X = 24, Y = 19 }
     };
 
