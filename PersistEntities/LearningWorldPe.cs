@@ -11,8 +11,8 @@ namespace PersistEntities;
 public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
 {
     public LearningWorldPe(string name, string shortname, string authors, string language, string description,
-        string goals, WorldTheme worldTheme,
-        string evaluationLink, string enrolmentKey, string storyStart, string storyEnd, string savePath,
+        LearningOutcomeCollectionPe learningOutcomeCollection, WorldTheme worldTheme, string evaluationLink,
+        string enrolmentKey, string storyStart, string storyEnd, string savePath,
         List<LearningSpacePe>? learningSpaces = null,
         List<PathWayConditionPe>? pathWayConditions = null,
         List<LearningPathwayPe>? learningPathWays = null, List<TopicPe>? topics = null)
@@ -23,7 +23,7 @@ public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
         Authors = authors;
         Language = language;
         Description = description;
-        Goals = goals;
+        LearningOutcomeCollection = learningOutcomeCollection;
         WorldTheme = worldTheme;
         EvaluationLink = evaluationLink;
         EnrolmentKey = enrolmentKey;
@@ -48,7 +48,7 @@ public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
         Authors = "";
         Language = "";
         Description = "";
-        Goals = "";
+        LearningOutcomeCollection = new LearningOutcomeCollectionPe();
         WorldTheme = default;
         EvaluationLink = "";
         EnrolmentKey = "";
@@ -88,8 +88,13 @@ public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
 
     [DataMember] public string Description { get; set; }
 
-    [DataMember] public string Goals { get; set; }
-    
+    [DataMember]
+    [Obsolete(
+        "The 'Goals' field is deprecated as of version 2.3.3 and has been replaced by 'LearningOutcomeCollection'. Use 'LearningOutcomeCollection' for new developments. 'Goals' is retained only for compatibility with LearningWorlds created in or before version 2.0.0.")]
+    public string? Goals { get; set; }
+
+    [DataMember] public LearningOutcomeCollectionPe LearningOutcomeCollection { get; set; }
+
     [DataMember] public WorldTheme WorldTheme { get; set; }
 
     [DataMember] public string EvaluationLink { get; set; }
@@ -108,6 +113,13 @@ public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
     private void OnDeserialized(StreamingContext context)
     {
         Id = Guid.NewGuid();
+
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
+        if (LearningOutcomeCollection == null)
+        {
+            ConvertGoalsToLearningOutcomeCollection();
+        }
+
         //rebuild InBound and OutBound on all spaces
         foreach (var learningPathwayPe in LearningPathways)
         {
@@ -126,6 +138,24 @@ public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
             if (!string.IsNullOrEmpty(space.Goals))
                 space.LearningOutcomeCollection.LearningOutcomes.Add(new ManualLearningOutcomePe(space.Goals));
         }
-    }
 #pragma warning restore CS0618 // Type or member is obsolete
+    }
+
+    //LearningWorlds created in or before Version 2.3.3 have Goals instead of LearningOutcomeCollection in the LearningWorld
+    //To ensure compatibility, we convert Goals to LearningOutcomeCollection
+    private void ConvertGoalsToLearningOutcomeCollection()
+    {
+        LearningOutcomeCollection = new LearningOutcomeCollectionPe();
+
+#pragma warning disable CS0618 // Type or member is obsolete
+        if (string.IsNullOrEmpty(Goals)) return;
+        var goalList = Goals.Split(["\r\n", "\n"], StringSplitOptions.None)
+            .Where(g => !string.IsNullOrWhiteSpace(g))
+            .ToList();
+#pragma warning restore CS0618 // Type or member is obsolete
+        foreach (var goal in goalList)
+        {
+            LearningOutcomeCollection.LearningOutcomes.Add(new ManualLearningOutcomePe(goal));
+        }
+    }
 }

@@ -18,19 +18,22 @@
     <resheader name="writer">
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
-    <data name="LearningOutcomesSpaceOverview.Title" xml:space="preserve">
+    <data name="LearningOutcomesOverview.Title" xml:space="preserve">
         <value>Learning outcome formulation</value>
     </data>
-    <data name="LearningOutcomesSpaceOverview.Text" xml:space="preserve">
+    <data name="LearningOutcomesOverview.Text.LearningSpace" xml:space="preserve">
         <value>You can formulate your learning outcome(s) for this learning space yourself or use the integrated input support for formulation.</value>
     </data>
-    <data name="LearningOutcomesSpaceOverview.Button.Structured" xml:space="preserve">
+    <data name="LearningOutcomesOverview.Text.LearningWorld" xml:space="preserve">
+        <value>You can formulate your learning outcome(s) for this learning world yourself or use the integrated input support for formulation.</value>
+    </data>
+    <data name="LearningOutcomesOverview.Button.Structured" xml:space="preserve">
         <value>Input support</value>
     </data>
-    <data name="LearningOutcomesSpaceOverview.Button.Manual" xml:space="preserve">
+    <data name="LearningOutcomesOverview.Button.Manual" xml:space="preserve">
         <value>Formulate learning outcome yourself</value>
     </data>
-    <data name="LearningOutcomesSpaceOverview.Overview.Subtitle" xml:space="preserve">
+    <data name="LearningOutcomesOverview.Overview.Subtitle" xml:space="preserve">
         <value>Overview of the created learning outcomes</value>
     </data>
 </root>

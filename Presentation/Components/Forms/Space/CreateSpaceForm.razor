@@ -1,11 +1,10 @@
-@using Presentation.PresentationLogic.LearningWorld
-@using Shared
-@using Presentation.Components.Forms.Models
-@using Presentation.Components.LearningOutcomes
+@using System.Diagnostics.CodeAnalysis
 @using BusinessLogic.Entities
 @using Microsoft.Extensions.Localization
 @using Presentation.Components.Forms.Buttons
-@using System.Diagnostics.CodeAnalysis
+@using Presentation.Components.Forms.Models
+@using Presentation.Components.LearningOutcomes
+@using Presentation.PresentationLogic.LearningWorld
 @using Shared.Theme
 <div class="absolute w-full z-30">
     <header class="py-2 2xl:py-3 bg-adlerbgbright border-b-2 border-adlergrey-100 overflow-hidden flex justify-center">
@@ -172,9 +171,10 @@
         };
         var parameters = new DialogParameters
         {
-            { nameof(LearningOutcomesSpaceOverview.LearningOutcomeCollection), FormDataContainer.FormModel.LearningOutcomeCollection }
+            { nameof(LearningOutcomesOverview.LearningOutcomeCollection), FormDataContainer.FormModel.LearningOutcomeCollection },
+            { nameof(LearningOutcomesOverview.EntityType), typeof(LearningSpace) }
         };
-        var dialog = await DialogService.ShowAsync<LearningOutcomesSpaceOverview>("", parameters, options);
+        var dialog = await DialogService.ShowAsync<LearningOutcomesOverview>("", parameters, options);
         _ = await dialog.Result;
         StateHasChanged();
     }

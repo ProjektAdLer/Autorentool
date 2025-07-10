@@ -1,9 +1,10 @@
-@using Microsoft.Extensions.Localization
-@using Presentation.PresentationLogic.AuthoringToolWorkspace
-@using Presentation.Components.Forms.Models
-@using BusinessLogic.Entities
-@using Presentation.Components.Forms.Buttons
 @using System.Diagnostics.CodeAnalysis
+@using BusinessLogic.Entities
+@using Microsoft.Extensions.Localization
+@using Presentation.Components.Forms.Buttons
+@using Presentation.Components.Forms.Models
+@using Presentation.Components.LearningOutcomes
+@using Presentation.PresentationLogic.AuthoringToolWorkspace
 @using Shared.Theme
 <div class="absolute w-full z-30">
     <header class="py-2 2xl:py-3 bg-adlerbgbright border-b-2 border-adlergrey-100 overflow-hidden flex justify-center">
@@ -18,7 +19,8 @@
           SnackbarMessage=@Localizer["CreateWorldForm.SnackbarMessage"]
           FormDataContainer="FormDataContainer">
     <Fields>
-        <div class="pl-4 2xl:pl-4 2xl:pr-4 overflow-y-scroll top-28 h-[75%] 2xl:h-[83%] absolute flex flex-col w-[100%] mt-2 border-t border-dotted">
+        <div
+            class="pl-4 2xl:pl-4 2xl:pr-4 overflow-y-scroll top-28 h-[75%] 2xl:h-[83%] absolute flex flex-col w-[100%] mt-2 border-t border-dotted">
             <Collapsable Title=@Localizer["CreateWorldForm.General.Text"] InitiallyCollapsed="false">
                 <div class="rounded-lg w-4/4 px-6">
                     <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
@@ -59,17 +61,20 @@
                                   Margin="Margin.Normal"/>
                 </div>
             </Collapsable>
-            
+
             <Collapsable Title="@Localizer["CreateWorldForm.EnrolmentKey.Title"]" InitiallyCollapsed="true">
                 <div class="rounded-lg w-4/4 px-6">
                     <div class="flex flex-row items-center gap-1">
                         <p class="text-xs pt-3">@Localizer["CreateWorldForm.General.Field.EnrolmentKey.Text"]</p>
-                        <MudTooltip Placement="Placement.Right" Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed">
+                        <MudTooltip Placement="Placement.Right"
+                                    Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed">
                             <TooltipContent>
-                                <MudText Class="text-xs">@((MarkupString)Localizer["CreateWorldForm.EnrolmentKey.Tooltip"].ToString())</MudText>
+                                <MudText
+                                    Class="text-xs">@((MarkupString)Localizer["CreateWorldForm.EnrolmentKey.Tooltip"].ToString())</MudText>
                             </TooltipContent>
                             <ChildContent>
-                                <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info" Class="text-adlergrey hover:text-adlerdarkblue"></MudIcon>
+                                <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info"
+                                         Class="text-adlergrey hover:text-adlerdarkblue"></MudIcon>
                             </ChildContent>
                         </MudTooltip>
                     </div>
@@ -92,13 +97,13 @@
                         {
                             <!-- WorldTheme.Company is disabled because it is not yet supported -->
                             <MudSelectItem Disabled="@theme.Equals(WorldTheme.Company)"
-                                Value="@(theme)">@(ThemeHelper<WorldTheme>.Localize(theme))</MudSelectItem>
+                                           Value="@(theme)">@(ThemeHelper<WorldTheme>.Localize(theme))</MudSelectItem>
                         }
                     </MudSelect>
                 </div>
             </Collapsable>
-            
-            <Collapsable Title=@Localizer["CreateWorldForm.Goals.Text"] InitiallyCollapsed="true">
+
+            @*<Collapsable Title=@Localizer["CreateWorldForm.Goals.Text"] InitiallyCollapsed="true">
                 <div class="rounded-lg w-4/4 px-6">
                     <p class="text-xs pt-3">@Localizer["CreateWorldForm.Goals.Field.Goals.Text"]</p>
                     <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
@@ -107,9 +112,19 @@
                                   Variant="Variant.Outlined"
                                   DebounceInterval="DebounceInterval"/>
                 </div>
+            </Collapsable>*@
+            <Collapsable Title=@Localizer["CreateWorldForm.Goals.Text"] InitiallyCollapsed="true">
+                <div class="w-4/4 px-6 flex flex-col">
+                    <p class="text-xs pt-3">@Localizer["CreateWorldForm.Goals.Field.Goals.Text"]</p>
+                    <div class="flex justify-center">
+                        <MudButton Class="w-72 btn-standard"
+                                   OnClick="OpenLearningOutcomesOverview">@Localizer["CreateWorldForm.Goals.Button"]</MudButton>
+                    </div>
+                </div>
             </Collapsable>
 
-            <Collapsable Title=@Localizer["CreateWorldForm.Fields.Collapsable.Description.Title"] InitiallyCollapsed="true">
+            <Collapsable Title=@Localizer["CreateWorldForm.Fields.Collapsable.Description.Title"]
+                         InitiallyCollapsed="true">
                 <div class="rounded-lg w-4/4 px-6">
                     <p class="text-xs pt-3">@Localizer["CreateWorldForm.Goals.Field.Description.Text"]</p>
                     <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
@@ -142,10 +157,11 @@
                 </div>
             </Collapsable>
         </div>
-        
+
     </Fields>
     <FooterButtons>
-        <div class="absolute flex flex-row justify-end left-0 w-full bottom-0 border-t-2 border-adlergrey-100 bg-adlerbgbright">
+        <div
+            class="absolute flex flex-row justify-end left-0 w-full bottom-0 border-t-2 border-adlergrey-100 bg-adlerbgbright">
             <DefaultSubmitButton/>
             <DefaultResetButton/>
         </div>
@@ -167,6 +183,9 @@
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal IFormDataContainer<LearningWorldFormModel, LearningWorld> FormDataContainer { get; set; }
 
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types
+    internal IDialogService DialogService { get; set; }
+
     [Parameter] public EventCallback OnSubmitted { get; set; }
 
     [Parameter] public int DebounceInterval { get; set; } = 300;
@@ -177,7 +196,7 @@
 
     private BaseForm<LearningWorldFormModel, LearningWorld> _form = null!;
     private MudTextField<string> _nameField = null!;
-    
+
     private WorldTheme[] _themes = (WorldTheme[])Enum.GetValues(typeof(WorldTheme));
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -191,7 +210,7 @@
 
     private void OnValidSubmit(LearningWorldFormModel model)
     {
-        AuthoringToolWorkspacePresenter.CreateLearningWorld(model.Name, model.Shortname, model.Authors, model.Language, model.Description, model.Goals, model.WorldTheme, model.EvaluationLink, model.EnrolmentKey, model.StoryStart, model.StoryEnd);
+        AuthoringToolWorkspacePresenter.CreateLearningWorld(model.Name, model.Shortname, model.Authors, model.Language, model.Description, model.LearningOutcomeCollection, model.WorldTheme, model.EvaluationLink, model.EnrolmentKey, model.StoryStart, model.StoryEnd);
         OnSubmitted.InvokeAsync();
     }
 
@@ -206,6 +225,25 @@
         {
             await _form.SubmitAsync();
         }
+    }
+
+    private async void OpenLearningOutcomesOverview()
+    {
+        var options = new DialogOptions
+        {
+            BackdropClick = true,
+            MaxWidth = MaxWidth.Small,
+            FullWidth = true,
+            CloseButton = true,
+        };
+        var parameters = new DialogParameters
+        {
+            { nameof(LearningOutcomesOverview.LearningOutcomeCollection), FormDataContainer.FormModel.LearningOutcomeCollection },
+            { nameof(LearningOutcomesOverview.EntityType), typeof(LearningWorld) }
+        };
+        var dialog = await DialogService.ShowAsync<LearningOutcomesOverview>("", parameters, options);
+        _ = await dialog.Result;
+        StateHasChanged();
     }
 
 }

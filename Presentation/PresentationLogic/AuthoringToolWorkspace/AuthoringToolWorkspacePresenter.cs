@@ -3,6 +3,7 @@ using Microsoft.Extensions.Localization;
 using MudBlazor;
 using Presentation.Components.Dialogues;
 using Presentation.PresentationLogic.API;
+using Presentation.PresentationLogic.LearningSpace.LearningOutcomeViewModel;
 using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.SelectedViewModels;
 using Shared.Theme;
@@ -26,7 +27,8 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
     public AuthoringToolWorkspacePresenter(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm,
         IPresentationLogic presentationLogic, ILogger<AuthoringToolWorkspacePresenter> logger,
         ISelectedViewModelsProvider selectedViewModelsProvider, IShutdownManager shutdownManager,
-        IDialogService dialogService, IErrorService errorService, IStringLocalizer<AuthoringToolWorkspacePresenter> localizer)
+        IDialogService dialogService, IErrorService errorService,
+        IStringLocalizer<AuthoringToolWorkspacePresenter> localizer)
     {
         AuthoringToolWorkspaceVm = authoringToolWorkspaceVm;
         _presentationLogic = presentationLogic;
@@ -69,10 +71,12 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
 
     /// <inheritdoc cref="IAuthoringToolWorkspacePresenter.CreateLearningWorld"/>
     public void CreateLearningWorld(string name, string shortname, string authors, string language, string description,
-        string goals, WorldTheme worldTheme, string evaluationLink, string enrolmentKey, string storyStart, string storyEnd)
+        LearningOutcomeCollectionViewModel learningOutcomeCollection, WorldTheme worldTheme, string evaluationLink,
+        string enrolmentKey, string storyStart, string storyEnd)
     {
         _presentationLogic.CreateLearningWorld(AuthoringToolWorkspaceVm, name, shortname, authors, language,
-            description, goals, worldTheme, evaluationLink, enrolmentKey, storyStart, storyEnd);
+            description, learningOutcomeCollection, worldTheme, evaluationLink, enrolmentKey, storyStart,
+            storyEnd);
     }
 
     /// <inheritdoc cref="IAuthoringToolWorkspacePresenter.DeleteLearningWorld"/>
@@ -152,7 +156,8 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
             CloseOnEscapeKey = true,
             BackdropClick = false
         };
-        var dialog = await _dialogService.ShowAsync<UnsavedWorldDialog>(_localizer["AuthoringToolWorkspacePresenter.SaveWorld.UnsavedChanges"], parameters, options);
+        var dialog = await _dialogService.ShowAsync<UnsavedWorldDialog>(
+            _localizer["AuthoringToolWorkspacePresenter.SaveWorld.UnsavedChanges"], parameters, options);
         var result = await dialog.Result;
         if (result == null) return DialogResult.Cancel();
         return result;
