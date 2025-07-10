@@ -10,7 +10,7 @@ public class ValidateH5pController : IValidateH5pController
     public ValidateH5pController(IValidateH5pUc validateH5pUc, IValidateH5pPresenter validateH5pPresenter)
     {
         ValidateH5pUc = validateH5pUc;
-        ValidateH5pPresenter = validateH5pPresenter;
+        ValidateH5PPresenter = validateH5pPresenter;
     }
     
     
@@ -26,6 +26,6 @@ public class ValidateH5pController : IValidateH5pController
 
     
     public IValidateH5pUc ValidateH5pUc { get; }
-    public IValidateH5pPresenter ValidateH5pPresenter { get; }
+    public IValidateH5pPresenter ValidateH5PPresenter { get; }
 
 }
