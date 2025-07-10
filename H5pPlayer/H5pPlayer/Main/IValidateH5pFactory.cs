@@ -1,4 +1,5 @@
 ﻿using H5pPlayer.BusinessLogic.Api.JavaScript;
+using H5pPlayer.BusinessLogic.UseCases.TerminateH5pPlayer;
 using H5pPlayer.BusinessLogic.UseCases.ValidateH5p;
 using H5pPlayer.Presentation.PresentationLogic.ValidateH5p;
 
@@ -7,8 +8,14 @@ namespace H5pPlayer.Main;
 public interface IValidateH5pFactory
 {
     
-    void CreateValidateH5pStructure(ICallJavaScriptAdapter callJavaScriptAdapter);
+    public void CreateValidateH5pStructure(
+        ICallJavaScriptAdapter callJavaScriptAdapter,
+        ITerminateH5pPlayerUcPort terminateH5pPlayerUc);
     
+    /// <exception cref="NullReferenceException">
+    /// Before call this property call <see cref="IValidateH5pFactory.CreateValidateH5pStructure"/>
+    /// </exception>
+    public IValidateH5pViewModel? ValidateH5pVm { get; }
     
     /// <exception cref="NullReferenceException">
     /// Before call this property call <see cref="IValidateH5pFactory.CreateValidateH5pStructure"/>
@@ -18,7 +25,7 @@ public interface IValidateH5pFactory
     /// <exception cref="NullReferenceException">
     /// Before call this property call <see cref="IValidateH5pFactory.CreateValidateH5pStructure"/>
     /// </exception>
-    public IValidateH5pViewModel? ValidateH5pVm { get; }
+    ITerminateH5pPlayerUcPort? TerminateH5pPlayerUc { get; }
     
     /// <exception cref="NullReferenceException">
     /// Before call this property call <see cref="IValidateH5pFactory.CreateValidateH5pStructure"/>

@@ -1,4 +1,6 @@
 ﻿@using H5pPlayer.Presentation.PresentationLogic.ValidateH5p
+@using MudBlazor
+@inject IDialogService DialogService
 
 <div class="flex justify-between items-center text-2xl text-adlergrey-800 adler">
     <div>H5P-Validierung</div>
@@ -9,12 +11,9 @@
 
 <ValidationNecessaryView></ValidationNecessaryView>
 
-<H5pStateView CurrentState="H5pStateView.H5pState.Unknown"></H5pStateView>
-
 <div style="margin-top: 20px;"></div>
 <div id="h5p-container"></div>
 <div style="margin-top: 20px;"></div>
-
 
 @if (ValidateH5pVm != null)
 {
@@ -25,22 +24,25 @@
             <span style="margin-left: 5px;">H5P ist abschließbar</span>
         </div>
     }
+
+    <div class="fixed bottom-4 right-4 flex flex-row gap-4 justify-end items-center z-50">
+        <NotUsableH5pButton ValidateH5pController="@ValidateH5pController" />
+        <PrimitiveH5pButton ValidateH5pController="@ValidateH5pController" />
+        <CompletableH5pButton IsEnabled="@ValidateH5pVm.IsCompletable"
+                              ValidateH5pController="@ValidateH5pController" />
+        <CancelValidateH5pButton ValidateH5pController="ValidateH5pController"
+                                 DialogService="@DialogService"></CancelValidateH5pButton>
+        
+    </div>
+
 }
-<button @onclick="@OpenContentFilesFolder" class="relative btn-standard p-2 justify-end items-center shadow-lg">
-    <p class="pl-1 font-bold uppercase">H5P ist primitiv</p>
-</button>
-
-<button @onclick="@OpenContentFilesFolder" class="relative btn-standard p-2 justify-end items-center shadow-lg">
-    <p class="pl-1 font-bold uppercase">H5P ist nicht verwendbar</p>
-</button>
-
-
 
 @code {
-    
+    private bool showDefectExplanation = false;
+
     [Parameter]
-    public required IValidateH5pViewModel ValidateH5pVm { get;  set; }
-   
+    public required IValidateH5pViewModel ValidateH5pVm { get; set; }
+
     [Parameter]
     public required IValidateH5pController ValidateH5pController { get; set; }
 
@@ -49,9 +51,7 @@
         ValidateH5pVm.OnChange += StateHasChanged;
     }
     
-    
-    private void OpenContentFilesFolder()
-    {
+  
 
-    }
+
 }

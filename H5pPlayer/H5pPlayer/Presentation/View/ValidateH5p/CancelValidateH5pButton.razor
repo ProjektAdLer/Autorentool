@@ -1,0 +1,32 @@
+﻿@using H5pPlayer.Presentation.PresentationLogic.ValidateH5p
+@using MudBlazor
+
+<button class="btn-standard p-3 min-w-[150px] text-right font-bold text-lg shadow-lg bg-gray-300 hover:bg-gray-400"
+        @onclick="OpenAbortDialog">
+    Abbrechen
+</button>
+    
+@code {
+    [Parameter, EditorRequired]
+    public required IValidateH5pController ValidateH5pController { get; set; }
+
+    [Parameter, EditorRequired]
+    public IDialogService DialogService { get; set; } = default!;
+
+    private async Task OpenAbortDialog()
+    {
+        var parameters = new DialogParameters
+        {
+            { nameof(CloseValidateH5pView.ValidateH5pController), ValidateH5pController }
+        };
+
+        var options = new DialogOptions
+        {
+            CloseButton = false,
+            BackdropClick = false,
+            MaxWidth = MaxWidth.Large
+        };
+
+        await DialogService.ShowAsync<CloseValidateH5pView>("Validierung abbrechen", parameters, options);
+    }
+}

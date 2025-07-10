@@ -278,7 +278,7 @@ public class StartH5pPlayerUcUT
     // ANF-ID: [HSE2]
     public async Task StartH5pPlayerToDisplayH5p()
     {
-        var mockDisplayH5pUC = Substitute.For<IDisplayH5pUC>();
+        var mockDisplayH5pUC = Substitute.For<IDisplayH5pUc>();
         var mockValidateH5pUc = Substitute.For<IValidateH5pUc>();
         var mockStartH5pPlayerUcOutputPort = Substitute.For<IStartH5pPlayerUCOutputPort>();
         var systemUnderTest = CreateStandardSystemUnderTest(
@@ -301,7 +301,7 @@ public class StartH5pPlayerUcUT
     public async Task StartH5pPlayerToValidateH5p()
     {
         var mockValidateH5pUc = Substitute.For<IValidateH5pUc>();
-        var mockDisplayH5pUC = Substitute.For<IDisplayH5pUC>();
+        var mockDisplayH5pUC = Substitute.For<IDisplayH5pUc>();
         var mockStartH5pPlayerUcOutputPort = Substitute.For<IStartH5pPlayerUCOutputPort>();
         var systemUnderTest = CreateStandardSystemUnderTest(
             mockValidateH5pUc, mockDisplayH5pUC,mockStartH5pPlayerUcOutputPort);
@@ -353,12 +353,12 @@ public class StartH5pPlayerUcUT
 
     private static StartH5pPlayerUC CreateStandardSystemUnderTest(
         IValidateH5pUc? validateH5PUc = null,
-        IDisplayH5pUC? displayH5pUc = null,
+        IDisplayH5pUc? displayH5pUc = null,
         IStartH5pPlayerUCOutputPort? outputPort = null,
         IFileSystemDataAccess? dataAccess = null)
     {
         validateH5PUc ??= Substitute.For<IValidateH5pUc>();
-        displayH5pUc ??= Substitute.For<IDisplayH5pUC>();
+        displayH5pUc ??= Substitute.For<IDisplayH5pUc>();
         outputPort ??= Substitute.For<IStartH5pPlayerUCOutputPort>();
         dataAccess ??= Substitute.For<IFileSystemDataAccess>();
         var systemUnderTest = new StartH5pPlayerUC(

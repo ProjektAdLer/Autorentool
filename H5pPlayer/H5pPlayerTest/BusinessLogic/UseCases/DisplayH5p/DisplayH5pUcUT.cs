@@ -1,6 +1,7 @@
 ﻿using H5pPlayer.BusinessLogic.Api.JavaScript;
 using H5pPlayer.BusinessLogic.Entities;
 using H5pPlayer.BusinessLogic.UseCases.DisplayH5p;
+using H5pPlayer.BusinessLogic.UseCases.TerminateH5pPlayer;
 using NSubstitute;
 
 namespace H5pPlayerTest.BusinessLogic.UseCases.DisplayH5p;
@@ -21,7 +22,7 @@ public class DisplayH5pUcUT
     public async Task StartToDisplayH5p_CallJavaScriptAdapter()
     {
         var mockJavaScriptAdapter = Substitute.For<ICallJavaScriptAdapter>();
-        var systemUnderTest = new DisplayH5pUC(mockJavaScriptAdapter);
+        var systemUnderTest =  CreateSystemUnderTest(mockJavaScriptAdapter);
         var unzippedH5psPath = Path.Combine(_basePath, "ValidPath1.h5p");
         var h5pZipSourcePath = Path.Combine(_basePath, "ValidPath2.h5p");
         var h5pEntity = CreateH5pEntity(unzippedH5psPath, h5pZipSourcePath);
@@ -39,6 +40,14 @@ public class DisplayH5pUcUT
         return javaScriptAdapterTO;
     }
 
+    private static DisplayH5pUc CreateSystemUnderTest(
+        ICallJavaScriptAdapter? callJavaScriptAdapter = null,
+        ITerminateH5pPlayerUcPort? terminateH5pPlayerUc = null)
+    {
+        callJavaScriptAdapter ??= Substitute.For<ICallJavaScriptAdapter>();
+        terminateH5pPlayerUc ??= Substitute.For<ITerminateH5pPlayerUcPort>();
+        return new DisplayH5pUc(callJavaScriptAdapter, terminateH5pPlayerUc);
+    }
 
     private static H5pEntity CreateH5pEntity(
         string unzippedH5psPath, string h5pZipSourcePath)

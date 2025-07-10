@@ -5,6 +5,7 @@ using H5pPlayer.BusinessLogic.Api.FileSystemDataAccess;
 using H5pPlayer.BusinessLogic.Entities;
 using H5pPlayer.Main;
 using Microsoft.Extensions.DependencyInjection;
+using MudBlazor;
 using TestContext = Bunit.TestContext;
 
 
@@ -75,6 +76,7 @@ public class StartH5pPlayerIt
         _startH5pPlayerFactory = new StartH5pPlayerFactory(displayH5pFactory, validateH5pFactory, fakeFileSystemDataAccess);
  
         _testContext.Services.AddTransient(_ => _startH5pPlayerFactory);
+        _testContext.Services.AddSingleton<IDialogService>(Substitute.For<IDialogService>());
     }
 
     [TearDown]

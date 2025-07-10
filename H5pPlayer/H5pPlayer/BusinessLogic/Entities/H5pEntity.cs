@@ -12,7 +12,7 @@ public class H5pEntity
     public H5pEntity()
     {
         ActiveDisplayMode = H5pDisplayMode.Display;
-        ActiveH5pState = H5pState.Unknown;
+        ActiveH5pState = H5pState.NotValidated;
         // init by empty cause of unix mac windows usage. 
         // -> otherwise we must deside the OS here 
         _h5pZipSourcePath = string.Empty;

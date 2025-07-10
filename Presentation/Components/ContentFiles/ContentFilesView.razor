@@ -1,6 +1,5 @@
 @using System.Diagnostics.CodeAnalysis
 @using System.Runtime.Serialization
-@using BusinessLogic.Entities.LearningContent.H5P
 @using Microsoft.Extensions.Localization
 @using MudBlazor.Extensions
 @using Presentation.Components.Dialogues
@@ -12,7 +11,6 @@
 @using Presentation.PresentationLogic.LearningElement
 @using Presentation.PresentationLogic.LearningWorld
 @using Presentation.PresentationLogic.Mediator
-@using Shared.H5P
 @using Presentation.H5P
 @inject ISnackbar Snackbar
 
@@ -113,23 +111,24 @@
             </MudTooltip>
         </MudTd>
 
-        <MudTd DataLabel="Type" Class="py-0 pl-0 cursor-default">
-            @if (context is FileContentViewModel fileContentContext)
-            {
-                <div style="display: flex; align-items: center; gap: 8px;">
-                    <span>@fileContentContext.Type</span>
-
-                    @if (fileContentContext.Type == "h5p")
+                <MudTd DataLabel="Type" Class="py-0 pl-0 cursor-default">
+                    @if (context is FileContentViewModel fileContentContext)
                     {
-                        <H5PStateIcon State="@fileContentContext.H5PState" />
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                        <span>@fileContentContext.Type</span>
+
+                        @if (fileContentContext.Type == "h5p")
+                        {
+                            <H5PStateIcon State="@fileContentContext.H5PState" />
+                        }
+                        </div>
                     }
-                </div>
-            }
-            else
-            {
-                <span>Link</span>
-            }
-            <MudPopover Open="Equals(_rowShowingPopover, context)" Class="bg-adlerdarkblue flex flex-row"
+                    else
+                    {
+                        <span>Link</span>
+                    }
+                
+                    <MudPopover Open="Equals(_rowShowingPopover, context)" Class="bg-adlerdarkblue flex flex-row"
                         AnchorOrigin="Origin.CenterRight" TransformOrigin="Origin.CenterRight"
                         @onmouseover="() => { _cursorInsidePopover = true; }"
                         @onmouseleave="() => { _cursorInsidePopover = false; _rowShowingPopover = null; }">

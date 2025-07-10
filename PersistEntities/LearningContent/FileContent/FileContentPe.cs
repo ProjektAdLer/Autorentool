@@ -1,5 +1,4 @@
 using System.Runtime.Serialization;
-using BusinessLogic.Entities.LearningContent.H5P;
 using JetBrains.Annotations;
 using Shared.H5P;
 
@@ -12,7 +11,7 @@ public class FileContentPe : IFileContentPe, IEquatable<FileContentPe>
         string type, 
         string filepath,
         bool isH5P = false,
-        H5PContentState h5pState = H5PContentState.Unknown)
+        H5PContentState h5pState = H5PContentState.NotUsable)
     {
         Name = name;
         Type = type;
@@ -31,7 +30,7 @@ public class FileContentPe : IFileContentPe, IEquatable<FileContentPe>
         Type = "";
         Filepath = "";
         IsH5P = false;
-        H5PState = H5PContentState.Unknown;
+        H5PState = H5PContentState.NotUsable;
     }
 
     public bool Equals(FileContentPe? other)

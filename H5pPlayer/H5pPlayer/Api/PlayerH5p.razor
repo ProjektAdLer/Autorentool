@@ -1,5 +1,8 @@
 ﻿@using H5pPlayer.BusinessLogic.Entities
+@using H5pPlayer.BusinessLogic.UseCases.TerminateH5pPlayer
 @using H5pPlayer.Presentation.View
+@using Microsoft.Extensions.Logging
+@using MudBlazor
 
 
 
@@ -14,11 +17,14 @@
     H5pZipSourcePath="@H5pZipSourcePath"
     UnzippedH5psPath="@UnzippedH5psPath"
     DisplayMode="@DisplayMode"
-    OnPlayerFinished="OnPlayerFinished">
+    OnPlayerFinished="HandleFinish">
 </H5pPlayerView>
 
 @code {
 
+    [CascadingParameter] 
+    IMudDialogInstance? MudDialog { get; set; }
+    
     [Parameter] 
     public string? H5pZipSourcePath { get; set; }
 
@@ -30,5 +36,17 @@
     
     [Parameter]
     public Action<H5pPlayerResultTO>? OnPlayerFinished { get; set; }
+   
+    [Parameter]
+    public ILogger? Logger { get; set; }
 
+    private void HandleFinish(H5pPlayerResultTO result)
+    {
+        Logger?.LogInformation("PlayerH5p HandleFinished called");
+        // Callback weitergeben
+        OnPlayerFinished?.Invoke(result);
+
+        // Dialog schließen und Ergebnis zurückgeben
+        MudDialog?.Close(DialogResult.Ok(result));
+    }
 }

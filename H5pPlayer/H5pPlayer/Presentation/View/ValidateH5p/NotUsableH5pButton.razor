@@ -1,0 +1,37 @@
+﻿@using H5pPlayer.Presentation.PresentationLogic.ValidateH5p
+
+<div class="relative inline-block">
+    <button @onclick="MarkAsNotUsable"
+            class="btn-standard p-3 min-w-[150px] text-right font-bold text-lg shadow-lg flex items-center gap-2">
+        H5P ist nicht verwendbar
+
+        <div class="relative group">
+            <span class="inline-block w-5 h-5 text-center rounded-full bg-white text-black border border-gray-400 text-xs font-bold leading-5 cursor-default select-none">
+                i
+            </span>
+
+            <div class="absolute bottom-full right-0 mb-2 w-64 p-2 text-sm text-gray-700 bg-gray-100 border border-gray-300 rounded shadow-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-300 z-50">
+                <ul class="list-disc pl-5">
+                    <li>H5P wird nicht angezeigt</li>
+                    <li>H5P kann trotz Aufgabe nicht abgeschlossen werden</li>
+                </ul>
+            </div>
+        </div>
+    </button>
+</div>
+
+
+@code {
+    private bool ShowDetails = false;
+
+    [Parameter, EditorRequired]
+    public required IValidateH5pController ValidateH5pController { get; set; }
+
+    private void MarkAsNotUsable()
+    {
+        ValidateH5pController.SetActiveH5pStateToNotUsable();
+        ValidateH5pController.TerminateValidateH5p();
+    }
+
+  
+}
