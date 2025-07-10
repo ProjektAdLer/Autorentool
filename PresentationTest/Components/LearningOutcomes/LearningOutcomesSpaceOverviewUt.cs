@@ -23,7 +23,7 @@ public class LearningOutcomesSpaceOverviewUt
     {
         _context = new TestContext();
         _dialogService = Substitute.For<IDialogService>();
-        _context.AddLocalizerForTest<LearningOutcomesSpaceOverview>();
+        _context.AddLocalizerForTest<LearningOutcomesOverview>();
         _context.Services.AddSingleton(_dialogService);
         _context.ComponentFactories.AddStub<LearningOutcomeItem>();
     }
@@ -87,10 +87,10 @@ public class LearningOutcomesSpaceOverviewUt
             Arg.Any<DialogOptions>());
     }
 
-    private IRenderedComponent<LearningOutcomesSpaceOverview> GetRenderedComponent(
+    private IRenderedComponent<LearningOutcomesOverview> GetRenderedComponent(
         LearningOutcomeCollectionViewModel learningOutcomeCollection)
     {
-        return _context.RenderComponent<LearningOutcomesSpaceOverview>(pBuilder =>
+        return _context.RenderComponent<LearningOutcomesOverview>(pBuilder =>
         {
             pBuilder.Add(p => p.LearningOutcomeCollection, learningOutcomeCollection);
         });

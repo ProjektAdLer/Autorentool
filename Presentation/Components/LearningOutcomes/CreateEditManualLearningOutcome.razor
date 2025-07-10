@@ -1,17 +1,20 @@
-@using Presentation.PresentationLogic.LearningSpace.LearningOutcomeViewModel
+@using System.Diagnostics.CodeAnalysis
 @using Microsoft.Extensions.Localization
 @using Presentation.PresentationLogic.API
-@using System.Diagnostics.CodeAnalysis
+@using Presentation.PresentationLogic.LearningSpace.LearningOutcomeViewModel
 <p class="cursor-default text-lg ml-7">
-    @Localizer["CreateEditManualLearningOutcome.Title.Part1"]<span class="cursor-default font-bold text-adlertextgrey">@Localizer["CreateEditManualLearningOutcome.Title.Part2"]</span>
+    @Localizer["CreateEditManualLearningOutcome.Title.Part1"]<span
+        class="cursor-default font-bold text-adlertextgrey">@Localizer["CreateEditManualLearningOutcome.Title.Part2"]</span>
 </p>
 
 <div class="relative max-w-full h-[300px] flex flex-col m-4">
-    <MudText Class="cursor-default px-3 text-sm">@Localizer["CreateEditManualLearningOutcome.Text"]</MudText>
+    <MudText
+        Class="cursor-default px-3 text-sm">@Localizer[$"CreateEditManualLearningOutcome.Text.{EntityType.Name}"]</MudText>
     <div class="border-adlergrey-200 border-4 rounded m-2 bg-adlerbgbright">
         <MudForm @ref="_form" Class="bg-adlerbgbright border-t-2 border-adlergrey-100">
             <div class="m-2 mb-4 bg-adlerbgbright">
-                <MudText Class="cursor-default font-bold text-sm pl-2">@Localizer["CreateEditManualLearningOutcome.Subtitle"]</MudText>
+                <MudText
+                    Class="cursor-default font-bold text-sm pl-2">@Localizer["CreateEditManualLearningOutcome.Subtitle"]</MudText>
                 <div class="border-4 border-adlergrey-100 bg-white rounded-md m-1.5">
                     <MudTextField Variant="Variant.Outlined"
                                   Class="shadow-none m-0"
@@ -39,6 +42,8 @@
     private string _outcome = null!; //set in OnParametersSet
 
     [Parameter, EditorRequired, AllowNull] public LearningOutcomeCollectionViewModel LearningOutcomeCollection { get; set; }
+
+    [Parameter, EditorRequired] public Type EntityType { get; set; } = null!;
 
     [Parameter] public ManualLearningOutcomeViewModel? CurrentManualLearningOutcome { get; set; }
 

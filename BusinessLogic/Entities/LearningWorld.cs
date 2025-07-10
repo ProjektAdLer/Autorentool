@@ -1,4 +1,5 @@
 ﻿using BusinessLogic.Entities.LearningContent.Story;
+using BusinessLogic.Entities.LearningOutcome;
 using JetBrains.Annotations;
 using Shared.Theme;
 
@@ -18,7 +19,7 @@ public class LearningWorld : ILearningWorld, IOriginator
         Authors = "";
         Language = "";
         Description = "";
-        Goals = "";
+        LearningOutcomeCollection = new LearningOutcomeCollection();
         WorldTheme = default;
         SavePath = "";
         EvaluationLink = "";
@@ -34,8 +35,8 @@ public class LearningWorld : ILearningWorld, IOriginator
     }
 
     public LearningWorld(string name, string shortname, string authors, string language, string description,
-        string goals, WorldTheme worldTheme, string evaluationLink = "", string enrolmentKey = "", string storyStart = "",
-        string storyEnd = "", string savePath = "",
+        LearningOutcomeCollection learningOutcomes, WorldTheme worldTheme, string evaluationLink = "",
+        string enrolmentKey = "", string storyStart = "", string storyEnd = "", string savePath = "",
         List<ILearningSpace>? learningSpaces = null,
         List<PathWayCondition>? pathWayConditions = null,
         List<LearningPathway>? learningPathways = null, List<Topic>? topics = null)
@@ -46,7 +47,7 @@ public class LearningWorld : ILearningWorld, IOriginator
         Authors = authors;
         Language = language;
         Description = description;
-        Goals = goals;
+        LearningOutcomeCollection = learningOutcomes;
         WorldTheme = worldTheme;
         SavePath = savePath;
         EvaluationLink = evaluationLink;
@@ -78,7 +79,7 @@ public class LearningWorld : ILearningWorld, IOriginator
     public string Authors { get; set; }
     public string Language { get; set; }
     public string Description { get; set; }
-    public string Goals { get; set; }
+    public LearningOutcomeCollection LearningOutcomeCollection { get; set; }
     public WorldTheme WorldTheme { get; set; }
     public string EvaluationLink { get; set; }
     public string EnrolmentKey { get; set; }
@@ -89,6 +90,7 @@ public class LearningWorld : ILearningWorld, IOriginator
     public IEnumerable<ILearningElement> AllLearningElements =>
         LearningSpaces.SelectMany(space => space.ContainedLearningElements)
             .Concat(UnplacedLearningElements.Where(ele => ele.LearningContent is not StoryContent));
+
     public string SavePath { get; set; }
 
     public bool UnsavedChanges
@@ -106,7 +108,8 @@ public class LearningWorld : ILearningWorld, IOriginator
 
     public IMemento GetMemento()
     {
-        return new LearningWorldMemento(Name, Shortname, Authors, Language, Description, Goals, WorldTheme,
+        return new LearningWorldMemento(Name, Shortname, Authors, Language, Description, LearningOutcomeCollection,
+            WorldTheme,
             EvaluationLink, EnrolmentKey, StoryStart, StoryEnd, SavePath,
             LearningSpaces, PathWayConditions, LearningPathways, Topics, InternalUnsavedChanges,
             UnplacedLearningElements);
@@ -124,7 +127,7 @@ public class LearningWorld : ILearningWorld, IOriginator
         Authors = learningWorldMemento.Authors;
         Language = learningWorldMemento.Language;
         Description = learningWorldMemento.Description;
-        Goals = learningWorldMemento.Goals;
+        LearningOutcomeCollection = learningWorldMemento.LearningOutcomeCollection;
         WorldTheme = learningWorldMemento.WorldTheme;
         EvaluationLink = learningWorldMemento.EvaluationLink;
         EnrolmentKey = learningWorldMemento.EnrolmentKey;
@@ -142,8 +145,8 @@ public class LearningWorld : ILearningWorld, IOriginator
     private record LearningWorldMemento : IMemento
     {
         internal LearningWorldMemento(string name, string shortname, string authors, string language,
-            string description, string goals, WorldTheme worldTheme, string evaluationLink, string enrolmentKey, string storyStart,
-            string storyEnd, string savePath,
+            string description, LearningOutcomeCollection learningOutcomeCollection, WorldTheme worldTheme,
+            string evaluationLink, string enrolmentKey, string storyStart, string storyEnd, string savePath,
             List<ILearningSpace> learningSpaces,
             List<PathWayCondition> pathWayConditions,
             List<LearningPathway> learningPathways, List<Topic> topics, bool unsavedChanges,
@@ -154,7 +157,7 @@ public class LearningWorld : ILearningWorld, IOriginator
             Authors = authors;
             Language = language;
             Description = description;
-            Goals = goals;
+            LearningOutcomeCollection = learningOutcomeCollection;
             WorldTheme = worldTheme;
             SavePath = savePath;
             EvaluationLink = evaluationLink;
@@ -178,7 +181,7 @@ public class LearningWorld : ILearningWorld, IOriginator
         internal string Authors { get; }
         internal string Language { get; }
         internal string Description { get; }
-        internal string Goals { get; }
+        internal LearningOutcomeCollection LearningOutcomeCollection { get; }
         internal WorldTheme WorldTheme { get; }
         internal string EvaluationLink { get; }
         internal string EnrolmentKey { get; }

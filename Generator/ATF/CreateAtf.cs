@@ -10,6 +10,7 @@ using PersistEntities.LearningContent;
 using PersistEntities.LearningContent.Action;
 using PersistEntities.LearningContent.Question;
 using PersistEntities.LearningContent.Story;
+using PersistEntities.LearningOutcome;
 using Shared;
 using Shared.Adaptivity;
 using Shared.Configuration;
@@ -208,10 +209,19 @@ public class CreateAtf : ICreateAtf
         LearningWorldJson.WorldName = learningWorld.Name;
         LearningWorldJson.WorldUUID = learningWorld.Id.ToString();
         LearningWorldJson.WorldDescription = learningWorld.Description;
-        LearningWorldJson.WorldGoals = learningWorld.Goals.Split("\n");
+        LearningWorldJson.WorldGoals =
+            ConvertLearningOutcomeCollectionToStringArray(learningWorld.LearningOutcomeCollection);
         LearningWorldJson.EvaluationLink = learningWorld.EvaluationLink;
         LearningWorldJson.EnrolmentKey = learningWorld.EnrolmentKey;
         LearningWorldJson.Theme = learningWorld.WorldTheme.ToString();
+    }
+
+    private static string[] ConvertLearningOutcomeCollectionToStringArray(
+        LearningOutcomeCollectionPe learningOutcomeCollection)
+    {
+        return learningOutcomeCollection.LearningOutcomes
+            .Select(lo => lo.GetOutcome())
+            .ToArray();
     }
 
     /// <summary>
