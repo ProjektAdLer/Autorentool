@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+    <data name="Dialog.Heading" xml:space="preserve">
+    <value>Added Learning Material</value>
+  </data>
+    <data name="Dialog.Description" xml:space="preserve">
+    <value>
+You have added H5Ps as external learning material. H5Ps must be validated for functionality before they can be successfully used in a learning world. This validation checks whether points can be earned by answering questions (e.g., H5P "Interactive Video"), making the H5P completable (displayed as a completable H5P = 🟢), or if it is not completable, where points are awarded merely by opening it (e.g., H5P "Image Slider", displayed as a non-completable H5P = 🟡). Some H5Ps may also be faulty or not display at all (shown as broken H5P = 🔴). Learn more here.
+    </value>
+  </data>
+    <data name="Dialog.Instruction" xml:space="preserve">
+    <value>
+Click the corresponding icon next to each unvalidated H5P in the list below to validate it. Alternatively, you can validate them later. Unvalidated H5Ps are marked with the following symbol (🕓).
+    </value>
+  </data>
+    <data name="Dialog.UnvalidatedFilesHeading" xml:space="preserve">
+    <value>Added, unvalidated H5Ps:</value>
+  </data>
+    <data name="Dialog.CancelButton" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+    <data name="Dialog.BeginValidationButton" xml:space="preserve">
+    <value>Start Validation</value>
+  </data>
+    <data name="Dialog.NoUnvalidatedH5Ps" xml:space="preserve">
+    <value>There are no unvalidated H5Ps.</value>
+  </data>
+    <data name="Dialog.OkButton" xml:space="preserve">
+    <value>OK</value>
+  </data>
+</root>
