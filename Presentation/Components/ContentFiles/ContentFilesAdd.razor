@@ -151,50 +151,10 @@
                  {
                    
                      _unvalidatedH5PFiles.Add(file.Name);
-                     
-                     Logger.LogTrace("Start H5P-Player with: " + 
-                                     "h5pZipSourcePath: " + h5pZipSourcePath + Environment.NewLine +
-                                      "unzippedH5psPath: " + unzippedH5ps.AbsoluteUri );
-
-                     var result = await H5PPlayerDialogViewModel.OpenH5pPlayerDialogAsync(h5pZipSourcePath, unzippedH5ps.AbsoluteUri,H5pDisplayMode.Validate);
-                     if (result != null)
-                     {
-                         Logger.LogTrace("H5P dialog result != null werte werden gesetzt:");
-                         h5PPlayerResultTo = result.Value;
-                         
-                         // in case of H5P Content:
-                         if (h5PPlayerResultTo != null)
-                         {
-                             Logger.LogTrace("H5P: Set ActiveH5pState in LearningContentViewModel ");
-                             if (fileContentVm != null)
-                             {
-                                 fileContentVm.IsH5P = true;
-                                 switch (h5PPlayerResultTo.Value.ActiveH5pState)
-                                 {
-                        
-                                     case "Completable": 
-                                         fileContentVm.H5PState = H5PContentState.Completable;
-                                         break;
-                                     case "Primitive": 
-                                         fileContentVm.H5PState = H5PContentState.Primitive;
-                                         break;
-                                     case "NotUsable": 
-                                         fileContentVm.H5PState = H5PContentState.NotUsable;
-                                         break;
-                                     case "NotValidated": 
-                                         fileContentVm.H5PState = H5PContentState.NotValidated;
-                                         break;
-                                 }
-                             }
-
-                          
-               
-
-                         }
                      }
                  }
 #endif
-            }
+            
             if (_unvalidatedH5PFiles.Any())
             {
                 await ShowImportH5PDialog(_unvalidatedH5PFiles.ToList());
@@ -375,12 +335,12 @@
 
     private async Task ValidateH5P(string fileName)
     {
-        if (!_h5pFilePaths.TryGetValue(fileName, out var fullPath))
-        {
-            Logger.LogError("Could not find full path for H5P file {FileName}", fileName);
-            return;
-        }
-        var h5PZipSourcePath = fullPath;
+        // if (!_h5pFilePaths.TryGetValue(fileName, out var fullPath))
+        // {
+        //     Logger.LogError("Could not find full path for H5P file {FileName}", fileName);
+        //     return;
+        // }
+        var h5PZipSourcePath = Path.Combine(ApplicationPaths.ContentFolder , fileName);
         var baseUri = new Uri(Navigation.BaseUri); 
         var unzippedH5Ps = new Uri(baseUri, "H5pStandalone/h5p-folder/"); 
 
@@ -388,10 +348,44 @@
                         "h5pZipSourcePath: " + h5PZipSourcePath + Environment.NewLine +
                         "unzippedH5psPath: " + unzippedH5Ps.AbsoluteUri);
 
-        H5PPlayerDialogViewModel.OpenH5pPlayerDialog(h5PZipSourcePath, unzippedH5Ps.AbsoluteUri, H5pDisplayMode.Validate);
-            
+        var result= await H5PPlayerDialogViewModel.OpenH5pPlayerDialogAsync(h5PZipSourcePath, unzippedH5Ps.AbsoluteUri, H5pDisplayMode.Validate);
+        if (result != null)
+        {
+            Logger.LogTrace("H5P dialog result != null werte werden gesetzt:");
+            h5PPlayerResultTo = result.Value;
 
-            await Task.CompletedTask;
+            // in case of H5P Content:
+            if (h5PPlayerResultTo != null)
+            {
+                Logger.LogTrace("H5P: Set ActiveH5pState in LearningContentViewModel ");
+                if (fileContentVm != null)
+                {
+                    fileContentVm.IsH5P = true;
+                    switch (h5PPlayerResultTo.Value.ActiveH5pState)
+                    {
+
+                        case "Completable":
+                            fileContentVm.H5PState = H5PContentState.Completable;
+                            break;
+                        case "Primitive":
+                            fileContentVm.H5PState = H5PContentState.Primitive;
+                            break;
+                        case "NotUsable":
+                            fileContentVm.H5PState = H5PContentState.NotUsable;
+                            break;
+                        case "NotValidated":
+                            fileContentVm.H5PState = H5PContentState.NotValidated;
+                            break;
+                    }
+                }
+
+
+
+
+            }
+        }
+
+        await Task.CompletedTask;
 
     }
     private void ToggleSpinner()
