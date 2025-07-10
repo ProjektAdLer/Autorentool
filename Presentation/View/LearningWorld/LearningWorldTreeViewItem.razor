@@ -10,7 +10,7 @@
      class="@GetElementDivCss()">
     <div class="flex flex-row gap-2 items-center p-2 ml-14">
         <MudIcon Class="w-5 h-5 2xl:w-6 2xl:h-6 opacity-60" Icon="@GetElementIcon()"></MudIcon>
-        <p class="break-all">@LearningElement.Name (Position @GetLearningElementPosition(LearningElement))</p>
+        <p class="break-all">@GetDisplayName(LearningElement)</p>
     </div>
 </div>
 
@@ -34,6 +34,13 @@
             .ToString();
     }
 
+    private string GetDisplayName(ILearningElementViewModel le)
+    {
+        return le.LearningContent is IStoryContentViewModel
+            ? le.Name
+            : $"{GetLearningElementPosition(le) + 1} - {le.Name}";
+    }
+    
     private string GetElementIcon()
     {
         return LearningElement.LearningContent switch
