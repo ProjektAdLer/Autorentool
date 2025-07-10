@@ -1,20 +1,18 @@
-@using System.Diagnostics.CodeAnalysis
-@using Microsoft.Extensions.Localization
 @using Presentation.PresentationLogic.LearningSpace.LearningOutcomeViewModel
+@using Microsoft.Extensions.Localization
+@using System.Diagnostics.CodeAnalysis
 <div class="pb-4">
     <div class="flex flex-col gap-4">
-        <p class="cursor-default text-lg mx-6">@Localizer["LearningOutcomesOverview.Title"]</p>
-        <p class="cursor-default text-sm 2xl:text-base mx-6">@Localizer[$"LearningOutcomesOverview.Text.{EntityType.Name}"]</p>
+        <p class="cursor-default text-lg mx-6">@Localizer["LearningOutcomesSpaceOverview.Title"]</p>
+        <p class="cursor-default text-sm 2xl:text-base mx-6">@Localizer["LearningOutcomesSpaceOverview.Text"]</p>
     </div>
 
     <div class="flex flex-col justify-center items-center py-4">
-        <MudButton Class="w-80 btn-standard create-structured-outcome" Variant="Variant.Filled"
-                   OnClick="CreateStructuredLearningOutcome">
-            @Localizer["LearningOutcomesOverview.Button.Structured"]
+        <MudButton Class="w-80 btn-standard create-structured-outcome" Variant="Variant.Filled" OnClick="CreateStructuredLearningOutcome">
+            @Localizer["LearningOutcomesSpaceOverview.Button.Structured"]
         </MudButton>
-        <MudButton Class="w-80 btn-standard create-manual-outcome" Variant="Variant.Filled"
-                   OnClick="CreateManualLearningOutcome">
-            @Localizer["LearningOutcomesOverview.Button.Manual"]
+        <MudButton Class="w-80 btn-standard create-manual-outcome" Variant="Variant.Filled" OnClick="CreateManualLearningOutcome">
+            @Localizer["LearningOutcomesSpaceOverview.Button.Manual"]
         </MudButton>
     </div>
 
@@ -22,14 +20,12 @@
     {
         <div class="h-[320px] outcomes">
             <MudDivider DividerType="DividerType.Middle"></MudDivider>
-            <p class="cursor-default text-sm mx-6 py-4 font-bold">@Localizer["LearningOutcomesOverview.Overview.Subtitle"]</p>
+            <p class="cursor-default text-sm mx-6 py-4 font-bold">@Localizer["LearningOutcomesSpaceOverview.Overview.Subtitle"]</p>
 
-            <div
-                class="h-[260px] max-w-full overflow-y-scroll border-2 border-adlergrey-100 rounded mx-6 bg-adlerbgbright outcomes-inner">
+            <div class="h-[260px] max-w-full overflow-y-scroll border-2 border-adlergrey-100 rounded mx-6 bg-adlerbgbright outcomes-inner">
                 @foreach (var learningOutcome in LearningOutcomeCollection.LearningOutcomes)
                 {
-                    <LearningOutcomeItem LearningOutcome="learningOutcome"
-                                         LearningOutcomeCollection="LearningOutcomeCollection"/>
+                    <LearningOutcomeItem LearningOutcome="learningOutcome" LearningOutcomeCollection="LearningOutcomeCollection" />
                 }
             </div>
         </div>
@@ -39,17 +35,18 @@
 @code {
     [Parameter, EditorRequired] public LearningOutcomeCollectionViewModel LearningOutcomeCollection { get; set; } = null!;
 
-    [Parameter, EditorRequired] public Type EntityType { get; set; } = null!;
-
     [Inject, AllowNull] internal IDialogService DialogService { get; set; }
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types
-    internal IStringLocalizer<LearningOutcomesOverview> Localizer { get; set; }
+    internal IStringLocalizer<LearningOutcomesSpaceOverview> Localizer { get; set; }
 
 
     protected override void OnInitialized()
     {
-        LearningOutcomeCollection.LearningOutcomes.CollectionChanged += (_, _) => { InvokeAsync(StateHasChanged); };
+        LearningOutcomeCollection.LearningOutcomes.CollectionChanged += (_, _) =>
+        {
+            InvokeAsync(StateHasChanged);
+        };
 
         base.OnInitialized();
     }
@@ -66,8 +63,7 @@
 
         var dialogParameters = new DialogParameters
         {
-            { nameof(CreateEditManualLearningOutcome.LearningOutcomeCollection), LearningOutcomeCollection },
-            { nameof(CreateEditManualLearningOutcome.EntityType), EntityType }
+            { nameof(CreateEditManualLearningOutcome.LearningOutcomeCollection), LearningOutcomeCollection }
         };
         var dialogReference = await DialogService.ShowAsync<CreateEditManualLearningOutcome>("", dialogParameters, options);
         await dialogReference.Result;

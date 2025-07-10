@@ -27,11 +27,8 @@
     <data name="CreateEditManualLearningOutcome.Title.Part2" xml:space="preserve">
         <value>Formulate learning outcome yourself</value>
     </data>
-    <data name="CreateEditManualLearningOutcome.Text.LearningSpace" xml:space="preserve">
+    <data name="CreateEditManualLearningOutcome.Text" xml:space="preserve">
         <value>Formulate your learning outcome for this learning space.</value>
-    </data>
-    <data name="CreateEditManualLearningOutcome.Text.LearningWorld" xml:space="preserve">
-        <value>Formulate your learning outcome for this learning world.</value>
     </data>
     <data name="CreateEditManualLearningOutcome.Subtitle" xml:space="preserve">
         <value>Learning outcome</value>

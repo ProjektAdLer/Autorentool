@@ -142,15 +142,14 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
 
     /// <inheritdoc cref="ILearningWorldPresenter.EditLearningWorld"/>
     public void EditLearningWorld(string name, string shortname, string authors, string language, string description,
-        LearningOutcomeCollectionViewModel learningOutcomeCollection, WorldTheme worldTheme, string evaluationLink,
-        string enrolmentKey, string storyStart, string storyEnd)
+        string goals, WorldTheme worldTheme, string evaluationLink, string enrolmentKey, string storyStart, string storyEnd)
     {
         if (!CheckLearningWorldNotNull("EditLearningWorld"))
             return;
 
         //Nullability of LearningWorldVm is checked in CheckLearningWorldNotNull
-        _presentationLogic.EditLearningWorld(LearningWorldVm!, name, shortname, authors, language, description,
-            learningOutcomeCollection, worldTheme, evaluationLink, enrolmentKey, storyStart, storyEnd);
+        _presentationLogic.EditLearningWorld(LearningWorldVm!, name, shortname, authors, language, description, goals, worldTheme,
+            evaluationLink, enrolmentKey, storyStart, storyEnd);
     }
 
     /// <inheritdoc cref="ILearningWorldPresenter.SaveLearningWorld"/>

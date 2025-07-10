@@ -87,7 +87,4 @@
     <data name="EditWorldForm.Theme.Field.Theme.Text" xml:space="preserve">
         <value>Selection of themes with different theme worlds for the learning world</value>
     </data>
-    <data name="EditWorldForm.Goals.Button" xml:space="preserve">
-        <value>Learning outcome formulation</value>
-    </data>
 </root>

@@ -90,7 +90,4 @@
     <data name="CreateWorldForm.Theme.Field.Theme.Text" xml:space="preserve">
         <value>Auswahl an Themes mit verschiedenen Themenwelten für die Lernwelt</value>
     </data>
-    <data name="CreateWorldForm.Goals.Button" xml:space="preserve">
-        <value>Lernziel-Formulierung</value>
-    </data>
 </root>

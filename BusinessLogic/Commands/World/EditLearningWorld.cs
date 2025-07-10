@@ -1,5 +1,4 @@
 using BusinessLogic.Entities;
-using BusinessLogic.Entities.LearningOutcome;
 using Microsoft.Extensions.Logging;
 using Shared.Theme;
 
@@ -10,8 +9,8 @@ public class EditLearningWorld : IEditLearningWorld
     private IMemento? _memento;
 
     public EditLearningWorld(LearningWorld learningWorld, string name, string shortname,
-        string authors, string language, string description, LearningOutcomeCollection learningOutcomeCollection,
-        WorldTheme worldTheme, string evaluationLink, string enrolmentKey, string storyStart, string storyEnd,
+        string authors, string language, string description, string goals, WorldTheme worldTheme, string evaluationLink,
+        string enrolmentKey, string storyStart, string storyEnd,
         Action<LearningWorld> mappingAction,
         ILogger<EditLearningWorld> logger)
     {
@@ -21,7 +20,7 @@ public class EditLearningWorld : IEditLearningWorld
         Authors = authors;
         Language = language;
         Description = description;
-        LearningOutcomeCollection = learningOutcomeCollection;
+        Goals = goals;
         WorldTheme = worldTheme;
         EvaluationLink = evaluationLink;
         EnrolmentKey = enrolmentKey;
@@ -37,7 +36,7 @@ public class EditLearningWorld : IEditLearningWorld
     internal string Authors { get; }
     internal string Language { get; }
     internal string Description { get; }
-    internal LearningOutcomeCollection LearningOutcomeCollection { get; }
+    internal string Goals { get; }
     internal WorldTheme WorldTheme { get; }
     internal string EvaluationLink { get; }
     internal string EnrolmentKey { get; }
@@ -52,9 +51,10 @@ public class EditLearningWorld : IEditLearningWorld
         _memento ??= LearningWorld.GetMemento();
 
         Logger.LogTrace(
-            "Editing LearningWorld {OldName} ({Id}). Previous Name: {Name}, Shortname: {Shortname}, Authors: {Authors}, Language: {Language}, Description: {Description}, LearningOutcomeCollection: {LearningOutcomeCollection}, Theme: {WorldTheme}, EvaluationLink: {EvaluationLink}, EnrolmentKey: {EnrolmentKey}, StoryStart: {StoryStart}, StoryEnd: {StoryEnd}",
-            LearningWorld.Name, LearningWorld.Id, WorldName, Shortname, Authors, Language, Description,
-            LearningOutcomeCollection, WorldTheme, EvaluationLink, EnrolmentKey, StoryStart, StoryEnd);
+            "Editing LearningWorld {OldName} ({Id}). Previous Name: {Name}, Shortname: {Shortname}, Authors: {Authors}, Language: {Language}, Description: {Description}, Goals: {Goals}, Theme: {WorldTheme}, EvaluationLink: {EvaluationLink}, EnrolmentKey: {EnrolmentKey}, StoryStart: {StoryStart}, StoryEnd: {StoryEnd}",
+            LearningWorld.Name, LearningWorld.Id, WorldName, Shortname, Authors, Language, Description, Goals,
+            WorldTheme,
+            EvaluationLink, EnrolmentKey, StoryStart, StoryEnd);
 
         if (AnyChanges()) LearningWorld.UnsavedChanges = true;
         LearningWorld.Name = WorldName;
@@ -62,7 +62,7 @@ public class EditLearningWorld : IEditLearningWorld
         LearningWorld.Authors = Authors;
         LearningWorld.Language = Language;
         LearningWorld.Description = Description;
-        LearningWorld.LearningOutcomeCollection = LearningOutcomeCollection;
+        LearningWorld.Goals = Goals;
         LearningWorld.WorldTheme = WorldTheme;
         LearningWorld.EvaluationLink = EvaluationLink;
         LearningWorld.EnrolmentKey = EnrolmentKey;
@@ -70,11 +70,11 @@ public class EditLearningWorld : IEditLearningWorld
         LearningWorld.StoryEnd = StoryEnd;
 
         Logger.LogTrace(
-            "Edited LearningWorld ({Id}). Updated Name: {Name}, Shortname: {Shortname}, Authors: {Authors}, Language: {Language}, Description: {Description}, LearningOutcomeCollection: {LearningOutcomeCollection}, Theme: {WorldTheme}, EvaluationLink: {EvaluationLink}, EnrolmentKey: {EnrolmentKey}, StoryStart: {StoryStart}, StoryEnd: {StoryEnd}",
+            "Edited LearningWorld ({Id}). Updated Name: {Name}, Shortname: {Shortname}, Authors: {Authors}, Language: {Language}, Description: {Description}, Goals: {Goals}, Theme: {WorldTheme}, EvaluationLink: {EvaluationLink}, EnrolmentKey: {EnrolmentKey}, StoryStart: {StoryStart}, StoryEnd: {StoryEnd}",
             LearningWorld.Id, LearningWorld.Name, LearningWorld.Shortname, LearningWorld.Authors,
-            LearningWorld.Language, LearningWorld.Description, LearningWorld.LearningOutcomeCollection,
-            LearningWorld.WorldTheme, LearningWorld.EvaluationLink, LearningWorld.EnrolmentKey,
-            LearningWorld.StoryStart, LearningWorld.StoryEnd);
+            LearningWorld.Language, LearningWorld.Description, LearningWorld.Goals, LearningWorld.WorldTheme,
+            LearningWorld.EvaluationLink,
+            LearningWorld.EnrolmentKey, LearningWorld.StoryStart, LearningWorld.StoryEnd);
 
         MappingAction.Invoke(LearningWorld);
     }
@@ -106,7 +106,7 @@ public class EditLearningWorld : IEditLearningWorld
         LearningWorld.Authors != Authors ||
         LearningWorld.Language != Language ||
         LearningWorld.Description != Description ||
-        LearningWorld.LearningOutcomeCollection != LearningOutcomeCollection ||
+        LearningWorld.Goals != Goals ||
         LearningWorld.WorldTheme != WorldTheme ||
         LearningWorld.EvaluationLink != EvaluationLink ||
         LearningWorld.EnrolmentKey != EnrolmentKey ||

@@ -95,7 +95,4 @@
     <data name="EditWorldForm.Theme.Field.Theme.Text" xml:space="preserve">
         <value>Auswahl an Themes mit verschiedenen Themenwelten für die Lernwelt</value>
     </data>
-    <data name="EditWorldForm.Goals.Button" xml:space="preserve">
-        <value>Lernziel-Formulierung</value>
-    </data>
 </root>

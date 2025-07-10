@@ -1,13 +1,13 @@
-@using System.ComponentModel
-@using System.Diagnostics.CodeAnalysis
+@using Presentation.PresentationLogic.LearningWorld
 @using AutoMapper
 @using BusinessLogic.Entities
-@using Microsoft.Extensions.Localization
-@using Presentation.Components.Forms.Buttons
 @using Presentation.Components.Forms.Models
-@using Presentation.Components.LearningOutcomes
-@using Presentation.PresentationLogic.LearningWorld
+@using Microsoft.Extensions.Localization
+@using System.ComponentModel
+@using System.Diagnostics.CodeAnalysis
+@using Presentation.Components.Forms.Buttons
 @using Shared.Theme
+
 <div class="absolute w-full z-30">
     <header class="py-2 2xl:py-3 bg-adlerbgbright border-b-2 border-adlergrey-100 overflow-hidden flex justify-center">
         <h2 class="text-base 2xl:text-lg text-center font-bold text-adlertitledarkblue mx-2">@Localizer["EditWorldForm.Header.Title"]</h2>
@@ -34,31 +34,31 @@
                                   @ref="_nameField"
                                   DebounceInterval="DebounceInterval"
                                   Placeholder="@Localizer["EditWorldForm.Fields.Collapsable.General.Field.Name.Text"]"
-                                  Typo="Typo.body1"
-                                  Margin="Margin.Normal"/>
+                                  Typo="Typo.body1" 
+                                  Margin="Margin.Normal" />
                     <MudTextField @bind-Value="FormDataContainer.FormModel.Shortname"
                                   For="@(() => FormModel.Shortname)"
                                   DebounceInterval="DebounceInterval"
-                                  Typo="Typo.body1"
-                                  Placeholder="@Localizer["EditWorldForm.Fields.Collapsable.General.Field.Shortname.Text"]"
+                                  Typo="Typo.body1" 
+                                  Placeholder="@Localizer["EditWorldForm.Fields.Collapsable.General.Field.Shortname.Text"]" 
                                   Margin="Margin.Normal"/>
                     <MudTextField @bind-Value="FormDataContainer.FormModel.Authors"
                                   For="@(() => FormModel.Authors)"
                                   DebounceInterval="DebounceInterval"
-                                  Placeholder="@Localizer["EditWorldForm.Fields.Collapsable.General.Field.Authors.Text"]"
-                                  Typo="Typo.body1"
+                                  Placeholder="@Localizer["EditWorldForm.Fields.Collapsable.General.Field.Authors.Text"]" 
+                                  Typo="Typo.body1" 
                                   Margin="Margin.Normal"/>
                     <MudTextField @bind-Value="FormDataContainer.FormModel.Language"
                                   For="@(() => FormModel.Language)"
                                   DebounceInterval="DebounceInterval"
-                                  Placeholder="@Localizer["EditWorldForm.Fields.Collapsable.General.Field.Language.Text"]"
-                                  Typo="Typo.body1"
+                                  Placeholder="@Localizer["EditWorldForm.Fields.Collapsable.General.Field.Language.Text"]" 
+                                  Typo="Typo.body1" 
                                   Margin="Margin.Normal"/>
                     <MudTextField @bind-Value="FormDataContainer.FormModel.EvaluationLink"
                                   For="@(() => FormModel.EvaluationLink)"
                                   DebounceInterval="DebounceInterval"
-                                  Placeholder="@Localizer["EditWorldForm.Fields.Collapsable.General.Field.EvaluationLink.Text"]"
-                                  Typo="Typo.body1"
+                                  Placeholder="@Localizer["EditWorldForm.Fields.Collapsable.General.Field.EvaluationLink.Text"]" 
+                                  Typo="Typo.body1" 
                                   Margin="Margin.Normal"/>
                 </div>
             </Collapsable>
@@ -91,13 +91,13 @@
                         {
                             <!-- WorldTheme.Company is disabled because it is not yet supported -->
                             <MudSelectItem Disabled="@theme.Equals(WorldTheme.Company)"
-                                           Value="@(theme)">@(ThemeHelper<WorldTheme>.Localize(theme))</MudSelectItem>
+                                Value="@(theme)">@(ThemeHelper<WorldTheme>.Localize(theme))</MudSelectItem>
                         }
                     </MudSelect>
                 </div>
             </Collapsable>
 
-            @*<Collapsable Title=@Localizer["EditWorldForm.Fields.Collapsable.Goals.Title"] InitiallyCollapsed="true">
+            <Collapsable Title=@Localizer["EditWorldForm.Fields.Collapsable.Goals.Title"] InitiallyCollapsed="true">
                 <div class="rounded-lg w-4/4 px-6">
                     <p class="text-xs pt-3">@Localizer["EditWorldForm.Fields.Collapsable.Goals.Field.Goals.Text"]</p>
                     <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
@@ -105,15 +105,6 @@
                                   Lines="3"
                                   Variant="Variant.Outlined"
                                   DebounceInterval="DebounceInterval"/>
-                </div>
-            </Collapsable>*@
-            <Collapsable Title=@Localizer["EditWorldForm.Fields.Collapsable.Goals.Title"] InitiallyCollapsed="true">
-                <div class="w-4/4 px-6">
-                    <p class="text-xs pt-3">@Localizer["EditWorldForm.Fields.Collapsable.Goals.Field.Goals.Text"]</p>
-                    <div class="flex justify-center">
-                        <MudButton Class="btn-standard w-72"
-                                   OnClick="OpenLearningOutcomesOverview">@Localizer["EditWorldForm.Goals.Button"]</MudButton>
-                    </div>
                 </div>
             </Collapsable>
 
@@ -180,9 +171,6 @@
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     private IStringLocalizer<EditWorldForm> Localizer { get; set; }
 
-    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types
-    internal IDialogService DialogService { get; set; }
-
     [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
     public ILearningWorldViewModel WorldToEdit { get; set; }
 
@@ -209,7 +197,7 @@
 
     private void OnValidSubmit(LearningWorldFormModel model)
     {
-        LearningWorldPresenter.EditLearningWorld(model.Name, model.Shortname, model.Authors, model.Language, model.Description, model.LearningOutcomeCollection, model.WorldTheme, model.EvaluationLink, model.EnrolmentKey, model.StoryStart, model.StoryEnd);
+        LearningWorldPresenter.EditLearningWorld(model.Name, model.Shortname, model.Authors, model.Language, model.Description, model.Goals, model.WorldTheme, model.EvaluationLink, model.EnrolmentKey, model.StoryStart, model.StoryEnd);
     }
 
     private void OnValidFieldChange(LearningWorldFormModel model) => OnValidSubmit(model);
@@ -233,7 +221,7 @@
     {
         if (e.PropertyName is nameof(LearningWorldViewModel.Name) or nameof(LearningWorldViewModel.Shortname)
             or nameof(LearningWorldViewModel.Authors) or nameof(LearningWorldViewModel.Language)
-            or nameof(LearningWorldViewModel.Description)
+            or nameof(LearningWorldViewModel.Description) or nameof(LearningWorldViewModel.Goals)
            )
         {
             InvokeAsync(MapIntoContainer);
@@ -243,28 +231,6 @@
     private async Task OnResetAsync()
     {
         await MapIntoContainer();
-    }
-
-    private async void OpenLearningOutcomesOverview()
-    {
-        var options = new DialogOptions
-        {
-            BackdropClick = true,
-            MaxWidth = MaxWidth.Small,
-            FullWidth = true,
-            CloseButton = true,
-        };
-
-        await MapIntoContainer();
-
-        var parameters = new DialogParameters
-        {
-            { nameof(LearningOutcomesOverview.LearningOutcomeCollection), FormDataContainer.FormModel.LearningOutcomeCollection },
-            { nameof(LearningOutcomesOverview.EntityType), typeof(LearningWorld) }
-        };
-        var dialog = await DialogService.ShowAsync<LearningOutcomesOverview>("", parameters, options);
-        _ = await dialog.Result;
-        StateHasChanged();
     }
 
 }

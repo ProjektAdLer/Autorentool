@@ -215,11 +215,11 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>CreateEditStructuredLearningOutcome.en.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="Resources\Components\LearningOutcomes\LearningOutcomesOverview.de.resx">
+    <EmbeddedResource Update="Resources\Components\LearningOutcomes\LearningOutcomesSpaceOverview.de.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>LearningOutcomesOverview.de.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="Resources\Components\LearningOutcomes\LearningOutcomesOverview.en.resx">
+    <EmbeddedResource Update="Resources\Components\LearningOutcomes\LearningOutcomesSpaceOverview.en.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>LearningOutcomesOverview.en.Designer.cs</LastGenOutput>
     </EmbeddedResource>
@@ -230,6 +230,14 @@
     <EmbeddedResource Update="Resources\Components\LearningOutcomes\LearningOutcomeItem.en.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>LearningOutcomeItem.en.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Components\LearningOutcomes\LearningOutcomesWorldOverview.de.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>LearningOutcomesWorldOverview.de.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Components\LearningOutcomes\LearningOutcomesWorldOverview.en.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>LearningOutcomesWorldOverview.en.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="Resources\View\LearningElement\DragDropLearningElement.de.resx">
       <Generator>ResXFileCodeGenerator</Generator>

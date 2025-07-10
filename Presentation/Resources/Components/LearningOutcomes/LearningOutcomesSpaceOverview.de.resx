@@ -18,22 +18,19 @@
     <resheader name="writer">
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
-    <data name="LearningOutcomesOverview.Title" xml:space="preserve">
+    <data name="LearningOutcomesSpaceOverview.Title" xml:space="preserve">
         <value>Lernziel-Formulierung</value>
     </data>
-    <data name="LearningOutcomesOverview.Text.LearningSpace" xml:space="preserve">
+    <data name="LearningOutcomesSpaceOverview.Text" xml:space="preserve">
         <value>Sie können Ihr(e) Lernziel(e) für diesen Lernraum selbst formulieren oder die integrierte Eingabeunterstützung zur Formulierung verwenden.</value>
     </data>
-    <data name="LearningOutcomesOverview.Text.LearningWorld" xml:space="preserve">
-        <value>Sie können Ihr(e) Lernziel(e) für diese Lernwelt selbst formulieren oder die integrierte Eingabeunterstützung zur Formulierung verwenden.</value>
-    </data>
-    <data name="LearningOutcomesOverview.Button.Structured" xml:space="preserve">
+    <data name="LearningOutcomesSpaceOverview.Button.Structured" xml:space="preserve">
         <value>Eingabeunterstützung</value>
     </data>
-    <data name="LearningOutcomesOverview.Button.Manual" xml:space="preserve">
+    <data name="LearningOutcomesSpaceOverview.Button.Manual" xml:space="preserve">
         <value>Lernziel selbst formulieren</value>
     </data>
-    <data name="LearningOutcomesOverview.Overview.Subtitle" xml:space="preserve">
+    <data name="LearningOutcomesSpaceOverview.Overview.Subtitle" xml:space="preserve">
         <value>Übersicht der erstellten Lernziele</value>
     </data>
 </root>

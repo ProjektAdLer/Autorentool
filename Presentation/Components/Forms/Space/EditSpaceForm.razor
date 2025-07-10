@@ -8,6 +8,7 @@
 @using Presentation.Components.LearningOutcomes
 @using Presentation.PresentationLogic.LearningSpace
 @using Presentation.PresentationLogic.LearningWorld
+@using Shared
 @using Shared.Theme
 <div class="absolute w-full z-30">
     <header class="py-2 2xl:py-3 bg-adlerbgbright border-b-2 border-adlergrey-100 overflow-hidden flex justify-center">
@@ -55,8 +56,7 @@
                     <p class="text-xs text-adlerblue-600">
                         @SpaceToEdit.NumberOfRequiredElements
                         <span class="text-adlergrey-800"> / </span> @SpaceToEdit.NumberOfElements
-                        <span
-                            class="text-adlergrey-800"> @Localizer["EditSpaceForm.Fields.Collapsable.CompletionConditions.Description.Appendix"] </span>
+                        <span class="text-adlergrey-800"> @Localizer["EditSpaceForm.Fields.Collapsable.CompletionConditions.Description.Appendix"] </span>
                     </p>
                     <ul class="pl-2 py-2 mt-0 border border-adlergrey-300 rounded w-full list-disc list-inside">
                         @foreach (var leName in SpaceToEdit.ContainedLearningElements.Where(x => x.IsRequired).Select(x => x.Name).ToList())
@@ -255,10 +255,9 @@
 
         var parameters = new DialogParameters
         {
-            { nameof(LearningOutcomesOverview.LearningOutcomeCollection), FormDataContainer.FormModel.LearningOutcomeCollection },
-            { nameof(LearningOutcomesOverview.EntityType), typeof(LearningSpace) }
+            { nameof(LearningOutcomesSpaceOverview.LearningOutcomeCollection), FormDataContainer.FormModel.LearningOutcomeCollection }
         };
-        var dialog = await DialogService.ShowAsync<LearningOutcomesOverview>("", parameters, options);
+        var dialog = await DialogService.ShowAsync<LearningOutcomesSpaceOverview>("", parameters, options);
         _ = await dialog.Result;
         StateHasChanged();
     }
