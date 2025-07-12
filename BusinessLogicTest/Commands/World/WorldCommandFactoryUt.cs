@@ -33,7 +33,7 @@ public class WorldCommandFactoryUt
         var description = "WorldDescription";
         var evaluationLink = "WorldEvaluationLink";
         var enrolmentKey = "WorldEnrolmentKey";
-        var goals = "WorldGoals";
+        var learningOutcomeCollection = EntityProvider.GetLearningOutcomeCollection();
         var theme = WorldTheme.CampusAschaffenburg;
         var storyStart = "WorldStoryStart";
         var storyEnd = "WorldStoryEnd";
@@ -41,7 +41,8 @@ public class WorldCommandFactoryUt
 
         // Act
         var result = _factory.GetCreateCommand(authoringToolWorkspace, name, shortname, authors, language,
-            description, goals,theme, evaluationLink, enrolmentKey, storyStart, storyEnd, mappingAction);
+            description, learningOutcomeCollection, theme, evaluationLink, enrolmentKey, storyStart, storyEnd,
+            mappingAction);
 
         // Assert
         Assert.That(result, Is.InstanceOf<CreateLearningWorld>());
@@ -54,7 +55,7 @@ public class WorldCommandFactoryUt
             Assert.That(resultCasted.LearningWorld.Authors, Is.EqualTo(authors));
             Assert.That(resultCasted.LearningWorld.Language, Is.EqualTo(language));
             Assert.That(resultCasted.LearningWorld.Description, Is.EqualTo(description));
-            Assert.That(resultCasted.LearningWorld.Goals, Is.EqualTo(goals));
+            Assert.That(resultCasted.LearningWorld.LearningOutcomeCollection, Is.EqualTo(learningOutcomeCollection));
             Assert.That(resultCasted.LearningWorld.EvaluationLink, Is.EqualTo(evaluationLink));
             Assert.That(resultCasted.LearningWorld.EnrolmentKey, Is.EqualTo(enrolmentKey));
             Assert.That(resultCasted.LearningWorld.StoryStart, Is.EqualTo(storyStart));
@@ -121,7 +122,7 @@ public class WorldCommandFactoryUt
         var description = "NewDescription";
         var evaluationLink = "NewEvaluationLink";
         var enrolmentKey = "NewEnrolmentKey";
-        var goals = "NewGoals";
+        var learningOutcomeCollection = EntityProvider.GetLearningOutcomeCollection();
         var theme = WorldTheme.CampusAschaffenburg;
         var storyStart = "NewStoryStart";
         var storyEnd = "NewStoryEnd";
@@ -129,7 +130,8 @@ public class WorldCommandFactoryUt
 
         // Act
         var result = _factory.GetEditCommand(learningWorld, name, shortname, authors, language,
-            description, goals,theme, evaluationLink, enrolmentKey, storyStart, storyEnd, mappingAction);
+            description, learningOutcomeCollection, theme, evaluationLink, enrolmentKey, storyStart, storyEnd,
+            mappingAction);
 
         // Assert
         Assert.That(result, Is.InstanceOf<EditLearningWorld>());
@@ -142,7 +144,7 @@ public class WorldCommandFactoryUt
             Assert.That(resultCasted.Authors, Is.EqualTo(authors));
             Assert.That(resultCasted.Language, Is.EqualTo(language));
             Assert.That(resultCasted.Description, Is.EqualTo(description));
-            Assert.That(resultCasted.Goals, Is.EqualTo(goals));
+            Assert.That(resultCasted.LearningOutcomeCollection, Is.EqualTo(learningOutcomeCollection));
             Assert.That(resultCasted.EvaluationLink, Is.EqualTo(evaluationLink));
             Assert.That(resultCasted.EnrolmentKey, Is.EqualTo(enrolmentKey));
             Assert.That(resultCasted.StoryStart, Is.EqualTo(storyStart));

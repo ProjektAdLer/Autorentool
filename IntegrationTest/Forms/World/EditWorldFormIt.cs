@@ -14,6 +14,7 @@ using Presentation.Components.Forms;
 using Presentation.Components.Forms.Buttons;
 using Presentation.Components.Forms.Models;
 using Presentation.Components.Forms.World;
+using Presentation.PresentationLogic.LearningOutcome;
 using Presentation.PresentationLogic.LearningWorld;
 using PresentationTest;
 using Shared.Theme;
@@ -120,7 +121,7 @@ public class EditWorldFormIt : MudFormTestFixture<EditWorldForm, LearningWorldFo
             Assert.That(FormModel.Authors, Is.EqualTo(""));
             Assert.That(FormModel.Language, Is.EqualTo(""));
             Assert.That(FormModel.Description, Is.EqualTo(""));
-            Assert.That(FormModel.Goals, Is.EqualTo(""));
+            Assert.That(FormModel.LearningOutcomeCollection.LearningOutcomes, Has.Count.EqualTo(0));
             Assert.That(FormModel.EvaluationLink, Is.EqualTo(""));
             Assert.That(FormModel.EnrolmentKey, Is.EqualTo(""));
             Assert.That(FormModel.StoryStart, Is.EqualTo(""));
@@ -156,7 +157,6 @@ public class EditWorldFormIt : MudFormTestFixture<EditWorldForm, LearningWorldFo
             Assert.That(() => FormModel.Authors, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
             Assert.That(() => FormModel.Language, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
             Assert.That(() => FormModel.Description, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
-            Assert.That(() => FormModel.Goals, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
             Assert.That(() => FormModel.EvaluationLink, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
             Assert.That(() => FormModel.EnrolmentKey, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
             Assert.That(() => FormModel.StoryStart, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
@@ -209,7 +209,6 @@ public class EditWorldFormIt : MudFormTestFixture<EditWorldForm, LearningWorldFo
             Assert.That(() => FormModel.Authors, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
             Assert.That(() => FormModel.Language, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
             Assert.That(() => FormModel.Description, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
-            Assert.That(() => FormModel.Goals, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
             Assert.That(() => FormModel.EvaluationLink, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
             Assert.That(() => FormModel.EnrolmentKey, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
             Assert.That(() => FormModel.StoryStart, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
@@ -221,7 +220,8 @@ public class EditWorldFormIt : MudFormTestFixture<EditWorldForm, LearningWorldFo
         systemUnderTest.FindComponent<SubmitThenRemapButton>().Find("button").Click();
 
         WorldPresenter.Received(2).EditLearningWorld(Expected, Expected, Expected, Expected,
-            Expected, Expected, WorldTheme.CampusAschaffenburg, Expected, Expected, Expected, Expected);
+            Expected, Arg.Any<LearningOutcomeCollectionViewModel>(), WorldTheme.CampusAschaffenburg, Expected, Expected,
+            Expected, Expected);
         Mapper.Received(1).Map(worldToMap, FormDataContainer.FormModel);
     }
 

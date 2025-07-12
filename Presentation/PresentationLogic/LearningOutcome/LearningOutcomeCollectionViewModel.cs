@@ -1,9 +1,9 @@
 using System.Collections.ObjectModel;
 using JetBrains.Annotations;
 
-namespace Presentation.PresentationLogic.LearningSpace.LearningOutcomeViewModel;
+namespace Presentation.PresentationLogic.LearningOutcome;
 
-public class LearningOutcomeCollectionViewModel
+public class LearningOutcomeCollectionViewModel : ILearningOutcomeCollectionViewModel
 {
     public LearningOutcomeCollectionViewModel(ObservableCollection<ILearningOutcomeViewModel>? learningOutcomes = null)
     {

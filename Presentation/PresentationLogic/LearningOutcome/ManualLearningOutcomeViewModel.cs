@@ -1,6 +1,6 @@
 using JetBrains.Annotations;
 
-namespace Presentation.PresentationLogic.LearningSpace.LearningOutcomeViewModel;
+namespace Presentation.PresentationLogic.LearningOutcome;
 
 public class ManualLearningOutcomeViewModel : ILearningOutcomeViewModel
 {

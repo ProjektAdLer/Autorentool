@@ -3,7 +3,7 @@ using Microsoft.Extensions.Localization;
 using MudBlazor;
 using Presentation.Components.Dialogues;
 using Presentation.PresentationLogic.API;
-using Presentation.PresentationLogic.LearningSpace.LearningOutcomeViewModel;
+using Presentation.PresentationLogic.LearningOutcome;
 using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.SelectedViewModels;
 using Shared.Theme;

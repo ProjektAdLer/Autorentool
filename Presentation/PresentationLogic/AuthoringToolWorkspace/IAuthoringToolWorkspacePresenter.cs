@@ -1,4 +1,4 @@
-using Presentation.PresentationLogic.LearningSpace.LearningOutcomeViewModel;
+using Presentation.PresentationLogic.LearningOutcome;
 using Presentation.PresentationLogic.LearningWorld;
 using Shared.Theme;
 

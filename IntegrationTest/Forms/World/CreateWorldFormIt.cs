@@ -14,6 +14,7 @@ using Presentation.Components.Forms.Buttons;
 using Presentation.Components.Forms.Models;
 using Presentation.Components.Forms.World;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
+using Presentation.PresentationLogic.LearningOutcome;
 using Shared.Theme;
 using TestHelpers;
 
@@ -83,7 +84,7 @@ public sealed class CreateWorldFormIt : MudFormTestFixture<CreateWorldForm, Lear
             Assert.That(FormModel.Authors, Is.EqualTo(""));
             Assert.That(FormModel.Language, Is.EqualTo(""));
             Assert.That(FormModel.Description, Is.EqualTo(""));
-            Assert.That(FormModel.Goals, Is.EqualTo(""));
+            Assert.That(FormModel.LearningOutcomeCollection.LearningOutcomes, Has.Count.EqualTo(0));
             Assert.That(FormModel.EvaluationLink, Is.EqualTo(""));
             Assert.That(FormModel.EnrolmentKey, Is.EqualTo(""));
             Assert.That(FormModel.StoryStart, Is.EqualTo(""));
@@ -119,7 +120,6 @@ public sealed class CreateWorldFormIt : MudFormTestFixture<CreateWorldForm, Lear
             Assert.That(() => FormModel.Authors, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
             Assert.That(() => FormModel.Language, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
             Assert.That(() => FormModel.Description, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
-            Assert.That(() => FormModel.Goals, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
             Assert.That(() => FormModel.EvaluationLink, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
             Assert.That(() => FormModel.EnrolmentKey, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
             Assert.That(() => FormModel.StoryStart, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
@@ -168,7 +168,8 @@ public sealed class CreateWorldFormIt : MudFormTestFixture<CreateWorldForm, Lear
         submitButton.Find("button").Click();
         Assert.That(callbackCalled, Is.False);
         WorkspacePresenter.DidNotReceive().CreateLearningWorld(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
-            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<WorldTheme>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<LearningOutcomeCollectionViewModel>(), Arg.Any<WorldTheme>(),
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
 
         var mudInput = systemUnderTest.FindComponent<MudTextField<string>>();
         var input = mudInput.Find("input");
@@ -181,7 +182,8 @@ public sealed class CreateWorldFormIt : MudFormTestFixture<CreateWorldForm, Lear
         submitButton.Find("button").Click();
         Assert.That(callbackCalled, Is.True);
         WorkspacePresenter.Received().CreateLearningWorld(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
-            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<WorldTheme>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<LearningOutcomeCollectionViewModel>(), Arg.Any<WorldTheme>(),
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
     }
 
     [Test]
@@ -204,14 +206,16 @@ public sealed class CreateWorldFormIt : MudFormTestFixture<CreateWorldForm, Lear
         input.KeyUp(Key.Enter);
         Assert.That(callbackCalled, Is.False);
         WorkspacePresenter.DidNotReceive().CreateLearningWorld(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
-            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<WorldTheme>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<LearningOutcomeCollectionViewModel>(), Arg.Any<WorldTheme>(),
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
 
         input.Change(Expected);
         Assert.That(FormDataContainer.FormModel.Name, Is.EqualTo(Expected));
         input.KeyUp(Key.Enter);
         Assert.That(callbackCalled, Is.True);
         WorkspacePresenter.Received().CreateLearningWorld(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
-            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<WorldTheme>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<LearningOutcomeCollectionViewModel>(), Arg.Any<WorldTheme>(),
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
     }
 
 

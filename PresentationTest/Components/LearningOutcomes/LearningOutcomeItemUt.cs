@@ -5,7 +5,7 @@ using NSubstitute;
 using NUnit.Framework;
 using Presentation.Components.LearningOutcomes;
 using Presentation.PresentationLogic.API;
-using Presentation.PresentationLogic.LearningSpace.LearningOutcomeViewModel;
+using Presentation.PresentationLogic.LearningOutcome;
 using TestHelpers;
 using TestContext = Bunit.TestContext;
 
@@ -105,7 +105,7 @@ public class LearningOutcomeItemUt
 
         _presentationLogic.Received().DeleteLearningOutcome(collection, outcome);
     }
-    
+
     [Test]
     public void DisplayButtonsProperty_WorksAsExpected([Values] bool displayButtons)
     {
@@ -128,7 +128,7 @@ public class LearningOutcomeItemUt
         {
             pBuilder.Add(p => p.LearningOutcomeCollection, collection);
             pBuilder.Add(p => p.LearningOutcome, outcome);
-            if(displayButtons is not null) pBuilder.Add(p => p.DisplayButtons, displayButtons.Value);
+            if (displayButtons is not null) pBuilder.Add(p => p.DisplayButtons, displayButtons.Value);
         });
     }
 }

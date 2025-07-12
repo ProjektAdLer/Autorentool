@@ -7,7 +7,7 @@ namespace PersistEntities.LearningOutcome;
 [DataContract]
 [KnownType(typeof(ManualLearningOutcomePe))]
 [KnownType(typeof(StructuredLearningOutcomePe))]
-public class LearningOutcomeCollectionPe
+public class LearningOutcomeCollectionPe : ILearningOutcomeCollectionPe
 {
     public LearningOutcomeCollectionPe(List<ILearningOutcomePe>? learningOutcomes = null)
     {

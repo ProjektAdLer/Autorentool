@@ -23,10 +23,10 @@ public static class EntityProvider
         return new AuthoringToolWorkspace(worlds ?? new List<ILearningWorld>());
     }
 
-    public static LearningWorld GetLearningWorld(bool unsavedChanges = false, string append = "")
+    public static LearningWorld GetLearningWorld(string name = "a", bool unsavedChanges = false, string append = "")
     {
-        return new LearningWorld("a" + append, "b" + append, "c" + append, "d" + append, "e" + append, "f" + append,
-                WorldTheme.CampusAschaffenburg,
+        return new LearningWorld(name + append, "b" + append, "c" + append, "d" + append, "e" + append,
+                GetLearningOutcomeCollection(unsavedChanges: unsavedChanges), WorldTheme.CampusAschaffenburg,
                 "g" + append)
             { UnsavedChanges = unsavedChanges };
     }
@@ -96,9 +96,9 @@ public static class EntityProvider
             positionY: positionY) { UnsavedChanges = unsavedChanges };
     }
 
-    public static PathWayCondition GetPathWayCondition()
+    public static PathWayCondition GetPathWayCondition(bool unsavedChanges = false)
     {
-        return new PathWayCondition(ConditionEnum.And);
+        return new PathWayCondition(ConditionEnum.And) { UnsavedChanges = unsavedChanges };
     }
 
     public static LearningPathway GetLearningPathway(IObjectInPathWay? source = null, IObjectInPathWay? target = null)
@@ -114,9 +114,10 @@ public static class EntityProvider
         };
     }
 
-    public static FileContent GetFileContent(string append = "", bool unsavedChanges = false)
+    public static FileContent GetFileContent(string name = "a name", string type = "a type", string append = "",
+        bool unsavedChanges = false)
     {
-        return new FileContent("a name" + append, "a type" + append, "a filepath" + append)
+        return new FileContent(name + append, type + append, "a filepath" + append)
             { UnsavedChanges = unsavedChanges };
     }
 
@@ -127,9 +128,9 @@ public static class EntityProvider
         return new StoryContent(name, unsavedChanges, storyText, npcName, npcMood);
     }
 
-    public static Topic GetTopic(string append = "")
+    public static Topic GetTopic(string append = "", bool unsavedChanges = false)
     {
-        return new Topic("a topic" + append);
+        return new Topic("a topic" + append) { UnsavedChanges = unsavedChanges };
     }
 
     public static LearningWorld GetLearningWorldWithSpace()

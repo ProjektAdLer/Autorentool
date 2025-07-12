@@ -53,7 +53,9 @@ public class CachingMapperUt
             Assert.That(workspaceViewModel.LearningWorlds[0].Authors, Is.EqualTo(worldEntity.Authors));
             Assert.That(workspaceViewModel.LearningWorlds[0].Language, Is.EqualTo(worldEntity.Language));
             Assert.That(workspaceViewModel.LearningWorlds[0].Description, Is.EqualTo(worldEntity.Description));
-            Assert.That(workspaceViewModel.LearningWorlds[0].Goals, Is.EqualTo(worldEntity.Goals));
+            Assert.That(
+                workspaceViewModel.LearningWorlds[0].LearningOutcomeCollection.LearningOutcomes.Select(lo => lo.Id),
+                Is.EqualTo(worldEntity.LearningOutcomeCollection.LearningOutcomes.Select(lo => lo.Id)).AsCollection);
         });
     }
 

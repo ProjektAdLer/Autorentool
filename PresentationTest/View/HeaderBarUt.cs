@@ -1,14 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using Bunit;
 using Bunit.Rendering;
 using Bunit.TestDoubles;
 using ElectronWrapper;
-using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
@@ -18,22 +15,17 @@ using NSubstitute.Core;
 using NSubstitute.ExceptionExtensions;
 using NUnit.Framework;
 using Presentation.Components;
-using Presentation.Components.Culture;
 using Presentation.Components.Dialogues;
 using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningContent;
-using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Action;
-using Presentation.PresentationLogic.LearningElement;
-using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.Mediator;
 using Presentation.PresentationLogic.SelectedViewModels;
 using Presentation.View;
 using Shared;
 using Shared.Exceptions;
-using Shared.Theme;
 using TestHelpers;
 using TestContext = Bunit.TestContext;
 
@@ -125,10 +117,9 @@ public class HeaderBarUt
     // ANF-ID: [AHO22]
     public void ExportButton_Clicked_LMSConnected_PositiveDialogResponse_CallsPresentationLogic()
     {
-        var world = new LearningWorldViewModel("a", "f", "d", "e", "f", "d",WorldTheme.CampusAschaffenburg, "h", "i", "j", "k");
-        var space = new LearningSpaceViewModel("a", "f", SpaceTheme.LearningArea, 1);
-        var element = new LearningElementViewModel("a", ViewModelProvider.GetFileContent(), "s", "e", LearningElementDifficultyEnum.Easy,
-            ElementModel.l_h5p_blackboard_1, points: 1);
+        var world = ViewModelProvider.GetLearningWorld();
+        var space = ViewModelProvider.GetLearningSpace();
+        var element = ViewModelProvider.GetLearningElement(parent: space);
         space.LearningSpaceLayout.LearningElements.Add(0, element);
         world.LearningSpaces.Add(space);
         _selectedViewModelsProvider.LearningWorld.Returns(world);
@@ -136,7 +127,7 @@ public class HeaderBarUt
         _presentationLogic.IsLmsConnected().Returns(true);
         _presentationLogic.GetLmsWorldList().Returns(new List<LmsWorldViewModel>());
         _presentationLogic.GetAllContent().Returns(new List<ILearningContentViewModel>
-            {element.LearningContent });
+            { element.LearningContent });
         var uploadResponseViewModel = new UploadResponseViewModel
         {
             WorldNameInLms = "worldName",
@@ -169,7 +160,7 @@ public class HeaderBarUt
     [Test]
     public void ExportButton_Clicked_LearningWorldIsNotValidForGeneration_ErrorServiceCalled()
     {
-        var world = new LearningWorldViewModel("a", "f", "d", "e", "f", "d",WorldTheme.CampusAschaffenburg, "h", "i", "j", "k");
+        var world = ViewModelProvider.GetLearningWorld();
         _selectedViewModelsProvider.LearningWorld.Returns(world);
         _presentationLogic.ValidateLearningWorldForGeneration(world).Returns(new ValidationResult()
         {
@@ -179,17 +170,16 @@ public class HeaderBarUt
 
         var button = systemUnderTest.FindOrFail("button[title='3DWorld.Generate.Hover']");
         button.Click();
-        _errorService.Received().SetError("Exception.InvalidLearningWorld.Message", 
+        _errorService.Received().SetError("Exception.InvalidLearningWorld.Message",
             "<li>Error 1</li><li>Error 2</li>");
     }
 
     [Test]
     public void ExportButton_Clicked_ConstructBackupThrowsOperationCanceledException_SnackbarWarningAdded()
     {
-        var world = new LearningWorldViewModel("a", "f", "d", "e", "f", "d",WorldTheme.CampusAschaffenburg, "h", "i", "j", "k");
-        var space = new LearningSpaceViewModel("a", "f", SpaceTheme.LearningArea, 1);
-        var element = new LearningElementViewModel("a", ViewModelProvider.GetFileContent(), "s", "e", LearningElementDifficultyEnum.Easy,
-            ElementModel.l_h5p_blackboard_1, points: 1);
+        var world = ViewModelProvider.GetLearningWorld();
+        var space = ViewModelProvider.GetLearningSpace();
+        var element = ViewModelProvider.GetLearningElement(parent: space);
         space.LearningSpaceLayout.LearningElements.Add(0, element);
         world.LearningSpaces.Add(space);
         _selectedViewModelsProvider.LearningWorld.Returns(world);
@@ -217,16 +207,15 @@ public class HeaderBarUt
     [Test]
     public void ExportButton_Clicked_ConstructBackupThrowsGeneratorException_ErrorServiceCalled()
     {
-        var world = new LearningWorldViewModel("a", "f", "d", "e", "f", "d",WorldTheme.CampusAschaffenburg, "h", "i", "j", "k");
-        var space = new LearningSpaceViewModel("a", "f", SpaceTheme.LearningArea, 1);
-        var element = new LearningElementViewModel("a", ViewModelProvider.GetFileContent(), "s", "e", LearningElementDifficultyEnum.Easy,
-            ElementModel.l_h5p_blackboard_1, points: 1);
+        var world = ViewModelProvider.GetLearningWorld();
+        var space = ViewModelProvider.GetLearningSpace();
+        var element = ViewModelProvider.GetLearningElement(parent: space);
         space.LearningSpaceLayout.LearningElements.Add(0, element);
         world.LearningSpaces.Add(space);
         _selectedViewModelsProvider.LearningWorld.Returns(world);
         _presentationLogic.ValidateLearningWorldForGeneration(world).Returns(new ValidationResult());
         _presentationLogic.GetAllContent().Returns(new List<ILearningContentViewModel>
-            {element.LearningContent });
+            { element.LearningContent });
         _presentationLogic.IsLmsConnected().Returns(true);
         _presentationLogic.GetLmsWorldList().Returns(new List<LmsWorldViewModel>());
         _presentationLogic
@@ -309,10 +298,9 @@ public class HeaderBarUt
     // ANF-ID: [AHO22]
     public void ExportButton_Clicked_ExistingWorld_Replace_CallsPresentationLogic()
     {
-        var world = new LearningWorldViewModel("a", "f", "d", "e", "f", "d",WorldTheme.CampusAschaffenburg, "h", "i", "j", "k");
-        var space = new LearningSpaceViewModel("a", "f", SpaceTheme.LearningArea, 1);
-        var element = new LearningElementViewModel("a", ViewModelProvider.GetFileContent(), "s", "e", LearningElementDifficultyEnum.Easy,
-            ElementModel.l_h5p_blackboard_1, points: 1);
+        var world = ViewModelProvider.GetLearningWorld();
+        var space = ViewModelProvider.GetLearningSpace();
+        var element = ViewModelProvider.GetLearningElement(parent: space);
         space.LearningSpaceLayout.LearningElements.Add(0, element);
         world.LearningSpaces.Add(space);
         _selectedViewModelsProvider.LearningWorld.Returns(world);
@@ -327,7 +315,7 @@ public class HeaderBarUt
             .ShowAsync<GenericCancellationConfirmationDialog>(Arg.Any<string>(), Arg.Any<DialogParameters>(),
                 Arg.Any<DialogOptions>())
             .Returns(genericCancellationConfirmationDialogReference);
-        _presentationLogic.GetAllContent().Returns(new List<ILearningContentViewModel>(){element.LearningContent});
+        _presentationLogic.GetAllContent().Returns(new List<ILearningContentViewModel>() { element.LearningContent });
         var replaceCopyLmsWorldDialogReference = Substitute.For<IDialogReference>();
         replaceCopyLmsWorldDialogReference.Result.Returns(DialogResult.Ok(ReplaceCopyLmsWorldDialogResult.Replace));
         _dialogService
@@ -348,10 +336,9 @@ public class HeaderBarUt
     // ANF-ID: [AHO22]
     public void ExportButton_Clicked_ExistingWorld_Copy_CallsPresentationLogic()
     {
-        var world = new LearningWorldViewModel("a", "f", "d", "e", "f", "d",WorldTheme.CampusAschaffenburg, "h", "i", "j", "k");
-        var space = new LearningSpaceViewModel("a", "f", SpaceTheme.LearningArea, 1);
-        var element = new LearningElementViewModel("a", ViewModelProvider.GetLinkContent(), "s", "e", LearningElementDifficultyEnum.Easy,
-            ElementModel.l_h5p_blackboard_1, points: 1);
+        var world = ViewModelProvider.GetLearningWorld();
+        var space = ViewModelProvider.GetLearningSpace();
+        var element = ViewModelProvider.GetLearningElement(parent: space);
         space.LearningSpaceLayout.LearningElements.Add(0, element);
         world.LearningSpaces.Add(space);
         _selectedViewModelsProvider.LearningWorld.Returns(world);
@@ -366,7 +353,7 @@ public class HeaderBarUt
             .ShowAsync<GenericCancellationConfirmationDialog>(Arg.Any<string>(), Arg.Any<DialogParameters>(),
                 Arg.Any<DialogOptions>())
             .Returns(genericCancellationConfirmationDialogReference);
-        _presentationLogic.GetAllContent().Returns(new List<ILearningContentViewModel>(){element.LearningContent });
+        _presentationLogic.GetAllContent().Returns(new List<ILearningContentViewModel>() { element.LearningContent });
         var replaceCopyLmsWorldDialogReference = Substitute.For<IDialogReference>();
         replaceCopyLmsWorldDialogReference.Result.Returns(DialogResult.Ok(ReplaceCopyLmsWorldDialogResult.Copy));
         _dialogService
@@ -386,10 +373,9 @@ public class HeaderBarUt
     [Test]
     public void ExportButton_Clicked_ExistingWorld_CancelReplaceCopyDialog_Aborts()
     {
-        var world = new LearningWorldViewModel("a", "f", "d", "e", "f", "d",WorldTheme.CampusAschaffenburg, "h", "i", "j", "k");
-        var space = new LearningSpaceViewModel("a", "f", SpaceTheme.LearningArea, 1);
-        var element = new LearningElementViewModel("a", null!, "s", "e", LearningElementDifficultyEnum.Easy,
-            ElementModel.l_h5p_blackboard_1, points: 1);
+        var world = ViewModelProvider.GetLearningWorld();
+        var space = ViewModelProvider.GetLearningSpace();
+        var element = ViewModelProvider.GetLearningElement(parent: space);
         space.LearningSpaceLayout.LearningElements.Add(0, element);
         world.LearningSpaces.Add(space);
         _selectedViewModelsProvider.LearningWorld.Returns(world);

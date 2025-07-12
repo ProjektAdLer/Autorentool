@@ -3,9 +3,9 @@ using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 using Presentation.PresentationLogic.LearningContent.Story;
 using Presentation.PresentationLogic.LearningElement;
+using Presentation.PresentationLogic.LearningOutcome;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
-using Presentation.PresentationLogic.LearningSpace.LearningOutcomeViewModel;
 using Presentation.PresentationLogic.Topic;
 using Shared.Theme;
 

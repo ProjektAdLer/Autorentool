@@ -188,7 +188,12 @@ public class CreateAtfUt
         const string authors = "ben and jerry";
         const string language = "german";
         const string description = "very cool element";
-        const string goals = "learn very many things";
+        var manualLearningOutcomeWorld = new ManualLearningOutcomePe("LO1");
+        var structuredLearningOutcomeWorld = new StructuredLearningOutcomePe(TaxonomyLevel.Level1, "LO2", "LO2",
+            "LO2", "LO2", CultureInfo.CurrentCulture);
+        var learningOutcomeCollection = PersistEntityProvider.GetLearningOutcomeCollection([
+            manualLearningOutcomeWorld, structuredLearningOutcomeWorld
+        ]);
         const WorldTheme theme = WorldTheme.CampusAschaffenburg;
         const string evaluationLink = "http://www.projekt-alder.eu";
         const string enrolmentKey = "1234";
@@ -380,7 +385,8 @@ public class CreateAtfUt
         var topics = new List<TopicPe> { topic1, topic2 };
 
 
-        var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals, theme,
+        var learningWorld = new LearningWorldPe(name, shortname, authors, language, description,
+            learningOutcomeCollection, theme,
             evaluationLink, enrolmentKey, storyStart, storyEnd, savePath, learningSpaces, conditions, topics: topics);
 
         var systemUnderTest = new CreateAtf(mockFileSystem, mockLogger);
@@ -409,6 +415,17 @@ public class CreateAtfUt
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.LearningWorldJson.WorldName, Is.EqualTo(learningWorld.Name));
+            Assert.That(systemUnderTest.LearningWorldJson.EvaluationLink, Is.EqualTo(learningWorld.EvaluationLink));
+            Assert.That(systemUnderTest.LearningWorldJson.EnrolmentKey, Is.EqualTo(learningWorld.EnrolmentKey));
+            Assert.That(systemUnderTest.LearningWorldJson.FrameStory.FrameStoryIntro, Is.EqualTo(storyStart));
+            Assert.That(systemUnderTest.LearningWorldJson.FrameStory.FrameStoryOutro, Is.EqualTo(storyEnd));
+            Assert.That(systemUnderTest.LearningWorldJson.WorldUUID, Is.EqualTo(learningWorld.Id.ToString()));
+            Assert.That(systemUnderTest.LearningWorldJson.WorldGoals, Has.Length.EqualTo(2));
+            Assert.That(systemUnderTest.LearningWorldJson.WorldGoals[0],
+                Is.EqualTo(learningWorld.LearningOutcomeCollection.LearningOutcomes[0].GetOutcome()));
+            Assert.That(systemUnderTest.LearningWorldJson.WorldGoals[1],
+                Is.EqualTo(learningWorld.LearningOutcomeCollection.LearningOutcomes[1].GetOutcome()));
+            Assert.That(systemUnderTest.LearningWorldJson.WorldDescription, Is.EqualTo(learningWorld.Description));
             Assert.That(systemUnderTest.LearningWorldJson.Theme, Is.EqualTo(learningWorld.WorldTheme.ToString()));
             Assert.That(systemUnderTest.ListFileContent, Is.EquivalentTo(listFileContent));
             Assert.That(systemUnderTest.LearningWorldJson.Topics.Count, Is.EqualTo(2));
@@ -773,9 +790,6 @@ public class CreateAtfUt
                 Is.EqualTo(ElementModelHelper.GetAtfString(ele7.ElementModel)));
             Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[8]).LearningSpaceParentId,
                 Is.EqualTo(systemUnderTest.LearningWorldJson.Spaces[2].SpaceId));
-
-            Assert.That(systemUnderTest.LearningWorldJson.FrameStory.FrameStoryIntro, Is.EqualTo(storyStart));
-            Assert.That(systemUnderTest.LearningWorldJson.FrameStory.FrameStoryOutro, Is.EqualTo(storyEnd));
         });
         Assert.Multiple(() => { Assert.That(mockFileSystem.FileExists(pathXmlFile), Is.True); });
     }
@@ -794,7 +808,12 @@ public class CreateAtfUt
         const string authors = "ben and jerry";
         const string language = "german";
         const string description = "very cool element";
-        const string goals = "learn very many things";
+        var manualLearningOutcomeWorld = new ManualLearningOutcomePe("LO1");
+        var structuredLearningOutcomeWorld = new StructuredLearningOutcomePe(TaxonomyLevel.Level1, "LO2", "LO2",
+            "LO2", "LO2", CultureInfo.CurrentCulture);
+        var learningOutcomeCollection = PersistEntityProvider.GetLearningOutcomeCollection([
+            manualLearningOutcomeWorld, structuredLearningOutcomeWorld
+        ]);
         const WorldTheme theme = WorldTheme.CampusAschaffenburg;
         const string evaluationLink = "https://www.projekt-alder.eu";
         const string enrolmentKey = "1234";
@@ -823,8 +842,9 @@ public class CreateAtfUt
         };
         var learningSpaces = new List<LearningSpacePe> { space1 };
 
-        var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals, theme,
-            evaluationLink, enrolmentKey, storyStart, storyEnd, savePath, learningSpaces);
+        var learningWorld = new LearningWorldPe(name, shortname, authors, language, description,
+            learningOutcomeCollection, theme, evaluationLink, enrolmentKey, storyStart, storyEnd, savePath,
+            learningSpaces);
 
         var systemUnderTest = new CreateAtf(mockFileSystem, mockLogger);
 
@@ -857,7 +877,12 @@ public class CreateAtfUt
         const string authors = "ben and jerry";
         const string language = "german";
         const string description = "very cool element";
-        const string goals = "learn very many things";
+        var manualLearningOutcomeWorld = new ManualLearningOutcomePe("LO1");
+        var structuredLearningOutcomeWorld = new StructuredLearningOutcomePe(TaxonomyLevel.Level1, "LO2", "LO2",
+            "LO2", "LO2", CultureInfo.CurrentCulture);
+        var learningOutcomeCollection = PersistEntityProvider.GetLearningOutcomeCollection([
+            manualLearningOutcomeWorld, structuredLearningOutcomeWorld
+        ]);
         const WorldTheme theme = WorldTheme.CampusAschaffenburg;
         const string evaluationLink = "https://www.projekt-alder.eu";
         const string enrolmentKey = "1234";
@@ -876,8 +901,9 @@ public class CreateAtfUt
         };
 
         var learningSpaces = new List<LearningSpacePe> { space1 };
-        var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals, theme,
-            evaluationLink, enrolmentKey, storyStart, storyEnd, savePath, learningSpaces);
+        var learningWorld = new LearningWorldPe(name, shortname, authors, language, description,
+            learningOutcomeCollection, theme, evaluationLink, enrolmentKey, storyStart, storyEnd, savePath,
+            learningSpaces);
 
         var systemUnderTest = new CreateAtf(mockFileSystem, mockLogger);
 
@@ -910,7 +936,12 @@ public class CreateAtfUt
         const string authors = "ben and jerry";
         const string language = "german";
         const string description = "very cool element";
-        const string goals = "learn very many things";
+        var manualLearningOutcomeWorld = new ManualLearningOutcomePe("LO1");
+        var structuredLearningOutcomeWorld = new StructuredLearningOutcomePe(TaxonomyLevel.Level1, "LO2", "LO2",
+            "LO2", "LO2", CultureInfo.CurrentCulture);
+        var learningOutcomeCollection = PersistEntityProvider.GetLearningOutcomeCollection([
+            manualLearningOutcomeWorld, structuredLearningOutcomeWorld
+        ]);
         const WorldTheme theme = WorldTheme.CampusAschaffenburg;
         const string evaluationLink = "https://www.projekt-alder.eu";
         const string enrolmentKey = "1234";
@@ -929,8 +960,9 @@ public class CreateAtfUt
         };
 
         var learningSpaces = new List<LearningSpacePe> { space1 };
-        var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals, theme,
-            evaluationLink, enrolmentKey, storyStart, storyEnd, savePath, learningSpaces);
+        var learningWorld = new LearningWorldPe(name, shortname, authors, language, description,
+            learningOutcomeCollection, theme, evaluationLink, enrolmentKey, storyStart, storyEnd, savePath,
+            learningSpaces);
 
         var systemUnderTest = new CreateAtf(mockFileSystem, mockLogger);
 
@@ -953,7 +985,12 @@ public class CreateAtfUt
         const string authors = "ben and jerry";
         const string language = "german";
         const string description = "very cool element";
-        const string goals = "learn very many things";
+        var manualLearningOutcomeWorld = new ManualLearningOutcomePe("LO1");
+        var structuredLearningOutcomeWorld = new StructuredLearningOutcomePe(TaxonomyLevel.Level1, "LO2", "LO2",
+            "LO2", "LO2", CultureInfo.CurrentCulture);
+        var learningOutcomeCollection = PersistEntityProvider.GetLearningOutcomeCollection([
+            manualLearningOutcomeWorld, structuredLearningOutcomeWorld
+        ]);
         const WorldTheme theme = WorldTheme.CampusAschaffenburg;
         const string evaluationLink = "https://www.projekt-alder.eu";
         const string enrolmentKey = "1234";
@@ -980,8 +1017,9 @@ public class CreateAtfUt
         };
 
         var learningSpaces = new List<LearningSpacePe> { space1 };
-        var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals, theme,
-            evaluationLink, enrolmentKey, storyStart, storyEnd, savePath, learningSpaces);
+        var learningWorld = new LearningWorldPe(name, shortname, authors, language, description,
+            learningOutcomeCollection, theme, evaluationLink, enrolmentKey, storyStart, storyEnd, savePath,
+            learningSpaces);
 
         var systemUnderTest = new CreateAtf(mockFileSystem, mockLogger);
 

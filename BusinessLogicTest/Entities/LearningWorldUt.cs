@@ -17,7 +17,7 @@ public class LearningWorldUt
         const string authors = "ben and jerry";
         const string language = "german";
         const string description = "very cool element";
-        const string goals = "learn very many things";
+        var learningOutcomeCollection = EntityProvider.GetLearningOutcomeCollection();
         const WorldTheme theme = WorldTheme.CampusAschaffenburg;
         const string evaluationLink = "eva";
         const string enrolmentKey = "enrolmentkey";
@@ -37,9 +37,11 @@ public class LearningWorldUt
 
         var selectableObjects = new List<ISelectableObjectInWorld> { space1, pathWayCondition, pathWay };
 
-        var systemUnderTest = new LearningWorld(name, shortname, authors, language, description, goals, theme, evaluationLink,
+        var systemUnderTest = new LearningWorld(name, shortname, authors, language, description,
+            learningOutcomeCollection, theme, evaluationLink,
             enrolmentKey, storyStart, storyEnd,
-            savePath: savePath, learningSpaces: learningSpaces, pathWayConditions: pathWayConditions, learningPathways: pathWays, topics: topics);
+            savePath: savePath, learningSpaces: learningSpaces, pathWayConditions: pathWayConditions,
+            learningPathways: pathWays, topics: topics);
 
         Assert.Multiple(() =>
         {
@@ -48,7 +50,8 @@ public class LearningWorldUt
             Assert.That(systemUnderTest.Authors, Is.EqualTo(authors));
             Assert.That(systemUnderTest.Language, Is.EqualTo(language));
             Assert.That(systemUnderTest.Description, Is.EqualTo(description));
-            Assert.That(systemUnderTest.Goals, Is.EqualTo(goals));
+            Assert.That(systemUnderTest.LearningOutcomeCollection, Is.EqualTo(learningOutcomeCollection));
+            Assert.That(systemUnderTest.WorldTheme, Is.EqualTo(theme));
             Assert.That(systemUnderTest.EvaluationLink, Is.EqualTo(evaluationLink));
             Assert.That(systemUnderTest.EnrolmentKey, Is.EqualTo(enrolmentKey));
             Assert.That(systemUnderTest.StoryStart, Is.EqualTo(storyStart));
@@ -71,7 +74,7 @@ public class LearningWorldUt
         const string authors = "ben and jerry";
         const string language = "german";
         const string description = "very cool element";
-        const string goals = "learn very many things";
+        var learningOutcomeCollection = EntityProvider.GetLearningOutcomeCollection();
         const WorldTheme theme = WorldTheme.CampusAschaffenburg;
         const string evaluationLink = "eva";
         const string enrolmentKey = "enrolmentkey";
@@ -87,7 +90,8 @@ public class LearningWorldUt
         var topic1 = new Topic("topic1");
         var topics = new List<Topic> { topic1 };
 
-        var systemUnderTest = new LearningWorld(name, shortname, authors, language, description, goals, theme, evaluationLink,
+        var systemUnderTest = new LearningWorld(name, shortname, authors, language, description,
+            learningOutcomeCollection, theme, evaluationLink,
             enrolmentKey, storyStart, storyEnd,
             savePath, learningSpaces, pathWayConditions, pathWays, topics);
 
@@ -98,7 +102,8 @@ public class LearningWorldUt
         var authorsChanged = "sdfg";
         var languageChanged = "english";
         var descriptionChanged = "changed description";
-        var goalsChanged = "new goals";
+        var learningOutcomeCollectionChanged = EntityProvider.GetLearningOutcomeCollection();
+        var themeChanged = WorldTheme.CampusKempten;
         var evaluationLinkChanged = "new evaluation link";
         var enrolmentKeyChanged = "new enrolment key";
         var storyStartChanged = "new story start";
@@ -116,7 +121,8 @@ public class LearningWorldUt
         systemUnderTest.Authors = authorsChanged;
         systemUnderTest.Language = languageChanged;
         systemUnderTest.Description = descriptionChanged;
-        systemUnderTest.Goals = goalsChanged;
+        systemUnderTest.LearningOutcomeCollection = learningOutcomeCollectionChanged;
+        systemUnderTest.WorldTheme = themeChanged;
         systemUnderTest.EvaluationLink = evaluationLinkChanged;
         systemUnderTest.EnrolmentKey = enrolmentKeyChanged;
         systemUnderTest.StoryStart = storyStartChanged;
@@ -136,7 +142,8 @@ public class LearningWorldUt
             Assert.That(systemUnderTest.Authors, Is.EqualTo(authorsChanged));
             Assert.That(systemUnderTest.Language, Is.EqualTo(languageChanged));
             Assert.That(systemUnderTest.Description, Is.EqualTo(descriptionChanged));
-            Assert.That(systemUnderTest.Goals, Is.EqualTo(goalsChanged));
+            Assert.That(systemUnderTest.LearningOutcomeCollection, Is.EqualTo(learningOutcomeCollectionChanged));
+            Assert.That(systemUnderTest.WorldTheme, Is.EqualTo(themeChanged));
             Assert.That(systemUnderTest.EvaluationLink, Is.EqualTo(evaluationLinkChanged));
             Assert.That(systemUnderTest.EnrolmentKey, Is.EqualTo(enrolmentKeyChanged));
             Assert.That(systemUnderTest.StoryStart, Is.EqualTo(storyStartChanged));
@@ -165,7 +172,8 @@ public class LearningWorldUt
             Assert.That(systemUnderTest.Authors, Is.EqualTo(authors));
             Assert.That(systemUnderTest.Language, Is.EqualTo(language));
             Assert.That(systemUnderTest.Description, Is.EqualTo(description));
-            Assert.That(systemUnderTest.Goals, Is.EqualTo(goals));
+            Assert.That(systemUnderTest.LearningOutcomeCollection, Is.EqualTo(learningOutcomeCollection));
+            Assert.That(systemUnderTest.WorldTheme, Is.EqualTo(theme));
             Assert.That(systemUnderTest.EvaluationLink, Is.EqualTo(evaluationLink));
             Assert.That(systemUnderTest.EnrolmentKey, Is.EqualTo(enrolmentKey));
             Assert.That(systemUnderTest.StoryStart, Is.EqualTo(storyStart));
@@ -190,7 +198,7 @@ public class LearningWorldUt
         const string authors = "ben and jerry";
         const string language = "german";
         const string description = "very cool element";
-        const string goals = "learn very many things";
+        var learningOutcomeCollection = EntityProvider.GetLearningOutcomeCollection();
         const WorldTheme theme = WorldTheme.CampusAschaffenburg;
         const string evaluationLink = "https://";
         const string enrolmentKey = "enrolmentkey";
@@ -200,8 +208,8 @@ public class LearningWorldUt
         var space1 = new LearningSpace("ff", "ff", 5, SpaceTheme.LearningArea);
         var learningSpaces = new List<ILearningSpace> { space1 };
 
-        var systemUnderTest = new LearningWorld(name, shortname, authors, language, description, goals,theme, evaluationLink,
-            enrolmentKey, storyStart, storyEnd,
+        var systemUnderTest = new LearningWorld(name, shortname, authors, language, description,
+            learningOutcomeCollection, theme, evaluationLink, enrolmentKey, storyStart, storyEnd,
             savePath: savePath, learningSpaces: learningSpaces);
 
 

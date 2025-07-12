@@ -1,5 +1,7 @@
+using System;
 using System.Threading.Tasks;
 using Bunit;
+using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningOutcome;
 using Microsoft.Extensions.DependencyInjection;
 using MudBlazor;
@@ -7,7 +9,7 @@ using NSubstitute;
 using NUnit.Framework;
 using Presentation.Components.LearningOutcomes;
 using Presentation.PresentationLogic.API;
-using Presentation.PresentationLogic.LearningSpace.LearningOutcomeViewModel;
+using Presentation.PresentationLogic.LearningOutcome;
 
 namespace IntegrationTest.Dialogues.Outcomes;
 
@@ -30,7 +32,7 @@ public class CreateEditManualLearningOutcomeUt : MudDialogTestFixture<CreateEdit
     {
         var dialogParameters = GetDialogParameters(Collection, Outcome);
 
-        Dialog = await OpenDialogAndGetDialogReferenceAsync(parameters:dialogParameters);
+        Dialog = await OpenDialogAndGetDialogReferenceAsync(parameters: dialogParameters);
     }
 
 
@@ -49,18 +51,21 @@ public class CreateEditManualLearningOutcomeUt : MudDialogTestFixture<CreateEdit
         var mudBtn = DialogProvider.FindComponent<MudButton>();
         var btn = mudBtn.Find("button");
         btn.Click();
-        
+
         PresentationLogic.Received().AddManualLearningOutcome(Arg.Any<LearningOutcomeCollectionViewModel>(), str);
     }
 
     private DialogParameters GetDialogParameters(
-        LearningOutcomeCollectionViewModel? collection = null, ManualLearningOutcome? outcome = null)
+        LearningOutcomeCollectionViewModel? collection = null, ManualLearningOutcome? outcome = null,
+        Type? entityType = null)
     {
         collection ??= new LearningOutcomeCollectionViewModel();
+        entityType ??= typeof(LearningSpace);
         return new DialogParameters<CreateEditManualLearningOutcome>
         {
             { nameof(CreateEditManualLearningOutcome.LearningOutcomeCollection), collection },
-            { nameof(CreateEditManualLearningOutcome.CurrentManualLearningOutcome), outcome }
+            { nameof(CreateEditManualLearningOutcome.CurrentManualLearningOutcome), outcome },
+            { nameof(CreateEditManualLearningOutcome.EntityType), entityType },
         };
     }
 }
