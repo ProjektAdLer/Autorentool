@@ -12,6 +12,7 @@ using Presentation.PresentationLogic.LearningContent.AdaptivityContent;
 using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Action;
 using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Question;
 using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Trigger;
+using Presentation.PresentationLogic.LearningContent.FileContent;
 using Presentation.PresentationLogic.LearningContent.LinkContent;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningPathway;
@@ -422,6 +423,8 @@ public interface IPresentationLogic
     /// <exception cref="HashExistsException">There is already a file with the same hash inside the content folder.</exception>
     Task<ILearningContentViewModel> LoadLearningContentViewModelAsync(string name, Stream stream);
 
+    void EditH5PFileContent(IFileContentViewModel fileContentVm);
+    
     /// <summary>
     /// Creates a Adaptivity Task in the given Adaptivity Content.
     /// </summary>

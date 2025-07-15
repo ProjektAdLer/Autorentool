@@ -9,6 +9,7 @@
 @using BusinessLogic.Entities.LearningContent
 @using BusinessLogic.Entities.LearningContent.FileContent
 @using BusinessLogic.ErrorManagement.DataAccess
+@using DataAccess.API
 @using H5pPlayer.Api
 @using H5pPlayer.BusinessLogic.Api.JavaScript
 @using H5pPlayer.BusinessLogic.Entities
@@ -168,12 +169,9 @@
                                  fileContentVm.IsH5P = true;
                                  switch (h5PPlayerResultTo.Value.ActiveH5pState)
                                  {
-                        
                                      case "Completable": 
-                                         fileContentVm.H5PState = H5PContentState.Completable;
-                                         break;
                                      case "Primitive": 
-                                         fileContentVm.H5PState = H5PContentState.Primitive;
+                                         fileContentVm.H5PState = H5PContentState.Usable;
                                          break;
                                      case "NotUsable": 
                                          fileContentVm.H5PState = H5PContentState.NotUsable;
@@ -182,11 +180,9 @@
                                          fileContentVm.H5PState = H5PContentState.NotValidated;
                                          break;
                                  }
+                                 
+                                 PresentationLogic.EditH5PFileContent(fileContentVm);
                              }
-
-                          
-               
-
                          }
                      }
                  }

@@ -3,6 +3,7 @@ using System.Security.Cryptography;
 using BusinessLogic.ErrorManagement.DataAccess;
 using Microsoft.Extensions.Logging;
 using PersistEntities.LearningContent;
+using Shared;
 using Shared.Configuration;
 using Shared.Extensions;
 
@@ -14,14 +15,18 @@ public class ContentFileHandler : IContentFileHandler
     private readonly IFileSystem _fileSystem;
     private readonly ILogger<ContentFileHandler> _logger;
     private readonly IXmlFileHandler<List<LinkContentPe>> _xmlFileHandlerLink;
+    public IXmlFileHandler<FileContentPe>? XmlFileHandlerFileContent { get; private set; }
 
-    public ContentFileHandler(ILogger<ContentFileHandler> logger, IFileSystem fileSystem,
-        IXmlFileHandler<List<LinkContentPe>> xmlFileHandlerLink)
+    public ContentFileHandler(
+        ILogger<ContentFileHandler> logger,
+        IFileSystem fileSystem,
+        IXmlFileHandler<List<LinkContentPe>> xmlFileHandlerLink,
+        IXmlFileHandler<FileContentPe> xmlFileHandlerFileContent)
     {
         _fileSystem = fileSystem;
         _xmlFileHandlerLink = xmlFileHandlerLink;
+        XmlFileHandlerFileContent = xmlFileHandlerFileContent;
         _logger = logger;
-        //make sure that the folder exists
         AssertContentFilesFolderExists();
         _logger.LogInformation("ContentFilesFolderPath is {Path}", ContentFilesFolderPath);
         AssertAllFilesInContentFilesFolderHaveHash();
@@ -29,21 +34,18 @@ public class ContentFileHandler : IContentFileHandler
 
     public string ContentFilesFolderPath => ApplicationPaths.ContentFolder;
 
-    /// <inheritdoc cref="IContentFileHandler.LoadContentAsync(string)"/>
     public async Task<ILearningContentPe> LoadContentAsync(string filepath)
     {
         var (duplicatePath, hash) = await GetFilePathOfExistingCopyAndHashAsync(filepath);
         return LoadContentAsyncInternal(filepath, duplicatePath, hash);
     }
 
-    /// <inheritdoc cref="IContentFileHandler.LoadContentAsync(string,byte[])"/>
     public async Task<ILearningContentPe> LoadContentAsync(string filepath, byte[] hash)
     {
         var (duplicatePath, _) = await GetFilePathOfExistingCopyAndHashAsync(filepath, hash);
         return LoadContentAsyncInternal(filepath, duplicatePath, hash);
     }
 
-    /// <inheritdoc cref="IContentFileHandler.LoadContentAsync(string,System.IO.Stream)"/>
     public async Task<ILearningContentPe> LoadContentAsync(string name, Stream stream)
     {
         var (duplicatePath, hash) = await GetFilePathOfExistingCopyAndHashAsync(stream);
@@ -63,10 +65,14 @@ public class ContentFileHandler : IContentFileHandler
         _logger.LogInformation("File {FileName} of type {FileType} loaded", fileName, fileType);
         if (duplicatePath == null)
             SaveHashForFileAsync(finalPath, hash);
-        return new FileContentPe(fileName, fileType, finalPath);
+        
+        var fileContentPe = new FileContentPe(fileName, fileType, finalPath);
+        GeneratePersistFileForH5pFileContent(fileContentPe);
+        return fileContentPe;
     }
 
-    /// <inheritdoc cref="IContentFileHandler.SaveLink"/>
+   
+
     public void SaveLink(LinkContentPe linkContent)
     {
         var links = GetAllLinks();
@@ -84,6 +90,8 @@ public class ContentFileHandler : IContentFileHandler
         OverwriteLinksFile(existingLinks);
     }
 
+ 
+
     private static bool AddLinkInternal(LinkContentPe linkContent, ICollection<LinkContentPe> links)
     {
         if (links.Contains(linkContent)) return false;
@@ -91,18 +99,38 @@ public class ContentFileHandler : IContentFileHandler
         links.Add(linkContent);
         return true;
     }
-
-    /// <inheritdoc cref="IContentFileHandler.GetAllContent"/>
+    
+    
     public IEnumerable<ILearningContentPe> GetAllContent()
     {
-        var fileContent = _fileSystem.Directory
+        var learningContents = _fileSystem.Directory
             .EnumerateFiles(ContentFilesFolderPath)
             .Select(ParseFileName)
-            .Where(FilterContent);
-        return fileContent.Union(GetAllLinks());
+            .Where(FilterContent)
+            .ToList(); 
+        return LoadH5PFilesFromXmlPersistence(learningContents);
     }
 
-    /// <inheritdoc cref="IContentFileHandler.RemoveContent"/>
+    private IEnumerable<ILearningContentPe> LoadH5PFilesFromXmlPersistence(List<ILearningContentPe> learningContents)
+    {
+        var updatedContents = new List<ILearningContentPe>();
+        foreach (var file in learningContents)
+        {
+            if (file.Name.Contains(".h5p"))
+            {
+                var h5pContent = file as FileContentPe;
+                var pathToXmlFile = Path.ChangeExtension(h5pContent!.Filepath, ".xml");
+                var fileContentPe =   XmlFileHandlerFileContent!.LoadFromDisk(pathToXmlFile);
+                updatedContents.Add(fileContentPe);
+            }
+            else
+            {
+                updatedContents.Add(file);
+            }
+        }
+        return updatedContents.Union(GetAllLinks());
+    }
+
     public void RemoveContent(ILearningContentPe content)
     {
         switch (content)
@@ -116,6 +144,21 @@ public class ContentFileHandler : IContentFileHandler
             default:
                 throw new ArgumentOutOfRangeException(nameof(content), content, null);
         }
+    }
+    
+  
+    public void EditH5PFileContent(IFileContentPe fileContentPe)
+    {
+        GeneratePersistFileForH5pFileContent(fileContentPe: fileContentPe);
+    }
+    
+    /// <summary>
+    /// Writes fileContent to xml file in ContentFiles-Folder
+    /// Existing files will be overwritten.
+    /// </summary>
+    private void GeneratePersistFileForH5pFileContent(IFileContentPe fileContentPe)
+    {
+            XmlFileHandlerFileContent!.SaveToDisk((fileContentPe as FileContentPe)!, Path.ChangeExtension(fileContentPe.Filepath, ".xml"));
     }
 
     private ILearningContentPe LoadContentAsyncInternal(string filepath, string? duplicatePath, byte[] hash)
@@ -136,7 +179,11 @@ public class ContentFileHandler : IContentFileHandler
         _logger.LogInformation("File {FileName} of type {FileType} loaded", fileName, fileType);
         if (duplicatePath == null)
             SaveHashForFileAsync(finalPath, hash);
-        return new FileContentPe(fileName, fileType, finalPath);
+        
+        
+        var fileContentPe = new FileContentPe(fileName, fileType, finalPath);
+        GeneratePersistFileForH5pFileContent(fileContentPe);
+        return fileContentPe;
     }
 
     private void AssertContentFilesFolderExists()
@@ -177,7 +224,7 @@ public class ContentFileHandler : IContentFileHandler
     /// <returns>True if it should be shown, false if not.</returns>
     private static bool FilterContent(ILearningContentPe arg)
     {
-        if (arg is FileContentPe { Type: "hash" or "ds_store" }) return false;
+        if (arg is FileContentPe { Type: "hash" or "ds_store" or "xml" }) return false;
         return !arg.Name.StartsWith(".");
     }
 
@@ -205,7 +252,9 @@ public class ContentFileHandler : IContentFileHandler
         if (!files.Contains(fileContent.Filepath) || !files.Contains($"{fileContent.Filepath}.hash"))
             throw new FileNotFoundException("The corresponding file was not found in the content folder.");
         _fileSystem.File.Delete(fileContent.Filepath);
+        _fileSystem.File.Delete(Path.ChangeExtension(fileContent.Filepath, ".xml"));
         _fileSystem.File.Delete($"{fileContent.Filepath}.hash");
+        _fileSystem.File.Delete(Path.ChangeExtension(fileContent.Filepath, ".xml.hash"));
     }
 
     /// <summary>

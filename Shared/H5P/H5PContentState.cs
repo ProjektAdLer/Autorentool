@@ -2,8 +2,7 @@
 
 public enum H5PContentState
 {
-    NotValidated,
-    NotUsable,
-    Primitive,
-    Completable,
+    NotValidated, // ungeprüft
+    NotUsable, // nicht nutzbar
+    Usable,
 }

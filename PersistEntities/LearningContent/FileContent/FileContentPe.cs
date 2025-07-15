@@ -4,6 +4,7 @@ using Shared.H5P;
 
 namespace PersistEntities.LearningContent;
 
+[DataContract]
 public class FileContentPe : IFileContentPe, IEquatable<FileContentPe>
 {
     public FileContentPe(
