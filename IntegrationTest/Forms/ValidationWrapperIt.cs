@@ -20,10 +20,7 @@ public class ValidationWrapperIt
     public async Task LearningWorld_WithLearningWorldValidator_ValidEntity_IsValidated()
     {
         var localizer = Substitute.For<IStringLocalizer<LearningWorldPropertyValidator>>();
-        localizer["LearningWorldValidator.Name.Duplicate"].Returns(new LocalizedString("en","Already in use."));
-        localizer["LearningWorldValidator.Shortname.Duplicate"].Returns(new LocalizedString("en","Already in use."));
-        localizer["LearningWorldValidator.Name.Valid"].Returns(new LocalizedString("en","Valid name."));
-        localizer["LearningWorldValidator.Shortname.Valid"].Returns(new LocalizedString("en","Valid shortname."));
+        localizer[Arg.Any<string>()].Returns(callInfo => new LocalizedString("en", callInfo.Arg<string>()));
         var namesProvider = Substitute.For<ILearningWorldNamesProvider>();
         var validator = new LearningWorldPropertyValidator(namesProvider, localizer);
         var entity = EntityProvider.GetLearningWorld();
@@ -39,10 +36,7 @@ public class ValidationWrapperIt
     public async Task LearningWorld_WithLearningWorldValidator_InvalidEntity_GivesErrors()
     {
         var localizer = Substitute.For<IStringLocalizer<LearningWorldPropertyValidator>>();
-        localizer["LearningWorldValidator.Name.Duplicate"].Returns(new LocalizedString("en","Already in use."));
-        localizer["LearningWorldValidator.Shortname.Duplicate"].Returns(new LocalizedString("en","Already in use."));
-        localizer["LearningWorldValidator.Name.Valid"].Returns(new LocalizedString("en","Valid name."));
-        localizer["LearningWorldValidator.Shortname.Valid"].Returns(new LocalizedString("en","Valid shortname."));
+        localizer[Arg.Any<string>()].Returns(callInfo => new LocalizedString("en", callInfo.Arg<string>()));
         var namesProvider = Substitute.For<ILearningWorldNamesProvider>();
         namesProvider.WorldNames.Returns(new[] { (new Guid(), "a") });
         namesProvider.WorldShortnames.Returns(new[] { (new Guid(), "b") });
@@ -54,9 +48,9 @@ public class ValidationWrapperIt
         var nameErrors = (await sut.ValidateAsync(entity, "Name")).ToArray();
         var shortnameErrors = (await sut.ValidateAsync(entity, "Shortname")).ToArray();
         Assert.That(nameErrors, Has.Length.EqualTo(1));
-        Assert.That(nameErrors, Does.Contain("Already in use."));
+        Assert.That(nameErrors.First(), Does.Contain(".Name.Duplicate"));
         Assert.That(shortnameErrors, Has.Length.EqualTo(1));
-        Assert.That(shortnameErrors, Does.Contain("Already in use."));
+        Assert.That(shortnameErrors.First(), Does.Contain(".Shortname.Duplicate"));
     }
 
     private ValidationWrapper<T> GetSystemUnderTest<T>(IValidator<T> validator)
