@@ -2,7 +2,6 @@
 using AutoMapper;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent.FileContent;
-using BusinessLogic.Entities.LearningContent.H5P;
 using BusinessLogic.Entities.LearningContent.Story;
 using FluentAssertions;
 using NUnit.Framework;
@@ -41,7 +40,7 @@ public class EntityPersistEntityMappingProfileUt
     private const int RequiredPoints = 3;
     private const double PositionX = 1.0;
     private const double PositionY = 2.0;
-    private const H5PContentState H5PState = H5PContentState.Primitive;
+    private const H5PContentState H5PState = H5PContentState.NotUsable;
     private const bool IsH5P = false;
 
     private const string NewName = "newName";

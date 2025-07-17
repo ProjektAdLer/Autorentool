@@ -7,17 +7,10 @@
 @using System.Diagnostics.CodeAnalysis
 @using System.IO.Compression
 @using BusinessLogic.Entities.LearningContent
-@using BusinessLogic.Entities.LearningContent.FileContent
 @using BusinessLogic.ErrorManagement.DataAccess
-@using DataAccess.API
-@using H5pPlayer.Api
-@using H5pPlayer.BusinessLogic.Api.JavaScript
 @using H5pPlayer.BusinessLogic.Entities
 @using H5pPlayer.BusinessLogic.UseCases.TerminateH5pPlayer
-@using H5pPlayer.DataAccess.FileSystem
-@using MudBlazor.Extensions
 @using Presentation.Components.Dialogues
-@using Presentation.PresentationLogic.LearningContent
 @using Presentation.PresentationLogic.LearningContent.FileContent
 @using Shared.H5P
 @using Shared.Configuration
@@ -93,7 +86,8 @@
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal IErrorService ErrorService { get; set; }
-    [Inject, AllowNull] 
+    
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal  IH5PPlayerDialogViewModel H5PPlayerDialogViewModel { get; set; }
 
 
@@ -169,9 +163,11 @@
                                  fileContentVm.IsH5P = true;
                                  switch (h5PPlayerResultTo.Value.ActiveH5pState)
                                  {
-                                     case "Completable": 
+                                     case "Completable":
+                                         fileContentVm.H5PState = H5PContentState.Completable;
+                                         break;
                                      case "Primitive": 
-                                         fileContentVm.H5PState = H5PContentState.Usable;
+                                         fileContentVm.H5PState = H5PContentState.Primitive;
                                          break;
                                      case "NotUsable": 
                                          fileContentVm.H5PState = H5PContentState.NotUsable;

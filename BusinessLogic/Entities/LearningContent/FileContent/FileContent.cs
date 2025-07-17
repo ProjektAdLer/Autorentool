@@ -12,7 +12,7 @@ public class FileContent : IFileContent
         Filepath = filepath;
         UnsavedChanges = true;
         IsH5P = false;
-        H5PState = H5PContentState.NotUsable;
+        H5PState = H5PContentState.NotValidated;
     }
 
     /// <summary>
@@ -26,7 +26,7 @@ public class FileContent : IFileContent
         Filepath = "";
         UnsavedChanges = false;
         IsH5P = false;
-        H5PState = H5PContentState.NotUsable;
+        H5PState = H5PContentState.NotValidated;
     }
 
     public string Name { get; set; }

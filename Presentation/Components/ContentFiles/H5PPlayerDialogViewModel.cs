@@ -49,24 +49,8 @@ public class H5PPlayerDialogViewModel : IH5PPlayerDialogViewModel
             CloseButton = false,
         };
 
-        var dialog = await DialogService.ShowAsync<PlayerH5p>("H5P-Player", parameters, options);
-        var dialogResult = await dialog.Result;
-
-        try
-        {
-            await JSRuntime.InvokeVoidAsync("terminateH5pStandalone");
-        }
-        catch (JSException ex)
-        {
-            Logger.LogError("JSException: Could not call 'terminateH5pStandalone': {Message}", ex.Message);
-        }
-
-        if (dialogResult is { Canceled: true })
-        {
-            Logger.LogInformation("Dialog wurde abgebrochen.");
-            return null;
-        }
-
+       await DialogService.ShowAsync<PlayerH5p>("H5P-Player", parameters, options);
+  
         return await tcs.Task;
     }
 
