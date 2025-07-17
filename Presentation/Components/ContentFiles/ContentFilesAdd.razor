@@ -88,7 +88,7 @@
     internal IErrorService ErrorService { get; set; }
     
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
-    internal  IH5PPlayerDialogViewModel H5PPlayerDialogViewModel { get; set; }
+    internal  IH5PPlayerPluginManager H5PPlayerPluginManager { get; set; }
 
 
     [CascadingParameter(Name = "RerenderContentContainer")]
@@ -148,7 +148,7 @@
                                      "h5pZipSourcePath: " + h5pZipSourcePath + Environment.NewLine +
                                       "unzippedH5psPath: " + unzippedH5ps.AbsoluteUri );
 
-                     var result = await H5PPlayerDialogViewModel.OpenH5pPlayerDialogAsync(h5pZipSourcePath, unzippedH5ps.AbsoluteUri,H5pDisplayMode.Validate);
+                     var result = await H5PPlayerPluginManager.OpenH5pPlayerDialogAsync(h5pZipSourcePath, unzippedH5ps.AbsoluteUri,H5pDisplayMode.Validate);
                      if (result != null)
                      {
                          Logger.LogTrace("H5P dialog result != null werte werden gesetzt:");

@@ -6,12 +6,12 @@ using MudBlazor;
 
 namespace Presentation.Components.ContentFiles;
 
-public class H5PPlayerDialogViewModel : IH5PPlayerDialogViewModel
+public class H5PPlayerPluginManager : IH5PPlayerPluginManager
 {
 
 
-    public H5PPlayerDialogViewModel(
-        ILogger<H5PPlayerDialogViewModel> logger,
+    public H5PPlayerPluginManager(
+        ILogger<H5PPlayerPluginManager> logger,
         IJSRuntime jSRuntime,
         IDialogService dialogService)
     {
@@ -57,7 +57,7 @@ public class H5PPlayerDialogViewModel : IH5PPlayerDialogViewModel
 
     
     
-    public ILogger<H5PPlayerDialogViewModel> Logger { get;  }
+    public ILogger<H5PPlayerPluginManager> Logger { get;  }
     public IJSRuntime JSRuntime { get; }
     public IDialogService DialogService { get; }
     

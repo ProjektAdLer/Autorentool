@@ -30,12 +30,12 @@ public class ContentFilesAddIt : MudBlazorTestFixture<ContentFilesAdd>
         _dialogService = Substitute.For<IDialogService>();
         _presentationLogic = Substitute.For<IPresentationLogic>();
         _errorService = Substitute.For<IErrorService>();
-        _h5PPlayerDialog = Substitute.For<IH5PPlayerDialogViewModel>();
+        _h5PPlayerPluginManager = Substitute.For<IH5PPlayerPluginManager>();
         
         Context.Services.AddSingleton(_dialogService);
         Context.Services.AddSingleton(_presentationLogic);
         Context.Services.AddSingleton(_errorService);
-        Context.Services.AddSingleton(_h5PPlayerDialog);
+        Context.Services.AddSingleton(_h5PPlayerPluginManager);
         Context.ComponentFactories.AddStub<AddLinkForm>();
         Context.RenderComponent<MudPopoverProvider>();
     }
@@ -43,7 +43,7 @@ public class ContentFilesAddIt : MudBlazorTestFixture<ContentFilesAdd>
     private IDialogService _dialogService = null!;
     private IPresentationLogic _presentationLogic = null!;
     private IErrorService _errorService = null!;
-    private IH5PPlayerDialogViewModel _h5PPlayerDialog = null!;
+    private IH5PPlayerPluginManager _h5PPlayerPluginManager = null!;
 
     [Test]
     public void OnInitialized_DependenciesInjected()

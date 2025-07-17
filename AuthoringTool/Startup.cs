@@ -203,7 +203,7 @@ public class Startup
         services.AddTransient(typeof(IFormDataContainer<,>), typeof(FormDataContainer<,>));
         services.AddSingleton<IElementModelHandler, ElementModelHandler>();
         services.AddScoped<INavigationManagerWrapper, NavigationManagerWrapper>();
-        services.AddScoped<IH5PPlayerDialogViewModel, H5PPlayerDialogViewModel>();
+        services.AddScoped<IH5PPlayerPluginManager, H5PPlayerPluginManager>();
     }
 
     internal static void ConfigureBusinessLogic(IServiceCollection services)
