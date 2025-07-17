@@ -8,12 +8,9 @@
 @using System.IO.Compression
 @using BusinessLogic.Entities.LearningContent
 @using BusinessLogic.ErrorManagement.DataAccess
-@using H5pPlayer.BusinessLogic.Entities
 @using H5pPlayer.BusinessLogic.UseCases.TerminateH5pPlayer
 @using Presentation.Components.Dialogues
 @using Presentation.PresentationLogic.LearningContent.FileContent
-@using Shared.H5P
-@using Shared.Configuration
 @inject IJSRuntime JsRuntime
 @inject NavigationManager Navigation
 @inject ISnackbar Snackbar
@@ -138,50 +135,15 @@
                 await HandleFileAsync(file);
                 
 #if DEBUG
-                 if (fileEnding.ToLowerInvariant()  == ".h5p")
+                 // fileContentVm is written in HandleFileAsync !!!!!!!
+                 var parseH5PFileTO = new ParseH5PFileTO
                  {
-                     var h5pZipSourcePath = Path.Combine(ApplicationPaths.ContentFolder , file.Name);
-                     var baseUri = new Uri(Navigation.BaseUri); 
-                     var unzippedH5ps= new Uri(baseUri, "H5pStandalone/h5p-folder/"); 
-                     
-                     Logger.LogTrace("Start H5P-Player with: " + 
-                                     "h5pZipSourcePath: " + h5pZipSourcePath + Environment.NewLine +
-                                      "unzippedH5psPath: " + unzippedH5ps.AbsoluteUri );
-
-                     var result = await H5PPlayerPluginManager.OpenH5pPlayerDialogAsync(h5pZipSourcePath, unzippedH5ps.AbsoluteUri,H5pDisplayMode.Validate);
-                     if (result != null)
-                     {
-                         Logger.LogTrace("H5P dialog result != null werte werden gesetzt:");
-                         h5PPlayerResultTo = result.Value;
-                         
-                         // in case of H5P Content:
-                         if (h5PPlayerResultTo != null)
-                         {
-                             Logger.LogTrace("H5P: Set ActiveH5pState in LearningContentViewModel ");
-                             if (fileContentVm != null)
-                             {
-                                 fileContentVm.IsH5P = true;
-                                 switch (h5PPlayerResultTo.Value.ActiveH5pState)
-                                 {
-                                     case "Completable":
-                                         fileContentVm.H5PState = H5PContentState.Completable;
-                                         break;
-                                     case "Primitive": 
-                                         fileContentVm.H5PState = H5PContentState.Primitive;
-                                         break;
-                                     case "NotUsable": 
-                                         fileContentVm.H5PState = H5PContentState.NotUsable;
-                                         break;
-                                     case "NotValidated": 
-                                         fileContentVm.H5PState = H5PContentState.NotValidated;
-                                         break;
-                                 }
-                                 
-                                 PresentationLogic.EditH5PFileContent(fileContentVm);
-                             }
-                         }
-                     }
-                 }
+                     FileName = file.Name,
+                     FileEnding = fileEnding,
+                     FileContentVm = fileContentVm!,
+                     NavigationManager = Navigation
+                 };
+                 await H5PPlayerPluginManager.ParseH5PFile(parseH5PFileTO);
                 
 #endif
             }
@@ -199,7 +161,9 @@
         }
 
     }
-   
+
+
+
     private async Task HandleZipFileAsync(IBrowserFile zipFile)
     {
         var zipStream = zipFile.OpenReadStream(1_000_000_000);

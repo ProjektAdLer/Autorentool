@@ -12,6 +12,8 @@ public interface IH5PPlayerPluginManager
         string unzippedH5psPath,
         H5pDisplayMode displayMode);
 
+    Task<H5pPlayerResultTO> ParseH5PFile(ParseH5PFileTO to);
+
     ILogger<H5PPlayerPluginManager> Logger { get; }
     IJSRuntime JSRuntime { get; }
     IDialogService DialogService { get; }
