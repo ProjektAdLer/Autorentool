@@ -650,7 +650,7 @@ public class EntityPersistEntityMappingProfileUt
     {
         var world = new LearningWorld("saveme", "", "", "", "", GetTestableLearningOutcomeCollection(),
             WorldTheme.CampusAschaffenburg);
-        Assert.That(world.UnsavedChanges);
+        Assert.That(world.UnsavedChanges, Is.True);
 
         var systemUnderTest = CreateTestableMapper();
 
@@ -661,6 +661,8 @@ public class EntityPersistEntityMappingProfileUt
             .Excluding(obj => obj.Id)
             .Excluding(obj => obj.UnsavedChanges)
             .Excluding(obj => obj.InternalUnsavedChanges)
+            .Excluding(obj => obj.LearningOutcomeCollection.UnsavedChanges)
+            .Excluding(obj => obj.LearningOutcomeCollection.InternalUnsavedChanges)
         );
         Assert.That(restoredWorld.UnsavedChanges, Is.False);
     }

@@ -99,7 +99,8 @@ public class LearningWorld : ILearningWorld, IOriginator
                LearningSpaces.Any(space => space.UnsavedChanges) ||
                UnplacedLearningElements.Any(element => element.UnsavedChanges) ||
                PathWayConditions.Any(condition => condition.UnsavedChanges) ||
-               Topics.Any(topic => topic.UnsavedChanges);
+               Topics.Any(topic => topic.UnsavedChanges) ||
+               LearningOutcomeCollection.UnsavedChanges;
         set => InternalUnsavedChanges = value;
     }
 
