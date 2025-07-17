@@ -35,7 +35,7 @@ public class FileContent : IFileContent
     public bool Equals(ILearningContent? other)
     {
         if (other is not IFileContent fileContent) return false;
-        return Name == fileContent.Name && Type == fileContent.Type && Filepath == fileContent.Filepath && PrimitiveH5P == fileContent.PrimitiveH5P;
+        return Name == fileContent.Name && Type == fileContent.Type && Filepath == fileContent.Filepath;
     }
 
     public override bool Equals(object? obj)
