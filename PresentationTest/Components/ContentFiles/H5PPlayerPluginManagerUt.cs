@@ -34,9 +34,8 @@ public class H5PPlayerPluginManagerTests
         var fileContentVm = Substitute.For<IFileContentViewModel>();
         var parseTo = CreateParseH5PFileTo(fileContentVm: fileContentVm);
 
-        var result = await _systemUnderTest.ParseH5PFile(parseTo);
+        await _systemUnderTest.ParseH5PFile(parseTo);
 
-        Assert.That(result.ActiveH5pState, Is.EqualTo("Completable"));
         fileContentVm.Received(1).IsH5P = true;
         fileContentVm.Received(1).H5PState = H5PContentState.Completable;
         _presentationLogic.Received(1).EditH5PFileContent(fileContentVm);
@@ -48,13 +47,12 @@ public class H5PPlayerPluginManagerTests
     }
 
     [Test]
-    public async Task ParseH5PFile_WithNonH5pFile_ShouldReturnDefaultAndNotCallDialog()
+    public async Task ParseH5PFile_WithNonH5pFile_ShouldNotCallDialog()
     {
         var parseTo = CreateParseH5PFileTo(".pdf");
 
-        var result = await _systemUnderTest.ParseH5PFile(parseTo);
+        await _systemUnderTest.ParseH5PFile(parseTo);
 
-        Assert.That(result.ActiveH5pState, Is.Null.Or.Empty);
         await _dialogService.DidNotReceive()
             .ShowAsync<PlayerH5p>(Arg.Any<string>(), Arg.Any<DialogParameters>(), Arg.Any<DialogOptions>());
     }
