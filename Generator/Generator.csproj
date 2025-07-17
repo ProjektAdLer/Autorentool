@@ -12,8 +12,8 @@
       <PackageReference Include="AutoMapper" Version="11.0.1" />
       <PackageReference Include="JetBrains.Annotations" Version="2024.3.0" />
       <PackageReference Include="SharpZipLib" Version="1.4.2" />
-        <PackageReference Include="System.Text.Json" Version="9.0.2" />
-        <PackageReference Include="TestableIO.System.IO.Abstractions.Wrappers" Version="21.3.1" />
+        <PackageReference Include="System.Text.Json" Version="9.0.6" />
+        <PackageReference Include="TestableIO.System.IO.Abstractions.Wrappers" Version="22.0.14" />
     </ItemGroup>
 
     <ItemGroup>

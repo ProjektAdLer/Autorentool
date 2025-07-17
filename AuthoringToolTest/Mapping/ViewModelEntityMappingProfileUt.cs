@@ -45,6 +45,8 @@ public class ViewModelEntityMappingProfileUt
     private const string SavePath = "foo/bar/baz.txt";
     private const string Type = "type";
     private const string Filepath = "bar/baz/buz.txt";
+    private const string NameNpc = "nameNpc";
+    private const NpcMood MoodNpc = NpcMood.Welcome;
     private static readonly List<string> ConfigureStoryText = new() { "storyText1", "storyText2", "storyText3" };
     private const LearningElementDifficultyEnum Difficulty = LearningElementDifficultyEnum.Easy;
     private const ElementModel SelectedElementModel = ElementModel.l_h5p_slotmachine_1;
@@ -70,6 +72,8 @@ public class ViewModelEntityMappingProfileUt
     private const string NewSavePath = "faa/bur/buz.txt";
     private const string NewType = "newType";
     private const string NewFilepath = "/foo/bar/baz.txt";
+    private const string NewNameNpc = "newNameNpc";
+    private const NpcMood NewMoodNpc = NpcMood.Tired;
     private static readonly List<string> ConfigureNewStoryText = new() { "NewStoryText1", "NewStoryText2", "NewStoryText3" };
     private const LearningElementDifficultyEnum NewDifficulty = LearningElementDifficultyEnum.Medium;
     private const ElementModel NewSelectedElementModel = ElementModel.l_h5p_blackboard_1;
@@ -146,8 +150,6 @@ public class ViewModelEntityMappingProfileUt
         TestElement(source, null, true);
         Assert.That(destination.Id, Is.EqualTo(source.Id));
     }
-
-
 
     [Test]
     public void MapLearningSpaceAndLearningSpaceViewModel_WithoutLearningElement_TestMappingIsValid()
@@ -446,7 +448,7 @@ public class ViewModelEntityMappingProfileUt
                 Description, Goals, Difficulty, ElementModel.l_h5p_slotmachine_1);
         var storyElementVm1 =
             new LearningElementViewModel("sel1", new StoryContentViewModel("foo", ConfigureStoryText), Description, Goals,
-                Difficulty, ElementModel.a_npc_defaultnpc);
+                Difficulty, ElementModel.a_npc_defaultdark_female);
 
         var space = new LearningSpaceViewModel("space", Description, SpaceTheme.LearningArea, RequiredPoints,
                 ViewModelProvider.GetLearningOutcomeCollection(),
@@ -686,7 +688,7 @@ public class ViewModelEntityMappingProfileUt
 
     private static StoryContent GetTestableStoryContent()
     {
-        return new StoryContent(Name, false, ConfigureStoryText);
+        return new StoryContent(Name, false, ConfigureStoryText, NameNpc, MoodNpc);
     }
 
 
@@ -700,7 +702,7 @@ public class ViewModelEntityMappingProfileUt
 
     private static StoryContentViewModel GetTestableNewStoryContentViewModel()
     {
-        return new StoryContentViewModel(NewName, ConfigureNewStoryText);
+        return new StoryContentViewModel(NewName, ConfigureNewStoryText, NewNameNpc, NewMoodNpc);
     }
 
     private static LearningElement GetTestableElementWithParent(LearningSpace parent)
@@ -714,7 +716,7 @@ public class ViewModelEntityMappingProfileUt
     private static LearningElement GetTestableStoryElementWithParent(LearningSpace parent)
     {
         return new LearningElement(Name, GetTestableStoryContent(), Description, Goals, Difficulty,
-            SelectedElementModel, parent, Workload, Points, PositionX, PositionY);
+            SelectedElementModel, parent, workload: Workload, points: Points, positionX: PositionX, positionY: PositionY);
     }
 
     private static LearningElementViewModel GetTestableElementViewModelWithParent(LearningSpaceViewModel parent)
@@ -727,7 +729,7 @@ public class ViewModelEntityMappingProfileUt
     private static LearningElementViewModel GetTestableStoryElementViewModelWithParent(LearningSpaceViewModel parent)
     {
         return new LearningElementViewModel(NewName, GetTestableNewStoryContentViewModel(), NewDescription, NewGoals,
-            NewDifficulty, NewSelectedElementModel, parent, NewWorkload, NewPoints, NewPositionX, NewPositionY);
+            NewDifficulty, NewSelectedElementModel, parent, workload: NewWorkload, points: NewPoints, positionX: NewPositionX, positionY: NewPositionY);
     }
 
     private static LearningSpace GetTestableSpace()
@@ -942,6 +944,8 @@ public class ViewModelEntityMappingProfileUt
                 {
                     Assert.That(content.Name, Is.EqualTo(useNewFields ? NewName : Name));
                     Assert.That(content.StoryText, Is.EqualTo(useNewFields ? ConfigureNewStoryText : ConfigureStoryText));
+                    Assert.That(content.NpcName, Is.EqualTo(useNewFields ? NewNameNpc : NameNpc));
+                    Assert.That(content.NpcMood, Is.EqualTo(useNewFields ? NewMoodNpc : MoodNpc));
                 });
                 break;
             case StoryContentViewModel content:
@@ -949,6 +953,8 @@ public class ViewModelEntityMappingProfileUt
                 {
                     Assert.That(content.Name, Is.EqualTo(useNewFields ? NewName : Name));
                     Assert.That(content.StoryText, Is.EqualTo(useNewFields ? ConfigureNewStoryText : ConfigureStoryText));
+                    Assert.That(content.NpcName, Is.EqualTo(useNewFields ? NewNameNpc : NameNpc));
+                    Assert.That(content.NpcMood, Is.EqualTo(useNewFields ? NewMoodNpc : MoodNpc));
                 });
                 break;
             default:

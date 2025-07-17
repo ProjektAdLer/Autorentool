@@ -24,18 +24,18 @@
         </value>
     </resheader>
     <data name="OverView.Workload" xml:space="preserve">
-        <value>Arbeitsaufwand: </value>
-    </data>
-    <data name="OverView.Points" xml:space="preserve">
-        <value>Gesamtpunkte:</value>
+        <value>Dauer:</value>
     </data>
     <data name="OverView.Workload.TimeScale" xml:space="preserve">
         <value> min</value>
     </data>
-    <data name="LearningWorldTreeView.Points.Summary" xml:space="preserve">
-        <value> Pkt.</value>
-    </data>
     <data name="OverView.Title" xml:space="preserve">
         <value>Lernwelt-Übersicht - Hierarchie</value>
+    </data>
+    <data name="LearningWorldTreeView.Condition.Text" xml:space="preserve">
+        <value>Abschlussbedingung (Gesamt):</value>
+    </data>
+    <data name="LearningWorldTreeView.Condition.Elements" xml:space="preserve">
+        <value>Elem.</value>
     </data>
 </root>

@@ -193,7 +193,7 @@ public class ReadAtf : IReadAtf
             documentRootJson.World.WorldDescription, "",
             "World Attributes", "label", 0,
             0, "", documentRootJson.World.WorldDescription,
-            documentRootJson.World.WorldGoals);
+            documentRootJson.World.WorldGoals, 0, null);
 
         _listAllElementsOrdered.Add(_worldAttributes);
     }
@@ -227,8 +227,8 @@ public class ReadAtf : IReadAtf
     /// </summary>
     private void GetAdaptivityElements(IDocumentRootJson documentRootJson)
     {
-        foreach (var element in documentRootJson.World.Elements.Where(
-                     element => element.ElementFileType is "adaptivity"))
+        foreach (var element in
+                 documentRootJson.World.Elements.Where(element => element.ElementFileType is "adaptivity"))
         {
             _listAdaptivityElements.Add((IAdaptivityElementJson)element);
         }

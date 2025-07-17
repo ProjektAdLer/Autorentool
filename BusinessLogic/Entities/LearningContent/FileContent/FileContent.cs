@@ -39,7 +39,7 @@ public class FileContent : IFileContent
     public bool Equals(ILearningContent? other)
     {
         if (other is not IFileContent fileContent) return false;
-        return Name == fileContent.Name && Type == fileContent.Type && Filepath == fileContent.Filepath && IsH5P == fileContent.IsH5P;
+        return Name == fileContent.Name && Type == fileContent.Type && Filepath == fileContent.Filepath;
     }
 
     public override bool Equals(object? obj)
@@ -66,6 +66,4 @@ public class FileContent : IFileContent
     {
         return !Equals(left, right);
     }
-
-
 }

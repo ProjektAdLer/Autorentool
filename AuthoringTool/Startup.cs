@@ -333,6 +333,7 @@ public class Startup
         ThemeHelper<WorldTheme>.Initialize(app.ApplicationServices.GetRequiredService<IStringLocalizer<WorldTheme>>());
         LearningElementDifficultyHelper.Initialize(app.ApplicationServices
             .GetRequiredService<IStringLocalizer<LearningElementDifficultyEnum>>());
+        NpcMoodHelper.Initialize(app.ApplicationServices.GetRequiredService<IStringLocalizer<NpcMood>>());
 
         app.UseRouting();
 

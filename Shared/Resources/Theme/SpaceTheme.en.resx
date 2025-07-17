@@ -88,7 +88,7 @@
         <value>Break room</value>
     </data>
     <data name="Enum.SpaceTheme.SocialArea.Suburb" xml:space="preserve">
-        <value>Neighbourhood meeting place</value>
+        <value>Community center</value>
     </data>
     <data name="Enum.SpaceTheme.TechnicalArea.CampusAschaffenburg" xml:space="preserve">
         <value>Computer centre</value>
@@ -100,7 +100,7 @@
         <value>IT department</value>
     </data>
     <data name="Enum.SpaceTheme.TechnicalArea.Suburb" xml:space="preserve">
-        <value>Server room in the town hall</value>
+        <value>IT room at city hall</value>
     </data>
     <data name="Enum.SpaceTheme.Presentation" xml:space="preserve">
         <value>Presentation</value>

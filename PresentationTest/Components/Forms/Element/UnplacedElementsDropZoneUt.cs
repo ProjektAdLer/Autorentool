@@ -128,7 +128,7 @@ public class UnplacedElementsDropZoneUt
         var mudMenus = _testContext.Render((RenderFragment)mudMenu[0].Instance.Parameters["ChildContent"])
             .FindComponentsOrFail<Stub<MudMenu>>().ToList();
 
-        Assert.That(mudMenus, Has.Count.EqualTo(3));
+        Assert.That(mudMenus, Has.Count.EqualTo(4));
 
         // Element Type Filter
         var elementTypeFilterHeader = (string)mudMenus[0].Instance.Parameters["Label"];
@@ -200,6 +200,26 @@ public class UnplacedElementsDropZoneUt
             Assert.That(
                 _testContext.Render((RenderFragment)difficultyFilterEntries[4].Instance.Parameters["ChildContent"])
                     .Markup, Is.EqualTo("Enum.LearningElementDifficultyEnum.Hard"));
+        });
+
+        // RequiredFilter
+        var requiredFilterHeader = (string)mudMenus[3].Instance.Parameters["Label"];
+        var requiredFilterChildContent =
+            _testContext.Render((RenderFragment)mudMenus[3].Instance.Parameters["ChildContent"]);
+        var requiredFilterEntries = requiredFilterChildContent.FindComponentsOrFail<Stub<MudMenuItem>>().ToList();
+        Assert.Multiple(() =>
+        {
+            Assert.That(requiredFilterHeader, Is.EqualTo("UnplacedElementsDropZone.Filter.Required"));
+            Assert.That(requiredFilterEntries, Has.Count.EqualTo(3));
+            Assert.That(
+                _testContext.Render((RenderFragment)requiredFilterEntries[0].Instance.Parameters["ChildContent"])
+                    .Markup, Is.EqualTo("UnplacedElementsDropZone.Filter.All"));
+            Assert.That(
+                _testContext.Render((RenderFragment)requiredFilterEntries[1].Instance.Parameters["ChildContent"])
+                    .Markup, Is.EqualTo("UnplacedElementsDropZone.Filter.RequiredOnly"));
+            Assert.That(
+                _testContext.Render((RenderFragment)requiredFilterEntries[2].Instance.Parameters["ChildContent"])
+                    .Markup, Is.EqualTo("UnplacedElementsDropZone.Filter.OptionalOnly"));
         });
 
         // Search Bar
@@ -519,15 +539,95 @@ public class UnplacedElementsDropZoneUt
         Assert.That(dragDropLearningElements, Has.Count.EqualTo(11));
     }
 
+    [Test]
+    [TestCase(new[] { "All" }, 11)]
+    [TestCase(new[] { "RequiredOnly" }, 5)]
+    [TestCase(new[] { "OptionalOnly" }, 6)]
+    // ANF-ID: [ASN0030]
+    public async Task Filter_IsRequired_ShowFilteredItems(string[] requiredFilters, int expectedCount)
+    {
+        var items = GetTestItems();
+        var systemUnderTest = GetRenderedComponent(items: items);
+
+        var filterMenu = systemUnderTest.FindComponentOrFail<Stub<MudMenu>>();
+        var filterDropDowns = _testContext.Render((RenderFragment)filterMenu.Instance.Parameters["ChildContent"])
+            .FindComponentsOrFail<Stub<MudMenu>>().ToList();
+
+        var requiredFilterChildContent =
+            _testContext.Render((RenderFragment)filterDropDowns[3].Instance.Parameters["ChildContent"]);
+
+        foreach (var filterValue in requiredFilters)
+        {
+            var currentOnClick = (EventCallback<MouseEventArgs>)(requiredFilterChildContent
+                .FindComponents<Stub<MudMenuItem>>().First(item =>
+                    _testContext.Render((RenderFragment)item.Instance.Parameters["ChildContent"]).Markup
+                        .Contains(filterValue))).Instance.Parameters["OnClick"];
+            await systemUnderTest.InvokeAsync(() => currentOnClick.InvokeAsync());
+        }
+
+        var mudDropZone = systemUnderTest.FindComponentOrFail<MudDropZone<ILearningElementViewModel>>();
+        var dragDropLearningElements = mudDropZone.FindComponents<Stub<DragDropLearningElement>>().ToList();
+
+        Assert.That(dragDropLearningElements, Has.Count.EqualTo(expectedCount));
+    }
+
+    [Test]
+    // ANF-ID: [ASN0030]
+    public async Task Filter_IsRequired_AddAndRemoveFilters()
+    {
+        var items = GetTestItems();
+        var systemUnderTest = GetRenderedComponent(items: items);
+
+        var filterMenu = systemUnderTest.FindComponentOrFail<Stub<MudMenu>>();
+        var filterDropDowns = _testContext.Render((RenderFragment)filterMenu.Instance.Parameters["ChildContent"])
+            .FindComponentsOrFail<Stub<MudMenu>>().ToList();
+
+        var requiredFilterChildContent =
+            _testContext.Render((RenderFragment)filterDropDowns[3].Instance.Parameters["ChildContent"]);
+
+        var mudDropZone = systemUnderTest.FindComponentOrFail<MudDropZone<ILearningElementViewModel>>();
+
+        var requiredOnlyOnClick = (EventCallback<MouseEventArgs>)(requiredFilterChildContent
+            .FindComponents<Stub<MudMenuItem>>().First(item =>
+                _testContext.Render((RenderFragment)item.Instance.Parameters["ChildContent"]).Markup
+                    .Contains("RequiredOnly"))).Instance.Parameters["OnClick"];
+
+        var optionalOnlyOnClick = (EventCallback<MouseEventArgs>)(requiredFilterChildContent
+            .FindComponents<Stub<MudMenuItem>>().First(item =>
+                _testContext.Render((RenderFragment)item.Instance.Parameters["ChildContent"]).Markup
+                    .Contains("OptionalOnly"))).Instance.Parameters["OnClick"];
+
+        //Required
+        await systemUnderTest.InvokeAsync(() => requiredOnlyOnClick.InvokeAsync());
+        var dragDropLearningElements = mudDropZone.FindComponents<Stub<DragDropLearningElement>>().ToList();
+        Assert.That(dragDropLearningElements, Has.Count.EqualTo(5));
+
+        //Required + Optional
+        await systemUnderTest.InvokeAsync(() => optionalOnlyOnClick.InvokeAsync());
+        dragDropLearningElements = mudDropZone.FindComponents<Stub<DragDropLearningElement>>().ToList();
+        Assert.That(dragDropLearningElements, Has.Count.EqualTo(11));
+
+        //Optional
+        await systemUnderTest.InvokeAsync(() => requiredOnlyOnClick.InvokeAsync());
+        dragDropLearningElements = mudDropZone.FindComponents<Stub<DragDropLearningElement>>().ToList();
+        Assert.That(dragDropLearningElements, Has.Count.EqualTo(6));
+
+        //No Filter
+        await systemUnderTest.InvokeAsync(() => optionalOnlyOnClick.InvokeAsync());
+        dragDropLearningElements = mudDropZone.FindComponents<Stub<DragDropLearningElement>>().ToList();
+        Assert.That(dragDropLearningElements, Has.Count.EqualTo(11));
+    }
+
 
     private static ILearningElementViewModel CreateSubstituteForLearningElement(string name,
         ILearningContentViewModel learningContent,
-        LearningElementDifficultyEnum difficulty = LearningElementDifficultyEnum.None)
+        LearningElementDifficultyEnum difficulty = LearningElementDifficultyEnum.None, bool required = false)
     {
         var item = Substitute.For<ILearningElementViewModel>();
         item.Name.Returns(name);
         item.LearningContent = learningContent;
         item.Difficulty = difficulty;
+        item.IsRequired = required;
 
         return item;
     }
@@ -537,23 +637,23 @@ public class UnplacedElementsDropZoneUt
         return new List<ILearningElementViewModel>
         {
             CreateSubstituteForLearningElement("storyItem1", ViewModelProvider.GetStoryContent(),
-                LearningElementDifficultyEnum.Easy),
+                LearningElementDifficultyEnum.Easy, true),
             CreateSubstituteForLearningElement("storyItem2", ViewModelProvider.GetStoryContent(),
                 LearningElementDifficultyEnum.Easy),
             CreateSubstituteForLearningElement("adaptivityItem1", ViewModelProvider.GetAdaptivityContent(),
-                LearningElementDifficultyEnum.Medium),
+                LearningElementDifficultyEnum.Medium, true),
             CreateSubstituteForLearningElement("adaptivityItem2", ViewModelProvider.GetAdaptivityContent()),
             CreateSubstituteForLearningElement("linkItem1", ViewModelProvider.GetLinkContent(),
                 LearningElementDifficultyEnum.Easy),
             CreateSubstituteForLearningElement("linkItem2", ViewModelProvider.GetLinkContent(),
-                LearningElementDifficultyEnum.Medium),
+                LearningElementDifficultyEnum.Medium, true),
             CreateSubstituteForLearningElement("item4", ViewModelProvider.GetFileContent(type: "txt"),
                 LearningElementDifficultyEnum.Hard),
             CreateSubstituteForLearningElement("item5", ViewModelProvider.GetFileContent(type: "pdf")),
             CreateSubstituteForLearningElement("item6", ViewModelProvider.GetFileContent(type: "jpg"),
-                LearningElementDifficultyEnum.Easy),
+                LearningElementDifficultyEnum.Easy, true),
             CreateSubstituteForLearningElement("item7", ViewModelProvider.GetFileContent(type: "bmp"),
-                LearningElementDifficultyEnum.Medium),
+                LearningElementDifficultyEnum.Medium, true),
             CreateSubstituteForLearningElement("item8", ViewModelProvider.GetFileContent(type: "h5p"),
                 LearningElementDifficultyEnum.Hard)
         };

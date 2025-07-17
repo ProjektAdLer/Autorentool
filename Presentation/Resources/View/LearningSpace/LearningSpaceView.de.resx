@@ -29,7 +29,7 @@
         <value>Abschlussbedingung:</value>
     </data>
     <data name="LearningSpace.SpaceWorkload.Text" xml:space="preserve">
-        <value>Arbeitsaufwand: </value>
+        <value>Dauer: </value>
     </data>
     <data name="LearningSpace.ElementName.Text" xml:space="preserve">
         <value>Ausgewähltes Lernelement:</value>
@@ -58,9 +58,6 @@
     <data name="LearningSpace.SpaceWorkload.Text.Additional" xml:space="preserve">
         <value> min</value>
     </data>
-    <data name="LearningSpace.SpacePoints.Text.Points.Suffix" xml:space="preserve">
-        <value>Pkt.</value>
-    </data>
     <data name="LearningSpace.SpaceGoals.Overview" xml:space="preserve">
         <value>Lernziele dieses Lernraums</value>
     </data>
@@ -72,5 +69,8 @@
     </data>
     <data name="LearningSpaceView.NoOutcome" xml:space="preserve">
         <value>Zu diesem Lernraum existieren aktuell noch keine Lernziele.</value>
+    </data>
+    <data name="LearningSpace.Condition.Text" xml:space="preserve">
+        <value>Elem.</value>
     </data>
 </root>

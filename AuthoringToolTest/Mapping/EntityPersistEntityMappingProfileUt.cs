@@ -32,6 +32,8 @@ public class EntityPersistEntityMappingProfileUt
     private const string SavePath = "foo/bar/baz.txt";
     private const string Type = "type";
     private const string Filepath = "bar/baz/buz.txt";
+    private const string NameNpc = "npcName";
+    private const NpcMood MoodNpc = NpcMood.Welcome;
     private static readonly List<string> ConfigureStoryText = new() { "storyText1", "storyText2", "storyText3" };
     private const LearningElementDifficultyEnum Difficulty = LearningElementDifficultyEnum.Easy;
     private const ElementModel SelectedElementModel = ElementModel.l_h5p_slotmachine_1;
@@ -55,10 +57,9 @@ public class EntityPersistEntityMappingProfileUt
     private const string NewSavePath = "faa/bur/buz.txt";
     private const string NewType = "newType";
     private const string NewFilepath = "/foo/bar/baz.txt";
-
-    private static readonly List<string> ConfigureNewStoryText =
-        new() { "NewStoryText1", "NewStoryText2", "NewStoryText3" };
-
+    private const string NewNameNpc = "newNpcName";
+    private const NpcMood NewMoodNpc = NpcMood.Shocked;
+    private static readonly List<string> ConfigureNewStoryText = new() { "NewStoryText1", "NewStoryText2", "NewStoryText3" };
     private const LearningElementDifficultyEnum NewDifficulty = LearningElementDifficultyEnum.Medium;
     private const ElementModel NewSelectedElementModel = ElementModel.l_h5p_blackboard_1;
     private const int NewWorkload = 2;
@@ -285,9 +286,8 @@ public class EntityPersistEntityMappingProfileUt
     {
         var systemUnderTest = CreateTestableMapper();
         var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals, WorldThemeVar,
-            EvaluationLink,
-            EnrolmentKey, savePath: SavePath);
-        source.UnplacedLearningElements.Add(new LearningElement(Name, CreateFileContent(), Description, Goals,
+            EvaluationLink, EnrolmentKey, savePath: SavePath);
+        source.UnplacedLearningElements.Add(new LearningElement(Name, GetTestableContent(), Description, Goals,
             Difficulty, SelectedElementModel, null, Workload, Points, PositionX, PositionY));
         var destination = new LearningWorldPe("", "", "", "", "", "", default, "", "", "", "", "");
 
@@ -377,10 +377,10 @@ public class EntityPersistEntityMappingProfileUt
     {
         var element1 =
             new LearningElement(Name, new FileContent(Name, Type, Filepath), Description, Goals, Difficulty,
-                ElementModel.l_h5p_slotmachine_1, null, Workload, Points, PositionX, PositionY);
+                ElementModel.l_h5p_slotmachine_1, null, workload: Workload, points: Points, positionX: PositionX, positionY: PositionY);
         var storyElement1 =
-            new LearningElement(Name, new StoryContent(Name, false, ConfigureStoryText), Description, Goals, Difficulty,
-                ElementModel.l_h5p_slotmachine_1, null, Workload, Points, PositionX, PositionY);
+            new LearningElement(Name, new StoryContent(Name, false, ConfigureStoryText, NameNpc, MoodNpc), Description, Goals, Difficulty,
+                ElementModel.l_h5p_slotmachine_1, null, workload: Workload, points: Points, positionX: PositionX, positionY: PositionY);
 
         var space = new LearningSpace(Name, Description, RequiredPoints, SpaceTheme.LearningArea,
             EntityProvider.GetLearningOutcomeCollection(),
@@ -446,7 +446,7 @@ public class EntityPersistEntityMappingProfileUt
                     {
                         {
                             0,
-                            new LearningElementPe(NewName, new StoryContentPe(NewName, false, ConfigureNewStoryText),
+                            new LearningElementPe(NewName, new StoryContentPe(NewName, false, ConfigureNewStoryText, NewNameNpc, NewMoodNpc),
                                 NewDescription, NewGoals,
                                 NewDifficulty, NewSelectedElementModel, NewWorkload, NewPoints)
                         }
@@ -664,7 +664,7 @@ public class EntityPersistEntityMappingProfileUt
 
     private static StoryContent GetTestableStoryContent()
     {
-        return new StoryContent(Name, false, ConfigureStoryText);
+        return new StoryContent(Name, false, ConfigureStoryText, NameNpc, MoodNpc);
     }
 
     private static FileContentPe GetTestableNewContentPersistEntity()
@@ -677,15 +677,15 @@ public class EntityPersistEntityMappingProfileUt
 
     private static StoryContentPe GetTestableNewStoryContentPersistEntity()
     {
-        return new StoryContentPe(NewName, false, ConfigureNewStoryText);
+        return new StoryContentPe(NewName, false, ConfigureNewStoryText, NewNameNpc, NewMoodNpc);
     }
 
     private static LearningElement GetTestableElementWithParent(LearningSpace parent)
     {
-        return new LearningElement(Name, CreateFileContent(), Description, Goals, Difficulty, SelectedElementModel,
-            parent, Workload,
-            Points, PositionX,
-            PositionY);
+        return new LearningElement(Name, GetTestableContent(), Description, Goals, Difficulty, SelectedElementModel,
+            parent, workload: Workload,
+            points: Points, positionX: PositionX,
+            positionY: PositionY);
     }
 
     private static LearningElement GetTestableStoryElementWithParent(LearningSpace parent)
@@ -929,6 +929,8 @@ public class EntityPersistEntityMappingProfileUt
                     Assert.That(content.Name, Is.EqualTo(useNewFields ? NewName : Name));
                     Assert.That(content.StoryText,
                         Is.EqualTo(useNewFields ? ConfigureNewStoryText : ConfigureStoryText));
+                    Assert.That(content.NpcName, Is.EqualTo(useNewFields ? NewNameNpc : NameNpc));
+                    Assert.That(content.NpcMood, Is.EqualTo(useNewFields ? NewMoodNpc : MoodNpc));
                 });
                 break;
             case StoryContentPe content:
@@ -937,6 +939,8 @@ public class EntityPersistEntityMappingProfileUt
                     Assert.That(content.Name, Is.EqualTo(useNewFields ? NewName : Name));
                     Assert.That(content.StoryText,
                         Is.EqualTo(useNewFields ? ConfigureNewStoryText : ConfigureStoryText));
+                    Assert.That(content.NpcName, Is.EqualTo(useNewFields ? NewNameNpc : NameNpc));
+                    Assert.That(content.NpcMood, Is.EqualTo(useNewFields ? NewMoodNpc : MoodNpc));
                 });
                 break;
             default:
@@ -950,10 +954,4 @@ public class EntityPersistEntityMappingProfileUt
         var systemUnderTest = mapper.CreateMapper();
         return systemUnderTest;
     }
-    
-
-    
-
-
-
 }

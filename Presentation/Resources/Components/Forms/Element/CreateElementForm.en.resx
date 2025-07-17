@@ -183,4 +183,19 @@ The corresponding slots can be found in each floor plan at the position of the e
     <data name="CreateElementForm.Fields.Collapsable.LearningContent.Text.SelectedLearningMaterial" xml:space="preserve">
         <value>Selected learning material:</value>
     </data>
+    <data name="CreateElementForm.Fields.Collapsable.Element.Mandatory" xml:space="preserve">
+        <value>Mandatory</value>
+    </data>
+    <data name="CreateElementForm.Fields.Collapsable.Element.Optional" xml:space="preserve">
+        <value>Optional</value>
+    </data>
+    <data name="CreateElementForm.Fields.Collapsable.3DRepresentation.Field.NpcName.Title" xml:space="preserve">
+        <value>Name of the person</value>
+    </data>
+    <data name="CreateElementForm.Fields.Collapsable.3DRepresentation.Field.NpcName.Text" xml:space="preserve">
+        <value>Name</value>
+    </data>
+    <data name="CreateStoryElementForm.Collapsable.Story.Length" xml:space="preserve">
+        <value>characters</value>
+    </data>
 </root>

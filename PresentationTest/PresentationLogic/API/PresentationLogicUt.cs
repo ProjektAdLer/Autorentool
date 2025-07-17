@@ -760,7 +760,7 @@ public class PresentationLogicUt
         mockMapper.Map<ILearningContent>(learningContentViewModel).Returns(learningContent);
         mockElementCommandFactory
             .GetCreateStoryInSlotCommand(learningSpaceEntity, 0, "name", learningContent, "description", "goals",
-                LearningElementDifficultyEnum.Easy, ElementModel.a_npc_defaultnpc, 123, 10, 5, 7,
+                LearningElementDifficultyEnum.Easy, ElementModel.a_npc_defaultdark_female, 123, 10, 5, 7,
                 Arg.Any<Action<BusinessLogic.Entities.LearningSpace>>())
             .Returns(mockCommand);
         mockBusinessLogic
@@ -772,7 +772,7 @@ public class PresentationLogicUt
             selectedViewModelsProvider: mockSelectedViewModelsProvider);
 
         systemUnderTest.CreateStoryElementInSlot(learningSpaceVm, 0, "name", learningContentViewModel, "description",
-            "goals", LearningElementDifficultyEnum.Easy, ElementModel.a_npc_defaultnpc, 123, 10, 5, 7);
+            "goals", LearningElementDifficultyEnum.Easy, ElementModel.a_npc_defaultdark_female, 123, 10, 5, 7);
 
         mockBusinessLogic.Received().ExecuteCommand(mockCommand);
     }
