@@ -118,10 +118,7 @@ public class ContentFileHandler : IContentFileHandler
         {
             if (file.Name.Contains(".h5p"))
             {
-                var h5pContent = file as FileContentPe;
-                var pathToXmlFile = Path.ChangeExtension(h5pContent!.Filepath, ".xml");
-                var fileContentPe =   XmlFileHandlerFileContent!.LoadFromDisk(pathToXmlFile);
-                updatedContents.Add(fileContentPe);
+                LoadXmlPersistenceOfH5pFile(file, updatedContents);
             }
             else
             {
@@ -129,6 +126,24 @@ public class ContentFileHandler : IContentFileHandler
             }
         }
         return updatedContents.Union(GetAllLinks());
+    }
+
+    private void LoadXmlPersistenceOfH5pFile(ILearningContentPe file, List<ILearningContentPe> updatedContents)
+    {
+        var h5pContent = file as FileContentPe;
+        var pathToXmlFile = Path.ChangeExtension(h5pContent!.Filepath, ".xml");
+
+        if (_fileSystem.File.Exists(pathToXmlFile))
+        {
+            var fileContentPe =  XmlFileHandlerFileContent!.LoadFromDisk(pathToXmlFile);
+            updatedContents.Add(fileContentPe);
+        }
+        else
+        {
+            GeneratePersistFileForH5pFileContent(h5pContent);
+            var fileContentPe =  XmlFileHandlerFileContent!.LoadFromDisk(pathToXmlFile);
+            updatedContents.Add(fileContentPe);
+        }
     }
 
     public void RemoveContent(ILearningContentPe content)

@@ -1,10 +1,12 @@
 using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
+using System.Runtime.Serialization;
 using System.Security.Cryptography;
 using BusinessLogic.ErrorManagement.DataAccess;
 using DataAccess.Persistence;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 using NUnit.Framework;
 using PersistEntities.LearningContent;
 using TestHelpers;
@@ -526,19 +528,56 @@ public class ContentFileHandlerUt
     // ANF-ID: [ASN0028]
     public void GetAllContent_LoadH5PsFromXmlPersistence()
     {
-        var fileSystem = new MockFileSystem();
-        fileSystem.AddFile(Path.Join(ContentFilesFolderPath, "a.h5p"), new MockFileData(new byte[] { 0x42, 0x24, 0x53, 0x54 }));
-        fileSystem.AddFile(Path.Join(ContentFilesFolderPath, "b.txt"), new MockFileData(new byte[] { 0x42, 0x24, 0x53, 0x54 }));
-        fileSystem.AddFile(Path.Join(ContentFilesFolderPath, "c.h5p"), new MockFileData(new byte[] { 0x42, 0x24, 0x53, 0x54 }));
-        fileSystem.AddFile(Path.Join(ContentFilesFolderPath, "c.h5p.hash"), new MockFileData(new byte[] { 0x42, 0x24, 0x53, 0x54 }));
-        fileSystem.AddFile(Path.Join(ContentFilesFolderPath, ".foobar"), new MockFileData(new byte[] { 0x42, 0x24, 0x53, 0x54 }));
-        
-        var systemUnderTest = CreateTestableContentFileHandler(fileSystem: fileSystem);
+        var fileNames = new[] { "a.h5p", "a.xml", "b.txt", "c.h5p", "c.xml", "c.h5p.hash", ".foobar" };
+        var fileSystem = CreateFakeFileSystem(ContentFilesFolderPath, fileNames);
+        var systemUnderTest = CreateTestableContentFileHandler(
+            fileSystem: fileSystem);
 
         systemUnderTest.GetAllContent();
         
         systemUnderTest.XmlFileHandlerFileContent!.Received(2).LoadFromDisk( Arg.Any<string>());
     }
+
+
+    [Test]
+    // ANF-ID: [ASN0028]
+    public void GetAllContent_LoadH5PsFromXmlPersistence_XmlFileNotFound_GeneratesXmlFile()
+    {
+        var fileNames = new[] { "a.h5p", "b.txt", "c.h5p", "c.h5p.hash", ".foobar" };
+        var fileSystem = CreateFakeFileSystem(ContentFilesFolderPath, fileNames);
+        var mockXmlFileHandlerFileContent = CreateFakeXmlFileHandlerFileContentWithLoadFromDisk();
+        var systemUnderTest = CreateTestableContentFileHandler(
+            fileSystem: fileSystem,
+            xmlFileHandlerFileContent: mockXmlFileHandlerFileContent);
+       
+        var result = systemUnderTest.GetAllContent();
+        systemUnderTest.XmlFileHandlerFileContent!.Received().SaveToDisk(Arg.Any<FileContentPe>(), Arg.Any<string>());
+        Assert.That(result.Count(), Is.EqualTo(2));
+    }
+
+    private static IXmlFileHandler<FileContentPe> CreateFakeXmlFileHandlerFileContentWithLoadFromDisk()
+    {
+        var mockXmlFileHandlerFileContent = Substitute.For<IXmlFileHandler<FileContentPe>>();
+        var fakeFileContentPe = PersistEntityProvider.GetFileContent();
+        mockXmlFileHandlerFileContent.LoadFromDisk(Arg.Any<string>()).Returns(fakeFileContentPe);
+        return mockXmlFileHandlerFileContent;
+    }
+
+
+    private static MockFileSystem CreateFakeFileSystem(string baseFolder, IEnumerable<string> fileNames)
+    {
+        var fileSystem = new MockFileSystem();
+        var dummyContent = new byte[] { 0x42, 0x24, 0x53, 0x54 };
+
+        foreach (var fileName in fileNames)
+        {
+            var fullPath = Path.Combine(baseFolder, fileName);
+            fileSystem.AddFile(fullPath, new MockFileData(dummyContent));
+        }
+
+        return fileSystem;
+    }
+
 
 
     
