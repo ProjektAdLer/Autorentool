@@ -1,5 +1,11 @@
 ﻿namespace Shared;
 
+// WARNING:
+// Enum entries in ElementModel must NOT simply be deleted or renamed!
+// If an entry is removed or renamed but still exists in a saved learning world, deserialisation will fail with an
+// exception. If a value is no longer to be used, it must be marked with [Obsolete] and an alternative value must be
+// specified with[AlternateValue].
+
 public enum ElementModel
 {
     // ReSharper disable InconsistentNaming
@@ -49,13 +55,13 @@ public enum ElementModel
     l_text_bookshelf_2,
 
     l_video_television_1,
-    
-    
+
+
     //Adaptivity
     a_npc_alerobot,
-    
+
     //NPCs
-    
+
     a_npc_defaultdark_female,
     a_npc_defaultdark_male,
     a_npc_defaultlight_male,
@@ -87,83 +93,63 @@ public enum ElementModel
     a_npc_teamc_male,
     a_npc_teamd_male,
     a_npc_teame_female,
-    
-    [Obsolete("Use a_npc_defaultdark_female instead", error: false)]
-    [AlternateValue(a_npc_defaultdark_female)]
+
+    [Obsolete("Use a_npc_defaultdark_female instead", error: false)] [AlternateValue(a_npc_defaultdark_female)]
     a_npc_defaultnpc,
-    
-    [Obsolete("Use a_npc_defaultdark_female instead", error: false)]
-    [AlternateValue(a_npc_defaultdark_female)]
+
+    [Obsolete("Use a_npc_defaultdark_female instead", error: false)] [AlternateValue(a_npc_defaultdark_female)]
     a_npc_defaultfemale,
-    
-    [Obsolete("Use a_npc_defaultdark_male instead", error: false)]
-    [AlternateValue(a_npc_defaultdark_male)]
+
+    [Obsolete("Use a_npc_defaultdark_male instead", error: false)] [AlternateValue(a_npc_defaultdark_male)]
     a_npc_defaultmale,
-    
-    [Obsolete("Use a_npc_bullylight_female instead", error: false)]
-    [AlternateValue(a_npc_bullylight_female)]
+
+    [Obsolete("Use a_npc_bullylight_female instead", error: false)] [AlternateValue(a_npc_bullylight_female)]
     a_npc_bullyfemale,
-    
-    [Obsolete("Use a_npc_bullylight_male instead", error: false)]
-    [AlternateValue(a_npc_bullylight_male)]
+
+    [Obsolete("Use a_npc_bullylight_male instead", error: false)] [AlternateValue(a_npc_bullylight_male)]
     a_npc_bullymale,
-    
-    [Obsolete("Use a_npc_bullylight_female instead", error: false)]
-    [AlternateValue(a_npc_bullylight_female)]
+
+    [Obsolete("Use a_npc_bullylight_female instead", error: false)] [AlternateValue(a_npc_bullylight_female)]
     a_npc_bully_female,
-    
-    [Obsolete("Use a_npc_bullylight_male instead", error: false)]
-    [AlternateValue(a_npc_bullylight_male)]
+
+    [Obsolete("Use a_npc_bullylight_male instead", error: false)] [AlternateValue(a_npc_bullylight_male)]
     a_npc_bully_male,
-    
-    [Obsolete("Use a_npc_oldiedark_male instead", error: false)]
-    [AlternateValue(a_npc_oldiedark_male)]
+
+    [Obsolete("Use a_npc_oldiedark_male instead", error: false)] [AlternateValue(a_npc_oldiedark_male)]
     a_npc_oldman,
-    
-    [Obsolete("Use a_npc_hiphoplight_female instead", error: false)]
-    [AlternateValue(a_npc_hiphoplight_female)]
+
+    [Obsolete("Use a_npc_hiphoplight_female instead", error: false)] [AlternateValue(a_npc_hiphoplight_female)]
     a_npc_hiphopfemale,
-    
-    [Obsolete("Use a_npc_hiphoplight_male instead", error: false)]
-    [AlternateValue(a_npc_hiphoplight_male)]
+
+    [Obsolete("Use a_npc_hiphoplight_male instead", error: false)] [AlternateValue(a_npc_hiphoplight_male)]
     a_npc_hiphopmale,
-    
-    [Obsolete("Use a_npc_hiphoplight_female instead", error: false)]
-    [AlternateValue(a_npc_hiphoplight_female)]
+
+    [Obsolete("Use a_npc_hiphoplight_female instead", error: false)] [AlternateValue(a_npc_hiphoplight_female)]
     a_npc_hiphop_female,
-    
-    [Obsolete("Use a_npc_hiphoplight_male instead", error: false)]
-    [AlternateValue(a_npc_hiphoplight_male)]
+
+    [Obsolete("Use a_npc_hiphoplight_male instead", error: false)] [AlternateValue(a_npc_hiphoplight_male)]
     a_npc_hiphop_male,
-    
-    [Obsolete("Use a_npc_santa_female instead", error: false)]
-    [AlternateValue(a_npc_santa_female)]
+
+    [Obsolete("Use a_npc_santa_female instead", error: false)] [AlternateValue(a_npc_santa_female)]
     a_npc_santafemale,
-    
-    [Obsolete("Use a_npc_santa_male instead", error: false)]
-    [AlternateValue(a_npc_santa_male)]
+
+    [Obsolete("Use a_npc_santa_male instead", error: false)] [AlternateValue(a_npc_santa_male)]
     a_npc_santamale,
-    
-    [Obsolete("Use a_npc_teame_female instead", error: false)]
-    [AlternateValue(a_npc_teame_female)]
+
+    [Obsolete("Use a_npc_teame_female instead", error: false)] [AlternateValue(a_npc_teame_female)]
     a_npc_dozentantonia,
-    
-    [Obsolete("Use a_npc_teamc_male instead", error: false)]
-    [AlternateValue(a_npc_teamc_male)]
+
+    [Obsolete("Use a_npc_teamc_male instead", error: false)] [AlternateValue(a_npc_teamc_male)]
     a_npc_dozentdaniel,
-    
-    [Obsolete("Use a_npc_teamb_male instead", error: false)]
-    [AlternateValue(a_npc_teamb_male)]
+
+    [Obsolete("Use a_npc_teamb_male instead", error: false)] [AlternateValue(a_npc_teamb_male)]
     a_npc_dozentgeorg,
-    
-    [Obsolete("Use a_npc_teamd_male instead", error: false)]
-    [AlternateValue(a_npc_teamd_male)]
+
+    [Obsolete("Use a_npc_teamd_male instead", error: false)] [AlternateValue(a_npc_teamd_male)]
     a_npc_dozentjoerg,
-    
-    [Obsolete("Use a_npc_teama_male instead", error: false)]
-    [AlternateValue(a_npc_teama_male)]
+
+    [Obsolete("Use a_npc_teama_male instead", error: false)] [AlternateValue(a_npc_teama_male)]
     a_npc_dozentlukas,
 
     // ReSharper restore InconsistentNaming
-    
 }
