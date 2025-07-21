@@ -19,22 +19,15 @@ namespace PresentationTest.Components.ContentFiles;
 [TestFixture]
 public class H5PPlayerPluginManagerTests
 {
-    [Test]
-    public async Task OpenH5pPlayerDialogAsync_ShouldReturnExpectedResult()
-    {
-        var result = await _systemUnderTest.OpenH5pPlayerDialogAsync("path1", "path2", H5pDisplayMode.Display);
-
-        Assert.That(result, Is.Not.Null);
-        Assert.That(result.Value.ActiveH5pState, Is.EqualTo("Completable"));
-    }
+  
 
     [Test]
-    public async Task ParseH5PFile_WithH5pFile_ShouldCallDialogAndSetStates()
+    public async Task StartH5pPlayerToValidateAsync_WithH5pFile_ShouldCallDialogAndSetStates()
     {
         var fileContentVm = Substitute.For<IFileContentViewModel>();
         var parseTo = CreateParseH5PFileTo(fileContentVm: fileContentVm);
 
-        await _systemUnderTest.ParseH5PFile(parseTo);
+        await _systemUnderTest.StartH5pPlayerToValidateAsync(parseTo);
 
         fileContentVm.Received(1).IsH5P = true;
         fileContentVm.Received(1).H5PState = H5PContentState.Completable;
@@ -47,11 +40,11 @@ public class H5PPlayerPluginManagerTests
     }
 
     [Test]
-    public async Task ParseH5PFile_WithNonH5pFile_ShouldNotCallDialog()
+    public async Task StartH5pPlayerToValidateAsync_WithNonH5pFile_ShouldNotCallDialog()
     {
         var parseTo = CreateParseH5PFileTo(".pdf");
 
-        await _systemUnderTest.ParseH5PFile(parseTo);
+        await _systemUnderTest.StartH5pPlayerToValidateAsync(parseTo);
 
         await _dialogService.DidNotReceive()
             .ShowAsync<PlayerH5p>(Arg.Any<string>(), Arg.Any<DialogParameters>(), Arg.Any<DialogOptions>());

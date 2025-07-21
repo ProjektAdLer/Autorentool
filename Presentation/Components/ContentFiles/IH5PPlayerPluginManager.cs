@@ -7,12 +7,8 @@ namespace Presentation.Components.ContentFiles;
 
 public interface IH5PPlayerPluginManager
 {
-    Task<H5pPlayerResultTO?> OpenH5pPlayerDialogAsync(
-        string h5pZipSourcePath,
-        string unzippedH5psPath,
-        H5pDisplayMode displayMode);
 
-    Task ParseH5PFile(ParseH5PFileTO to);
+    Task StartH5pPlayerToValidateAsync(ParseH5PFileTO to);
 
     ILogger<H5PPlayerPluginManager> Logger { get; }
     IJSRuntime JSRuntime { get; }
