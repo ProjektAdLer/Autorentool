@@ -2,7 +2,7 @@ namespace Shared;
 
 public static class PathHelper
 {
-    public static string TrimFileName(string fileName)
+    public static string ReplaceSpaceWithUnderscoreIn(string fileName)
     {
         //Trim whitespace from file ending
         var fileEnding = fileName.Split(".").Skip(1).Last();

@@ -188,7 +188,7 @@
         foreach (var entry in archive.Entries)
         {
             if (entry.Length == 0) continue;
-            var fileName = PathHelper.TrimFileName(entry.Name);
+            var fileName = PathHelper.ReplaceSpaceWithUnderscoreIn(entry.Name);
             var fileEnding = string.Concat(entry.Name.Split(".").Skip(1).Last().Prepend('.'));
             fileEnding = fileEnding.Trim().ToLowerInvariant();
             if (!AllowedFileEndings.Endings.Contains(fileEnding))
@@ -280,8 +280,8 @@
         using var memoryStream = new MemoryStream();
         await stream.CopyToAsync(memoryStream);
         await stream.DisposeAsync();
-
-        var fileName = PathHelper.TrimFileName(file.Name);
+        
+        var fileName = PathHelper.ReplaceSpaceWithUnderscoreIn(file.Name);
 
         Logger.LogTrace("Calling LoadLearningContentViewModel");
         try
