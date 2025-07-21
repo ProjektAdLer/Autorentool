@@ -138,7 +138,9 @@
                  // fileContentVm is written in HandleFileAsync !!!!!!!
                  var parseH5PFileTO = new ParseH5PFileTO
                  {
-                     FileName = file.Name,
+                     // dirty Hack: This must be a BusinessRule: ReplaceSpaceWithUnderscoreIn
+                     // today in 2025 it is too late for a clean fix
+                     FileName =  PathHelper.ReplaceSpaceWithUnderscoreIn(file.Name),
                      FileEnding = fileEnding,
                      FileContentVm = fileContentVm!,
                      NavigationManager = Navigation
