@@ -13,6 +13,7 @@
 @using H5pPlayer.BusinessLogic.Entities
 @using H5pPlayer.BusinessLogic.UseCases.TerminateH5pPlayer
 @using H5pPlayer.DataAccess.FileSystem
+@using Microsoft.AspNetCore.Routing.Constraints
 @using Presentation.Components.Dialogues
 @using Shared.Configuration
 @inject IJSRuntime JsRuntime
@@ -96,7 +97,9 @@
     private string HoverClass { get; set; } = "";
     
     private bool Working { get; set; } = false;
-
+    
+    private readonly List<string> _unvalidatedH5PFiles = new();
+    private readonly Dictionary<string, string> _h5PFilePaths = new();
     private MudFileUpload<IReadOnlyList<IBrowserFile>> _fileUpload = null!;
 
     /// <summary>
@@ -135,15 +138,9 @@
 #if DEBUG
                  if (fileEnding.ToLowerInvariant()  == ".h5p")
                  {
-                     var h5pZipSourcePath = Path.Combine(ApplicationPaths.ContentFolder , file.Name);
-                     var baseUri = new Uri(Navigation.BaseUri); 
-                     var unzippedH5ps= new Uri(baseUri, "H5pStandalone/h5p-folder/"); 
+                     _unvalidatedH5PFiles.Add(file.Name);
+                     _h5PFilePaths.Add(file.Name,Path.Combine(ApplicationPaths.ContentFolder , file.Name));
                      
-                     Logger.LogTrace("Start H5P-Player with: " + 
-                                     "h5pZipSourcePath: " + h5pZipSourcePath + Environment.NewLine +
-                                      "unzippedH5psPath: " + unzippedH5ps.AbsoluteUri );
-                      
-                      OpenH5pPlayerDialog(h5pZipSourcePath, unzippedH5ps.AbsoluteUri,H5pDisplayMode.Validate);
                  }
 #endif
             }
@@ -299,10 +296,40 @@
         
         Logger.LogTrace("LoadLearningContentViewModel returned");
     }
+    private async Task ShowImportH5PDialog(List<string> h5pFiles)
+    {
+        var parameters = new DialogParameters
+        {
+            { nameof(ImportH5PDialog.UnvalidatedH5Ps), h5pFiles },
+            { nameof(ImportH5PDialog.OnValidateClicked), EventCallback.Factory.Create<string>(this, ValidateH5P) }
+        };
 
-    private async void OpenH5pPlayerDialog(
-        string h5pZipSourcePath, 
-        string unzippedH5psPath, 
+        var options = new DialogOptions
+        {
+            CloseButton = true,
+            CloseOnEscapeKey = true,
+            MaxWidth = MaxWidth.Medium,
+            FullWidth = true,
+        };
+
+        await DialogService.ShowAsync<ImportH5PDialog>("", parameters, options);
+    }
+
+    private async Task ValidateH5P(string fileName)
+    {
+        var baseUri = new Uri(Navigation.BaseUri); 
+        var unzippedH5ps= new Uri(baseUri, "H5pStandalone/h5p-folder/"); 
+                     
+        Logger.LogTrace("Start H5P-Player with: " + 
+                        "h5pZipSourcePath: " + _h5PFilePaths[fileName] + Environment.NewLine +
+                        "unzippedH5psPath: " + unzippedH5ps.AbsoluteUri );
+                      
+        await OpenH5PPlayerDialog(_h5PFilePaths[fileName], unzippedH5ps.AbsoluteUri,H5pDisplayMode.Validate);
+    }
+
+    private async Task OpenH5PPlayerDialog(
+        string h5PZipSourcePath, 
+        string unzippedH5PsPath, 
         H5pDisplayMode displayMode)
     {
         
@@ -310,8 +337,8 @@
 
         var parameters = new DialogParameters
         {
-            { "H5pZipSourcePath", h5pZipSourcePath },
-            { "UnzippedH5psPath", unzippedH5psPath },
+            { "H5pZipSourcePath", h5PZipSourcePath },
+            { "UnzippedH5psPath", unzippedH5PsPath },
             { "DisplayMode", displayMode },
             { "OnPlayerFinished", new Action<H5pPlayerResultTO>(result =>
                 {

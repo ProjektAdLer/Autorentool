@@ -1,0 +1,70 @@
+@using System.Diagnostics.CodeAnalysis
+@using Microsoft.Extensions.Localization
+
+<MudDialog>
+    <DialogContent>
+        <MudText Typo="Typo.h6">@Localizer["Dialog.Heading"]</MudText>
+
+        <MudText Class="mt-2 mb-2" Typo="Typo.body2">
+            @Localizer["Dialog.Description"]
+        </MudText>
+
+        <MudText Class="mb-2" Typo="Typo.body2">
+            @Localizer["Dialog.Instruction"]
+        </MudText>
+
+        @if (UnvalidatedH5Ps?.Any() == true)
+        {
+            <MudText Class="mt-4 mb-2" Typo="Typo.subtitle2">@Localizer["Dialog.UnvalidatedFilesHeading"]</MudText>
+
+            <MudList T="string" Dense="true">
+                @foreach (var h5p in UnvalidatedH5Ps)
+                {
+                    <MudListItem T="string">
+                        @h5p
+                        <MudTooltip Text="H5P validieren">
+                            <MudIcon Icon="@Icons.Material.Filled.HourglassBottom" />
+                        </MudTooltip>
+                    </MudListItem>
+                }
+            </MudList>
+
+        }
+        else
+        {
+            <MudText Typo="Typo.body2">@Localizer["Dialog.NoUnvalidatedH5Ps"]</MudText>
+        }
+    </DialogContent>
+
+    <DialogActions>
+        <MudButton OnClick="Cancel" Color="Color.Secondary">@Localizer["Dialog.CancelButton"]</MudButton>
+        <MudButton OnClick="ValidateFirstH5P" Disabled="@(!UnvalidatedH5Ps?.Any() ?? true)" Color="Color.Primary">
+            @Localizer["Dialog.BeginValidationButton"]
+        </MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+   
+    [Inject, AllowNull] 
+    private IStringLocalizer<ImportH5PDialog> Localizer { get; set; } = default!;
+    
+    [CascadingParameter] public IMudDialogInstance MudDialog { get; set; } = default!;
+    
+   
+    [Parameter] public List<string> UnvalidatedH5Ps { get; set; } = new();
+    [Parameter] public EventCallback<string> OnValidateClicked { get; set; }
+
+    private async Task ValidateFirstH5P()
+    {
+        if (UnvalidatedH5Ps.Any())
+        {
+            var first = UnvalidatedH5Ps.First();
+            await OnValidateClicked.InvokeAsync(first);
+        }
+
+        MudDialog.Close(DialogResult.Ok(true));
+    }
+
+    private void Cancel() => MudDialog.Cancel();
+}
