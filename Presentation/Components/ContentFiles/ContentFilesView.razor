@@ -14,6 +14,7 @@
 @using Presentation.H5P
 @using Presentation.PresentationLogic.SelectedViewModels
 @inject ISnackbar Snackbar
+@inject NavigationManager Navigation
 
 <div class="flex flex-col gap-3">
     <header class="py-2 bg-adlerbgbright border-y-2 border-adlergrey-100 overflow-hidden flex justify-center">
@@ -136,7 +137,10 @@
                         @onmouseover="() => { _cursorInsidePopover = true; }"
                         @onmouseleave="() => { _cursorInsidePopover = false; _rowShowingPopover = null; }">
 
-                        <MudIconButton OnClick="() => PresentationLogic.ShowLearningContentAsync(context)"
+                        @* <MudIconButton OnClick="() => PresentationLogic.ShowLearningContentAsync(context)" *@
+                        @*                Icon="@Icons.Material.Filled.RemoveRedEye" Class="m-0 p-1 text-white hover:text-adlerbggradientfrom" title=@Localizer["Content.MudTd.Preview"]> *@
+                        @* </MudIconButton> *@
+                        <MudIconButton OnClick="() => ShowLearningContent(context)"
                                        Icon="@Icons.Material.Filled.RemoveRedEye" Class="m-0 p-1 text-white hover:text-adlerbggradientfrom" title=@Localizer["Content.MudTd.Preview"]>
                         </MudIconButton>
                         
@@ -471,6 +475,23 @@
             default:
                 _deletionCandidates = new List<ILearningContentViewModel>();
                 break;
+        }
+    }
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
+    internal  IH5PPlayerPluginManager H5PPlayerPluginManager { get; set; }
+    private async Task ShowLearningContent(ILearningContentViewModel context)
+    {
+        if (context is FileContentViewModel fileContentVm && fileContentVm.IsH5P)
+        {
+            var startH5PPlayerTO = new StartH5PPlayerTO();
+            startH5PPlayerTO.FileContentVm = fileContentVm;
+            startH5PPlayerTO.NavigationManager = Navigation;
+            await H5PPlayerPluginManager.StartH5pPlayerToValidateAsync(startH5PPlayerTO);
+        }
+        else
+        {
+            await PresentationLogic.ShowLearningContentAsync(context);
         }
     }
 
