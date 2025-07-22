@@ -136,12 +136,12 @@
                 
 #if DEBUG
                  // fileContentVm is written in HandleFileAsync !!!!!!!
-                 var parseH5PFileTO = new StartH5PPlayerTO
+                 var startH5pPlayerTO = new StartH5PPlayerTO
                  {
                      FileContentVm = fileContentVm!,
                      NavigationManager = Navigation
                  };
-                 await H5PPlayerPluginManager.StartH5pPlayerToValidateAsync(parseH5PFileTO);
+                 await H5PPlayerPluginManager.StartH5pPlayerToValidateAsync(startH5pPlayerTO);
                 
 #endif
             }
