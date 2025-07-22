@@ -287,7 +287,7 @@ public class EntityPersistEntityMappingProfileUt
         var systemUnderTest = CreateTestableMapper();
         var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals, WorldThemeVar,
             EvaluationLink, EnrolmentKey, savePath: SavePath);
-        source.UnplacedLearningElements.Add(new LearningElement(Name, GetTestableContent(), Description, Goals,
+        source.UnplacedLearningElements.Add(new LearningElement(Name, CreateFileContent(), Description, Goals,
             Difficulty, SelectedElementModel, null, Workload, Points, PositionX, PositionY));
         var destination = new LearningWorldPe("", "", "", "", "", "", default, "", "", "", "", "");
 
@@ -682,7 +682,7 @@ public class EntityPersistEntityMappingProfileUt
 
     private static LearningElement GetTestableElementWithParent(LearningSpace parent)
     {
-        return new LearningElement(Name, GetTestableContent(), Description, Goals, Difficulty, SelectedElementModel,
+        return new LearningElement(Name, CreateFileContent(), Description, Goals, Difficulty, SelectedElementModel,
             parent, workload: Workload,
             points: Points, positionX: PositionX,
             positionY: PositionY);

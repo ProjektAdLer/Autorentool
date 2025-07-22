@@ -52,6 +52,7 @@ public class ContentFilesViewUt
         _selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
         _errorService = Substitute.For<IErrorService>();
         _mudDialogInstance = Substitute.For<IMudDialogInstance>();
+        _h5PPlayerPluginManager = Substitute.For<IH5PPlayerPluginManager>();
 
         _testContext.ComponentFactories.AddStub<MudMenu>();
         _testContext.ComponentFactories.AddStub<MudMenuItem>();
@@ -64,6 +65,7 @@ public class ContentFilesViewUt
         _testContext.Services.AddSingleton(_localizer);
         _testContext.Services.AddSingleton(_selectedViewModelsProvider);
         _testContext.Services.AddSingleton(_errorService);
+        _testContext.Services.AddSingleton(_h5PPlayerPluginManager);
 
         _testContext.AddMudBlazorTestServices();
     }
@@ -83,6 +85,7 @@ public class ContentFilesViewUt
     private ISelectedViewModelsProvider _selectedViewModelsProvider;
     private IErrorService _errorService;
     private IMudDialogInstance _mudDialogInstance;
+    private IH5PPlayerPluginManager _h5PPlayerPluginManager;
 
     [Test]
     public void Constructor_InjectsDependencies()
