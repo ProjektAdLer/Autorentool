@@ -4,6 +4,7 @@ using H5pPlayer.BusinessLogic.UseCases.TerminateH5pPlayer;
 using Microsoft.JSInterop;
 using MudBlazor;
 using Presentation.PresentationLogic.API;
+using Presentation.PresentationLogic.LearningContent.FileContent;
 using Shared.Configuration;
 using Shared.H5P;
 
@@ -11,6 +12,7 @@ namespace Presentation.Components.ContentFiles;
 
 public class H5PPlayerPluginManager : IH5PPlayerPluginManager
 {
+
 
 
     public H5PPlayerPluginManager(
@@ -29,7 +31,9 @@ public class H5PPlayerPluginManager : IH5PPlayerPluginManager
     }
     
     
-    public async Task StartH5pPlayerToValidateAsync(ParseH5PFileTO parseH5pFileTO)
+
+   
+    public async Task StartH5pPlayerToValidateAsync(StartH5PPlayerTO parseH5pFileTO)
     {
         if (IsFileH5PFile(parseH5pFileTO))
         {
@@ -39,45 +43,47 @@ public class H5PPlayerPluginManager : IH5PPlayerPluginManager
                             "unzippedH5psPath: " + UnzippedH5PsPath );
 
             var h5PPlayerResult = await OpenH5pPlayerDialogAsync(H5pDisplayMode.Validate);
-            ProcessH5PPlayerResult(parseH5pFileTO, h5PPlayerResult);
+            ProcessH5PPlayerResult(h5PPlayerResult);
         }
     }
 
-    private static bool IsFileH5PFile(ParseH5PFileTO parseH5pFileTO)
+    private static bool IsFileH5PFile(StartH5PPlayerTO parseH5pFileTO)
     {
-        return parseH5pFileTO.FileEnding.ToLowerInvariant()  == ".h5p";
+        var fileEnding = parseH5pFileTO.FileContentVm!.Name.Split(".").Last();
+        return  fileEnding == "h5p";
     }
 
-    private void InitializeH5PPlayer(ParseH5PFileTO parseH5pFileTO)
+    private void InitializeH5PPlayer(StartH5PPlayerTO parseH5pFileTO)
     {
-        H5PZipSourcePath = Path.Combine(ApplicationPaths.ContentFolder , parseH5pFileTO.FileName);
-        BaseUri = new Uri(parseH5pFileTO.NavigationManager.BaseUri); 
+        FileContentVm = parseH5pFileTO.FileContentVm;
+        H5PZipSourcePath = Path.Combine(ApplicationPaths.ContentFolder , FileContentVm!.Name);
+        BaseUri = new Uri(parseH5pFileTO.NavigationManager!.BaseUri); 
         UnzippedH5PsPath = new Uri(BaseUri, "H5pStandalone/h5p-folder/").AbsoluteUri;
     }
 
-    private void ProcessH5PPlayerResult(ParseH5PFileTO parseH5pFileTO, H5pPlayerResultTO? h5PPlayerResult)
+    private void ProcessH5PPlayerResult(H5pPlayerResultTO? h5PPlayerResult)
     {
         if (h5PPlayerResult != null)
         {
             Logger.LogTrace("H5P: Set ActiveH5pState in LearningContentViewModel ");
-            parseH5pFileTO.FileContentVm.IsH5P = true;
+            FileContentVm!.IsH5P = true;
             switch (h5PPlayerResult.Value.ActiveH5pState)
             {
                 case "Completable":
-                    parseH5pFileTO.FileContentVm.H5PState = H5PContentState.Completable;
+                    FileContentVm.H5PState = H5PContentState.Completable;
                     break;
                 case "Primitive":
-                    parseH5pFileTO.FileContentVm.H5PState = H5PContentState.Primitive;
+                    FileContentVm.H5PState = H5PContentState.Primitive;
                     break;
                 case "NotUsable":
-                    parseH5pFileTO.FileContentVm.H5PState = H5PContentState.NotUsable;
+                    FileContentVm.H5PState = H5PContentState.NotUsable;
                     break;
                 case "NotValidated":
-                    parseH5pFileTO.FileContentVm.H5PState = H5PContentState.NotValidated;
+                    FileContentVm.H5PState = H5PContentState.NotValidated;
                     break;
             }
 
-            PresentationLogic.EditH5PFileContent(parseH5pFileTO.FileContentVm);
+            PresentationLogic.EditH5PFileContent(FileContentVm);
         }
     }
 
@@ -114,7 +120,7 @@ public class H5PPlayerPluginManager : IH5PPlayerPluginManager
 
 
     
-    
+    private IFileContentViewModel? FileContentVm { get; set; }
     public ILogger<H5PPlayerPluginManager> Logger { get;  }
     public IJSRuntime JSRuntime { get; }
     public IDialogService DialogService { get; }

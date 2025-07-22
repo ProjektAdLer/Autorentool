@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using H5pPlayer.Api;
-using H5pPlayer.BusinessLogic.Entities;
 using H5pPlayer.BusinessLogic.UseCases.TerminateH5pPlayer;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Logging;
@@ -25,6 +24,7 @@ public class H5PPlayerPluginManagerTests
     public async Task StartH5pPlayerToValidateAsync_WithH5pFile_ShouldCallDialogAndSetStates()
     {
         var fileContentVm = Substitute.For<IFileContentViewModel>();
+        fileContentVm.Name.Returns("test.h5p");
         var parseTo = CreateParseH5PFileTo(fileContentVm: fileContentVm);
 
         await _systemUnderTest.StartH5pPlayerToValidateAsync(parseTo);
@@ -42,7 +42,9 @@ public class H5PPlayerPluginManagerTests
     [Test]
     public async Task StartH5pPlayerToValidateAsync_WithNonH5pFile_ShouldNotCallDialog()
     {
-        var parseTo = CreateParseH5PFileTo(".pdf");
+        var fileContentVm = Substitute.For<IFileContentViewModel>();
+        fileContentVm.Name.Returns("test.pdf");
+        var parseTo = CreateParseH5PFileTo(fileContentVm: fileContentVm);
 
         await _systemUnderTest.StartH5pPlayerToValidateAsync(parseTo);
 
@@ -93,13 +95,10 @@ public class H5PPlayerPluginManagerTests
             .Returns(Task.FromResult(_dialogReference));
     }
     
-    private static ParseH5PFileTO CreateParseH5PFileTo(
-        string fileEnding = ".h5p", IFileContentViewModel? fileContentVm = null)
+    private static StartH5PPlayerTO CreateParseH5PFileTo(IFileContentViewModel? fileContentVm = null)
     {
-        return new ParseH5PFileTO
+        return new StartH5PPlayerTO
         {
-            FileEnding = fileEnding,
-            FileName = $"test{fileEnding}",
             NavigationManager = new FakeNavigationManager(),
             FileContentVm = fileContentVm ?? Substitute.For<IFileContentViewModel>()
         };

@@ -3,10 +3,8 @@ using Presentation.PresentationLogic.LearningContent.FileContent;
 
 namespace Presentation.Components.ContentFiles;
 
-public struct ParseH5PFileTO
+public record StartH5PPlayerTO
 {
-    public string FileEnding { get; set; }
-    public string FileName { get; set; }
-    public IFileContentViewModel FileContentVm { get; set; }
-    public NavigationManager NavigationManager { get; set; }
+    public IFileContentViewModel? FileContentVm { get; set; }
+    public NavigationManager? NavigationManager { get; set; }
 }

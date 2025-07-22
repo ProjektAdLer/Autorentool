@@ -7,8 +7,8 @@ namespace Presentation.Components.ContentFiles;
 
 public interface IH5PPlayerPluginManager
 {
-
-    Task StartH5pPlayerToValidateAsync(ParseH5PFileTO to);
+    /// <exception cref="ArgumentNullException">If any member of<see cref="StartH5PPlayerTO"/> Is Null!</exception>
+    Task StartH5pPlayerToValidateAsync(StartH5PPlayerTO to);
 
     ILogger<H5PPlayerPluginManager> Logger { get; }
     IJSRuntime JSRuntime { get; }
