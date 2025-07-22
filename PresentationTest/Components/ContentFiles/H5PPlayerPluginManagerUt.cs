@@ -25,7 +25,7 @@ public class H5PPlayerPluginManagerTests
     {
         var fileContentVm = Substitute.For<IFileContentViewModel>();
         fileContentVm.Name.Returns("test.h5p");
-        var parseTo = CreateParseH5PFileTo(fileContentVm: fileContentVm);
+        var parseTo = CreateStartH5PPlayerTO(fileContentVm: fileContentVm);
 
         await _systemUnderTest.StartH5pPlayerToValidateAsync(parseTo);
 
@@ -44,7 +44,7 @@ public class H5PPlayerPluginManagerTests
     {
         var fileContentVm = Substitute.For<IFileContentViewModel>();
         fileContentVm.Name.Returns("test.pdf");
-        var parseTo = CreateParseH5PFileTo(fileContentVm: fileContentVm);
+        var parseTo = CreateStartH5PPlayerTO(fileContentVm: fileContentVm);
 
         await _systemUnderTest.StartH5pPlayerToValidateAsync(parseTo);
 
@@ -95,7 +95,7 @@ public class H5PPlayerPluginManagerTests
             .Returns(Task.FromResult(_dialogReference));
     }
     
-    private static StartH5PPlayerTO CreateParseH5PFileTo(IFileContentViewModel? fileContentVm = null)
+    private static StartH5PPlayerTO CreateStartH5PPlayerTO(IFileContentViewModel? fileContentVm = null)
     {
         return new StartH5PPlayerTO
         {
