@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Globalization;
+using AutoMapper;
 using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningContent;
@@ -249,5 +250,10 @@ public static class ViewModelProvider
         var rule = GetRule();
         task.Questions.First().Rules.Add(rule);
         return new AdaptivityContentViewModel(new List<IAdaptivityTaskViewModel> { task, GetAdaptivityTask() });
+    }
+
+    public static LearningWorldViewModel GetBlankLearningWorld()
+    {
+        return new LearningWorldViewModel("", "", "", "", "", "", default, "", "", "", "", "", "");
     }
 }

@@ -221,4 +221,9 @@ public static class PersistEntityProvider
     {
         return new ChoicePe("a choice");
     }
+
+    public static LearningWorldPe GetBlankLearningWorld()
+    {
+        return new LearningWorldPe("", "", "", "", "", "", default, "", "", "", "", "", "", "");
+    }
 }

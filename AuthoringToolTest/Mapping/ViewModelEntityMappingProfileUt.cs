@@ -260,7 +260,7 @@ public class ViewModelEntityMappingProfileUt
             evaluationLink: EvaluationLink, evaluationLinkName: EvaluationLinkName,
             evaluationLinkText: EvaluationLinkText, enrolmentKey: EnrolmentKey, storyStart: StoryStart,
             storyEnd: StoryEnd, savePath: SavePath, learningSpaces: new List<ILearningSpace>());
-        var destination = new LearningWorldViewModel("", "", "", "", "", "", default, "", "", "", "", "", "");
+        var destination = ViewModelProvider.GetBlankLearningWorld();
 
         systemUnderTest.Map(source, destination);
         TestWorld(destination, false);
@@ -298,7 +298,7 @@ public class ViewModelEntityMappingProfileUt
         source.LearningSpaces.Add(new LearningSpace(Name, Description, RequiredPoints, SpaceTheme.LearningArea,
             positionX: PositionX,
             positionY: PositionY));
-        var destination = new LearningWorldViewModel("", "", "", "", "", "", default, "", "", "", "", "", "");
+        var destination = ViewModelProvider.GetBlankLearningWorld();
 
         systemUnderTest.Map(source, destination);
 
@@ -347,7 +347,7 @@ public class ViewModelEntityMappingProfileUt
             EvaluationLink, EvaluationLinkName, EvaluationLinkText, EnrolmentKey, StoryStart, StoryEnd,
             savePath: SavePath, learningSpaces: new List<ILearningSpace>());
         source.LearningSpaces.Add(GetTestableSpace());
-        var destination = new LearningWorldViewModel("", "", "", "", "", "", default, "", "", "", "", "", "");
+        var destination = ViewModelProvider.GetBlankLearningWorld();
 
         systemUnderTest.Map(source, destination);
 
@@ -396,7 +396,7 @@ public class ViewModelEntityMappingProfileUt
         var pathWayCondition = new PathWayCondition(ConditionEnum.And, 3, 2);
         source.LearningSpaces.Add(space1);
         source.PathWayConditions.Add(pathWayCondition);
-        var destination = new LearningWorldViewModel("", "", "", "", "", "", default, "", "", "", "", "", "");
+        var destination = ViewModelProvider.GetBlankLearningWorld();
 
         source.LearningPathways.Add(new LearningPathway(space1, pathWayCondition));
 

@@ -243,14 +243,19 @@
         }
         else
         {
-            // ReSharper disable ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
-            if (_evaluationLinkField != null && _evaluationLinkNameField != null)
-                // ReSharper restore ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
-            {
-                await Task.Delay(DebounceInterval);
-                await _evaluationLinkField.Validate();
-                await _evaluationLinkNameField.Validate();
-            }
+            await ValidateEvaluationLinkFields();
+        }
+    }
+
+    private async Task ValidateEvaluationLinkFields()
+    {
+        // ReSharper disable ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
+        if (_evaluationLinkField != null && _evaluationLinkNameField != null)
+            // ReSharper restore ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
+        {
+            await Task.Delay(DebounceInterval);
+            await _evaluationLinkField.Validate();
+            await _evaluationLinkNameField.Validate();
         }
     }
 

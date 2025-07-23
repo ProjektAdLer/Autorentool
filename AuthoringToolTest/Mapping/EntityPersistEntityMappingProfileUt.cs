@@ -251,7 +251,7 @@ public class EntityPersistEntityMappingProfileUt
             EvaluationLink, EvaluationLinkName, EvaluationLinkText,
             EnrolmentKey,
             savePath: SavePath, learningSpaces: new List<ILearningSpace>());
-        var destination = new LearningWorldPe("", "", "", "", "", "", default, "", "", "", "", "", "", "");
+        var destination = PersistEntityProvider.GetBlankLearningWorld();
 
         systemUnderTest.Map(source, destination);
 
@@ -285,7 +285,7 @@ public class EntityPersistEntityMappingProfileUt
             EvaluationLink, EvaluationLinkName, EvaluationLinkText, EnrolmentKey, savePath: SavePath);
         source.UnplacedLearningElements.Add(new LearningElement(Name, GetTestableContent(), Description, Goals,
             Difficulty, SelectedElementModel, null, Workload, Points, PositionX, PositionY));
-        var destination = new LearningWorldPe("", "", "", "", "", "", default, "", "", "", "", "", "", "");
+        var destination = PersistEntityProvider.GetBlankLearningWorld();
 
         systemUnderTest.Map(source, destination);
 
@@ -333,7 +333,7 @@ public class EntityPersistEntityMappingProfileUt
         source.LearningSpaces.Add(new LearningSpace(Name, Description, RequiredPoints, SpaceTheme.LearningArea,
             positionX: PositionX, positionY: PositionY, inBoundSpaces: new List<IObjectInPathWay>(),
             outBoundSpaces: new List<IObjectInPathWay>()));
-        var destination = new LearningWorldPe("", "", "", "", "", "", default, "", "", "", "", "", "", "");
+        var destination = PersistEntityProvider.GetBlankLearningWorld();
 
         systemUnderTest.Map(source, destination);
 
@@ -408,7 +408,7 @@ public class EntityPersistEntityMappingProfileUt
         var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals, WorldThemeVar,
             EvaluationLink, EvaluationLinkName, EvaluationLinkText, EnrolmentKey, StoryStart, StoryEnd, SavePath,
             new List<ILearningSpace> { space });
-        var destination = new LearningWorldPe("", "", "", "", "", "", default, "", "", "", "", "", "", "");
+        var destination = PersistEntityProvider.GetBlankLearningWorld();
 
         var systemUnderTest = CreateTestableMapper();
 
@@ -484,7 +484,7 @@ public class EntityPersistEntityMappingProfileUt
         source.LearningSpaces.Add(space1);
         source.PathWayConditions.Add(pathWayCondition);
         source.LearningSpaces.Add(space2);
-        var destination = new LearningWorldPe("", "", "", "", "", "", default, "", "", "", "", "", "", "");
+        var destination = PersistEntityProvider.GetBlankLearningWorld();
 
         source.LearningPathways.Add(new LearningPathway(space1, pathWayCondition));
         source.LearningPathways.Add(new LearningPathway(pathWayCondition, space2));
