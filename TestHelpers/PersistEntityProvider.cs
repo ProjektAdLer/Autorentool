@@ -18,7 +18,8 @@ public static class PersistEntityProvider
     public static LearningWorldPe GetLearningWorld(string append = "", List<LearningSpacePe>? learningSpaces = null)
     {
         return new LearningWorldPe("LWPn" + append, "LWPsn" + append, "LWPa" + append, "LWPl" + append, "LWPd" + append,
-            "LWPg" + append, WorldTheme.CampusAschaffenburg, "LWPev" + append, "LWPek" + append, "LWPss" + append,
+            "LWPg" + append, WorldTheme.CampusAschaffenburg, "LWPev" + append, "LWPevN" + append, "LWPevT" + append,
+            "LWPek" + append, "LWPss" + append,
             "LWPse" + append, "LWPsp" + append, learningSpaces: learningSpaces);
     }
 
@@ -62,7 +63,7 @@ public static class PersistEntityProvider
     }
 
     public static LearningElementPe GetLearningElement(string append = "", ILearningContentPe? content = null,
-        string name = "", LearningElementDifficultyEnum difficulty = LearningElementDifficultyEnum.Easy, 
+        string name = "", LearningElementDifficultyEnum difficulty = LearningElementDifficultyEnum.Easy,
         ElementModel elementModel = ElementModel.l_h5p_slotmachine_1, int workload = 0)
     {
         return new LearningElementPe(name != "" ? name : "a" + append, content!, "d" + append, "e" + append,
@@ -97,7 +98,8 @@ public static class PersistEntityProvider
         List<string>? story = null, string npcName = "a npc name", NpcMood npcMood = NpcMood.Welcome)
     {
         return new StoryContentPe(name ?? "a name", unsavedChanges,
-            story ?? new List<string> { "this is a story", "of a", "duck", "debugging", "a", "bug", "with quacks" }, npcName, NpcMood.Welcome);
+            story ?? new List<string> { "this is a story", "of a", "duck", "debugging", "a", "bug", "with quacks" },
+            npcName, NpcMood.Welcome);
     }
 
     public static TopicPe GetTopic(string? name = null)
@@ -218,5 +220,10 @@ public static class PersistEntityProvider
     private static ChoicePe GetAdaptivityChoice()
     {
         return new ChoicePe("a choice");
+    }
+
+    public static LearningWorldPe GetBlankLearningWorld()
+    {
+        return new LearningWorldPe("", "", "", "", "", "", default, "", "", "", "", "", "", "");
     }
 }

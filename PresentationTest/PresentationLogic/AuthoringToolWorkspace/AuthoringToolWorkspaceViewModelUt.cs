@@ -71,6 +71,7 @@ public class AuthoringToolWorkspaceViewModelUt
 
     private LearningWorldViewModel GetLearningWorldViewModelForTesting()
     {
-        return new LearningWorldViewModel("foo", "bar", "foo", "bar", "foo", "bar",WorldTheme.CampusAschaffenburg, "foo", "foo", "foo", "foo");
+        return new LearningWorldViewModel("foo", "bar", "foo", "bar", "foo", "bar", WorldTheme.CampusAschaffenburg,
+            "foo", "foo", "foo", "foo", "foo", "foo");
     }
 }

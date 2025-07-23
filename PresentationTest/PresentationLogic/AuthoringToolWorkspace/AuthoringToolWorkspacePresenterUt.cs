@@ -13,6 +13,7 @@ using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.SelectedViewModels;
 using Shared.Theme;
+using TestHelpers;
 
 namespace PresentationTest.PresentationLogic.AuthoringToolWorkspace;
 
@@ -32,28 +33,28 @@ public class AuthoringToolWorkspacePresenterUt
     // ANF-ID: [ASE1]
     public void CreateLearningWorld_CallsCreateLearningWorldOnPresentationLogic()
     {
-        var workspaceVm = new AuthoringToolWorkspaceViewModel();
+        var workspaceVm = ViewModelProvider.GetAuthoringToolWorkspace();
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
         var systemUnderTest = CreatePresenterForTesting(workspaceVm, presentationLogic: presentationLogic,
             selectedViewModelsProvider: selectedViewModelsProvider);
 
-        systemUnderTest.AuthoringToolWorkspaceVm.LearningWorlds.Add(
-            new LearningWorldViewModel("Foo", "Foo", "Foo", "Foo", "Foo", "Foo", WorldTheme.CampusAschaffenburg, "Foo", "Foo", "Foo", "Foo"));
+        systemUnderTest.AuthoringToolWorkspaceVm.LearningWorlds.Add(ViewModelProvider.GetLearningWorld());
 
-        systemUnderTest.CreateLearningWorld("n", "s", "a", "l", "d", "g", WorldTheme.CampusAschaffenburg, "e", "f", "ss", "se");
+        systemUnderTest.CreateLearningWorld("n", "s", "a", "l", "d", "g", WorldTheme.CampusAschaffenburg, "el", "eln",
+            "elt", "ek", "ss", "se");
 
-        presentationLogic.Received(1).CreateLearningWorld(workspaceVm, "n", "s", "a", "l", "d", "g", WorldTheme.CampusAschaffenburg, "e", "f", "ss", "se");
+        presentationLogic.Received(1).CreateLearningWorld(workspaceVm, "n", "s", "a", "l", "d", "g",
+            WorldTheme.CampusAschaffenburg, "el", "eln", "elt", "ek", "ss", "se");
     }
 
     [Test]
     // ANF-ID: [ASE4]
     public async Task DeleteLearningWorld_CallsSaveLearningWorldAsync_WhenUnsavedChangesAndYesResponse()
     {
-        var learningWorld = new LearningWorldViewModel("unsaved", "f", "f", "f", "f", "f",WorldTheme.CampusAschaffenburg, "f", "f", "f", "f")
-        {
-            UnsavedChanges = true
-        };
+        var learningWorld = ViewModelProvider.GetLearningWorld();
+        learningWorld.UnsavedChanges = true;
+
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var dialogReference = Substitute.For<IDialogReference>();
         dialogReference.Result.Returns(DialogResult.Ok(true));
@@ -74,10 +75,9 @@ public class AuthoringToolWorkspacePresenterUt
     // ANF-ID: [ASE4]
     public async Task DeleteLearningWorld_CallsDeleteLearningWorld_WhenNoUnsavedChangesOrNoResponse()
     {
-        var learningWorld = new LearningWorldViewModel("saved", "f", "f", "f", "f", "f",WorldTheme.CampusAschaffenburg, "f", "f", "f", "f")
-        {
-            UnsavedChanges = false
-        };
+        var learningWorld = ViewModelProvider.GetLearningWorld();
+        learningWorld.UnsavedChanges = false;
+
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var dialogReference = Substitute.For<IDialogReference>();
         dialogReference.Result.Returns(DialogResult.Ok(false));
@@ -98,10 +98,9 @@ public class AuthoringToolWorkspacePresenterUt
     // ANF-ID: [ASE4]
     public async Task DeleteLearningWorld_CallsErrorService_WhenUnexpectedDialogResultType()
     {
-        var learningWorld = new LearningWorldViewModel("unsaved", "f", "f", "f", "f", "f",WorldTheme.CampusAschaffenburg, "f", "f", "f", "f")
-        {
-            UnsavedChanges = true
-        };
+        var learningWorld = ViewModelProvider.GetLearningWorld();
+        learningWorld.UnsavedChanges = true;
+
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var dialogReference = Substitute.For<IDialogReference>();
         dialogReference.Result.Returns(DialogResult.Ok("unexpected type"));
@@ -123,10 +122,9 @@ public class AuthoringToolWorkspacePresenterUt
     // ANF-ID: [ASE4]
     public async Task DeleteLearningWorld_AbortsWhenDialogCanceled()
     {
-        var learningWorld = new LearningWorldViewModel("unsaved", "f", "f", "f", "f", "f",WorldTheme.CampusAschaffenburg, "f", "f", "f", "f")
-        {
-            UnsavedChanges = true
-        };
+        var learningWorld = ViewModelProvider.GetLearningWorld();
+        learningWorld.UnsavedChanges = true;
+
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var dialogReference = Substitute.For<IDialogReference>();
         dialogReference.Result.Returns(DialogResult.Cancel());
@@ -152,7 +150,7 @@ public class AuthoringToolWorkspacePresenterUt
     public void SaveLearningWorld_CallsPresentationLogic()
     {
         var presentationLogic = Substitute.For<IPresentationLogic>();
-        var learningWorld = new LearningWorldViewModel("fo", "f", "", "f", "", "",WorldTheme.CampusAschaffenburg, "f", "f", "f", "f");
+        var learningWorld = ViewModelProvider.GetLearningWorld();
         var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
 
         var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic,
@@ -167,7 +165,7 @@ public class AuthoringToolWorkspacePresenterUt
     public void SaveLearningWorld_SerializationException_CallsErrorService()
     {
         var presentationLogic = Substitute.For<IPresentationLogic>();
-        var learningWorld = new LearningWorldViewModel("fo", "f", "", "f", "", "", WorldTheme.CampusAschaffenburg,"f", "f", "f", "f");
+        var learningWorld = ViewModelProvider.GetLearningWorld();
         var errorService = Substitute.For<IErrorService>();
         presentationLogic
             .When(x => x.SaveLearningWorld(Arg.Any<ILearningWorldViewModel>()))
@@ -185,7 +183,7 @@ public class AuthoringToolWorkspacePresenterUt
     public void SaveLearningWorld_InvalidOperationException_CallsErrorService()
     {
         var presentationLogic = Substitute.For<IPresentationLogic>();
-        var learningWorld = new LearningWorldViewModel("fo", "f", "", "f", "", "",WorldTheme.CampusAschaffenburg, "f", "f", "f", "f");
+        var learningWorld = ViewModelProvider.GetLearningWorld();
         var errorService = Substitute.For<IErrorService>();
         presentationLogic
             .When(x => x.SaveLearningWorld(Arg.Any<ILearningWorldViewModel>()))
@@ -202,15 +200,13 @@ public class AuthoringToolWorkspacePresenterUt
     // ANF-ID: [ASE6, ASN0025]
     public async Task OnBeforeShutdown_CallsDialogService_ForEveryUnsavedWorld_AndCallsSaveOnYesResponse()
     {
-        var viewModel = new AuthoringToolWorkspaceViewModel();
-        var unsavedWorld = new LearningWorldViewModel("unsaved", "f", "f", "f", "f", "f",WorldTheme.CampusAschaffenburg, "f", "f", "f", "f")
-        {
-            UnsavedChanges = true
-        };
-        var savedWorld = new LearningWorldViewModel("unsaved", "f", "f", "f", "f", "f", WorldTheme.CampusAschaffenburg,"f", "f", "f", "f")
-        {
-            UnsavedChanges = false
-        };
+        var viewModel = ViewModelProvider.GetAuthoringToolWorkspace();
+        var unsavedWorld = ViewModelProvider.GetLearningWorld();
+        unsavedWorld.UnsavedChanges = true;
+
+        var savedWorld = ViewModelProvider.GetLearningWorld();
+        savedWorld.UnsavedChanges = false;
+
         viewModel._learningWorlds.Add(unsavedWorld);
         viewModel._learningWorlds.Add(savedWorld);
         var args = new BeforeShutdownEventArgs();
@@ -251,11 +247,10 @@ public class AuthoringToolWorkspacePresenterUt
     // ANF-ID: [ASN0025]
     public async Task OnBeforeShutdown_CallsDialogService_CancelsShutdownOnCancelReturnValue()
     {
-        var viewModel = new AuthoringToolWorkspaceViewModel();
-        var unsavedWorld = new LearningWorldViewModel("unsaved", "f", "f", "f", "f", "f", WorldTheme.CampusAschaffenburg,"f", "f", "f", "f")
-        {
-            UnsavedChanges = true
-        };
+        var viewModel = ViewModelProvider.GetAuthoringToolWorkspace();
+        var unsavedWorld = ViewModelProvider.GetLearningWorld();
+        unsavedWorld.UnsavedChanges = true;
+
         viewModel._learningWorlds.Add(unsavedWorld);
         var args = new BeforeShutdownEventArgs();
         var presentationLogic = Substitute.For<IPresentationLogic>();
@@ -284,11 +279,10 @@ public class AuthoringToolWorkspacePresenterUt
     // ANF-ID: [ASN0025]
     public async Task OnBeforeShutdown_CallsErrorService_WhenUnexpectedDialogResultTypeReturned()
     {
-        var viewModel = new AuthoringToolWorkspaceViewModel();
-        var unsavedWorld = new LearningWorldViewModel("unsaved", "f", "f", "f", "f", "f",WorldTheme.CampusAschaffenburg, "f", "f", "f", "f")
-        {
-            UnsavedChanges = true
-        };
+        var viewModel = ViewModelProvider.GetAuthoringToolWorkspace();
+        var unsavedWorld = ViewModelProvider.GetLearningWorld();
+        unsavedWorld.UnsavedChanges = true;
+
         viewModel._learningWorlds.Add(unsavedWorld);
         var args = new BeforeShutdownEventArgs();
         var presentationLogic = Substitute.For<IPresentationLogic>();
@@ -315,7 +309,8 @@ public class AuthoringToolWorkspacePresenterUt
         ILogger<AuthoringToolWorkspacePresenter>? logger = null,
         ISelectedViewModelsProvider? selectedViewModelsProvider = null,
         IShutdownManager? shutdownManager = null,
-        IDialogService? dialogService = null, IErrorService? errorService = null, IStringLocalizer<AuthoringToolWorkspacePresenter>? localizer = null)
+        IDialogService? dialogService = null, IErrorService? errorService = null,
+        IStringLocalizer<AuthoringToolWorkspacePresenter>? localizer = null)
     {
         authoringToolWorkspaceVm ??= Substitute.For<IAuthoringToolWorkspaceViewModel>();
         presentationLogic ??= Substitute.For<IPresentationLogic>();

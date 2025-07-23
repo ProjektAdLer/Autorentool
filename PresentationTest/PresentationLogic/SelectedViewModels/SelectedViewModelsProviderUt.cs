@@ -6,7 +6,6 @@ using NSubstitute;
 using NUnit.Framework;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
-using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.SelectedViewModels;
 using Shared;
 using Shared.Theme;
@@ -23,7 +22,7 @@ public class SelectedViewModelsProviderUt
         var onUndoRedo = Substitute.For<IOnUndoRedo>();
         var logger = Substitute.For<ILogger<SelectedViewModelsProvider>>();
         var systemUnderTest = new SelectedViewModelsProvider(onUndoRedo, logger);
-        var learningWorld = new LearningWorldViewModel("a", "b", "c", "d", "e", "f",WorldTheme.CampusAschaffenburg, "h", "i", "j", "k", "g");
+        var learningWorld = ViewModelProvider.GetLearningWorld();
         var mockCommand = Substitute.For<ICreateLearningSpace>();
 
         systemUnderTest.SetActiveElementSlotInSpace(1, null);

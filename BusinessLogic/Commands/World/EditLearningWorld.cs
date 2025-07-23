@@ -10,7 +10,7 @@ public class EditLearningWorld : IEditLearningWorld
 
     public EditLearningWorld(LearningWorld learningWorld, string name, string shortname,
         string authors, string language, string description, string goals, WorldTheme worldTheme, string evaluationLink,
-        string enrolmentKey, string storyStart, string storyEnd,
+        string evaluationLinkName, string evaluationLinkText, string enrolmentKey, string storyStart, string storyEnd,
         Action<LearningWorld> mappingAction,
         ILogger<EditLearningWorld> logger)
     {
@@ -23,6 +23,8 @@ public class EditLearningWorld : IEditLearningWorld
         Goals = goals;
         WorldTheme = worldTheme;
         EvaluationLink = evaluationLink;
+        EvaluationLinkName = evaluationLinkName;
+        EvaluationLinkText = evaluationLinkText;
         EnrolmentKey = enrolmentKey;
         StoryStart = storyStart;
         StoryEnd = storyEnd;
@@ -39,6 +41,8 @@ public class EditLearningWorld : IEditLearningWorld
     internal string Goals { get; }
     internal WorldTheme WorldTheme { get; }
     internal string EvaluationLink { get; }
+    internal string EvaluationLinkName { get; }
+    internal string EvaluationLinkText { get; }
     internal string EnrolmentKey { get; }
     internal string StoryStart { get; }
     internal string StoryEnd { get; }
@@ -51,10 +55,10 @@ public class EditLearningWorld : IEditLearningWorld
         _memento ??= LearningWorld.GetMemento();
 
         Logger.LogTrace(
-            "Editing LearningWorld {OldName} ({Id}). Previous Name: {Name}, Shortname: {Shortname}, Authors: {Authors}, Language: {Language}, Description: {Description}, Goals: {Goals}, Theme: {WorldTheme}, EvaluationLink: {EvaluationLink}, EnrolmentKey: {EnrolmentKey}, StoryStart: {StoryStart}, StoryEnd: {StoryEnd}",
+            "Editing LearningWorld {OldName} ({Id}). Previous Name: {Name}, Shortname: {Shortname}, Authors: {Authors}, Language: {Language}, Description: {Description}, Goals: {Goals}, Theme: {WorldTheme}, EvaluationLink: {EvaluationLink}, EvaluationLinkName: {EvaluationLinkName}, EvaluationLinkText: {EvaluationLinkText}, EnrolmentKey: {EnrolmentKey}, StoryStart: {StoryStart}, StoryEnd: {StoryEnd}",
             LearningWorld.Name, LearningWorld.Id, WorldName, Shortname, Authors, Language, Description, Goals,
             WorldTheme,
-            EvaluationLink, EnrolmentKey, StoryStart, StoryEnd);
+            EvaluationLink, EvaluationLinkName, EvaluationLinkText, EnrolmentKey, StoryStart, StoryEnd);
 
         if (AnyChanges()) LearningWorld.UnsavedChanges = true;
         LearningWorld.Name = WorldName;
@@ -65,15 +69,17 @@ public class EditLearningWorld : IEditLearningWorld
         LearningWorld.Goals = Goals;
         LearningWorld.WorldTheme = WorldTheme;
         LearningWorld.EvaluationLink = EvaluationLink;
+        LearningWorld.EvaluationLinkName = EvaluationLinkName;
+        LearningWorld.EvaluationLinkText = EvaluationLinkText;
         LearningWorld.EnrolmentKey = EnrolmentKey;
         LearningWorld.StoryStart = StoryStart;
         LearningWorld.StoryEnd = StoryEnd;
 
         Logger.LogTrace(
-            "Edited LearningWorld ({Id}). Updated Name: {Name}, Shortname: {Shortname}, Authors: {Authors}, Language: {Language}, Description: {Description}, Goals: {Goals}, Theme: {WorldTheme}, EvaluationLink: {EvaluationLink}, EnrolmentKey: {EnrolmentKey}, StoryStart: {StoryStart}, StoryEnd: {StoryEnd}",
+            "Edited LearningWorld ({Id}). Updated Name: {Name}, Shortname: {Shortname}, Authors: {Authors}, Language: {Language}, Description: {Description}, Goals: {Goals}, Theme: {WorldTheme}, EvaluationLink: {EvaluationLink}, EvaluationLinkName: {EvaluationLinkName}, EvaluationLinkText: {EvaluationLinkText}, EnrolmentKey: {EnrolmentKey}, StoryStart: {StoryStart}, StoryEnd: {StoryEnd}",
             LearningWorld.Id, LearningWorld.Name, LearningWorld.Shortname, LearningWorld.Authors,
             LearningWorld.Language, LearningWorld.Description, LearningWorld.Goals, LearningWorld.WorldTheme,
-            LearningWorld.EvaluationLink,
+            LearningWorld.EvaluationLink, LearningWorld.EvaluationLinkName, LearningWorld.EvaluationLinkText,
             LearningWorld.EnrolmentKey, LearningWorld.StoryStart, LearningWorld.StoryEnd);
 
         MappingAction.Invoke(LearningWorld);
@@ -109,6 +115,8 @@ public class EditLearningWorld : IEditLearningWorld
         LearningWorld.Goals != Goals ||
         LearningWorld.WorldTheme != WorldTheme ||
         LearningWorld.EvaluationLink != EvaluationLink ||
+        LearningWorld.EvaluationLinkName != EvaluationLinkName ||
+        LearningWorld.EvaluationLinkText != EvaluationLinkText ||
         LearningWorld.EnrolmentKey != EnrolmentKey ||
         LearningWorld.StoryStart != StoryStart ||
         LearningWorld.StoryEnd != StoryEnd;
