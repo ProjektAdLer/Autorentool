@@ -112,8 +112,8 @@ public interface IPresentationLogic
     /// <param name="storyEnd">The story end of the learning world.</param>
     void EditLearningWorld(ILearningWorldViewModel learningWorldVm, string name, string shortname, string authors,
         string language, string description, LearningOutcomeCollectionViewModel learningOutcomeCollectionVm,
-        WorldTheme worldTheme, string evaluationLink,string evaluationLinkName,
-        string evaluationLinkText, stringenrolmentKey, string storyStart, string storyEnd);
+        WorldTheme worldTheme, string evaluationLink, string evaluationLinkName,
+        string evaluationLinkText, string enrolmentKey, string storyStart, string storyEnd);
 
     /// <summary>
     /// Deletes the given learning world in the authoring tool workspace.

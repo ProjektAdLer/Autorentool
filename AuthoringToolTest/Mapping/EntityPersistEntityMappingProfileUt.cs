@@ -266,8 +266,8 @@ public class EntityPersistEntityMappingProfileUt
     {
         var systemUnderTest = CreateTestableMapper();
         var source = new LearningWorld(Name, Shortname, Authors, Language, Description,
-            GetTestableLearningOutcomeCollection(), EvaluationLinkName, EvaluationLinkText,
-            WorldThemeVar, EvaluationLink, EnrolmentKey,
+            GetTestableLearningOutcomeCollection(), WorldThemeVar, EvaluationLink, EvaluationLinkName,
+            EvaluationLinkText, EnrolmentKey,
             savePath: SavePath, learningSpaces: new List<ILearningSpace>());
         var destination = PersistEntityProvider.GetBlankLearningWorld();
 
