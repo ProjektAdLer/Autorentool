@@ -176,7 +176,7 @@ public class PresentationLogic : IPresentationLogic
     /// <inheritdoc cref="IPresentationLogic.CreateLearningWorld"/>
     public void CreateLearningWorld(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm, string name,
         string shortname, string authors, string language, string description,
-        LearningOutcomeCollectionViewModel learningOutcomeCollectionVm, WorldTheme worldTheme, string evaluationLink,
+        LearningOutcomeCollectionViewModel learningOutcomeCollectionVm, WorldTheme worldTheme, string evaluationLink, string evaluationLinkName, string evaluationLinkText,
         string enrolmentKey, string storyStart, string storyEnd)
     {
         var authoringToolWorkspaceEntity =
@@ -184,7 +184,8 @@ public class PresentationLogic : IPresentationLogic
         var learningOutcomeCollection = Mapper.Map<LearningOutcomeCollection>(learningOutcomeCollectionVm);
 
         var command = WorldCommandFactory.GetCreateCommand(authoringToolWorkspaceEntity, name, shortname, authors,
-            language, description, learningOutcomeCollection, worldTheme, evaluationLink, enrolmentKey,
+            language, description, learningOutcomeCollection, worldTheme, evaluationLink, evaluationLinkName, evaluationLinkText,
+            enrolmentKey,
             storyStart, storyEnd,
             workspace => CMapper.Map(workspace, authoringToolWorkspaceVm));
         BusinessLogic.ExecuteCommand(command);
@@ -196,14 +197,15 @@ public class PresentationLogic : IPresentationLogic
     public void EditLearningWorld(ILearningWorldViewModel learningWorldVm, string name,
         string shortname, string authors, string language, string description,
         LearningOutcomeCollectionViewModel learningOutcomeCollectionVm, WorldTheme worldTheme,
-        string evaluationLink, string enrolmentKey, string storyStart, string storyEnd)
+        string evaluationLink,string evaluationLinkName, string evaluationLinkText,
+        string enrolmentKey, string storyStart, string storyEnd)
     {
         var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
         var learningOutcomeCollection = Mapper.Map<LearningOutcomeCollection>(learningOutcomeCollectionVm);
 
-        var command = WorldCommandFactory.GetEditCommand(worldEntity, name, shortname, authors, language, description,
-            learningOutcomeCollection, worldTheme, evaluationLink, enrolmentKey, storyStart, storyEnd,
-            world => CMapper.Map(world, learningWorldVm));
+        var command = WorldCommandFactory.GetEditCommand(worldEntity, name, shortname, authors, language,
+            description, learningOutcomeCollection, worldTheme, evaluationLink, evaluationLinkName, evaluationLinkText,
+            enrolmentKey, storyStart, storyEnd, world => CMapper.Map(world, learningWorldVm));
         //quit early if there are no changes
         if (!command.AnyChanges())
         {

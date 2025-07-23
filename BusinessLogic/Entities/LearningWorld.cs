@@ -23,6 +23,8 @@ public class LearningWorld : ILearningWorld, IOriginator
         WorldTheme = default;
         SavePath = "";
         EvaluationLink = "";
+        EvaluationLinkName = "";
+        EvaluationLinkText = "";
         EnrolmentKey = "";
         StoryStart = "";
         StoryEnd = "";
@@ -36,7 +38,7 @@ public class LearningWorld : ILearningWorld, IOriginator
 
     public LearningWorld(string name, string shortname, string authors, string language, string description,
         LearningOutcomeCollection learningOutcomes, WorldTheme worldTheme, string evaluationLink = "",
-        string enrolmentKey = "", string storyStart = "", string storyEnd = "", string savePath = "",
+       string evaluationLinkName = "", string evaluationLinkText = "", string enrolmentKey = "", string storyStart = "", string storyEnd = "", string savePath = "",
         List<ILearningSpace>? learningSpaces = null,
         List<PathWayCondition>? pathWayConditions = null,
         List<LearningPathway>? learningPathways = null, List<Topic>? topics = null)
@@ -51,6 +53,8 @@ public class LearningWorld : ILearningWorld, IOriginator
         WorldTheme = worldTheme;
         SavePath = savePath;
         EvaluationLink = evaluationLink;
+        EvaluationLinkName = evaluationLinkName;
+        EvaluationLinkText = evaluationLinkText;
         EnrolmentKey = enrolmentKey;
         StoryStart = storyStart;
         StoryEnd = storyEnd;
@@ -82,6 +86,8 @@ public class LearningWorld : ILearningWorld, IOriginator
     public LearningOutcomeCollection LearningOutcomeCollection { get; set; }
     public WorldTheme WorldTheme { get; set; }
     public string EvaluationLink { get; set; }
+    public string EvaluationLinkName { get; set; }
+    public string EvaluationLinkText { get; set; }
     public string EnrolmentKey { get; set; }
     public string StoryStart { get; set; }
     public string StoryEnd { get; set; }
@@ -111,7 +117,7 @@ public class LearningWorld : ILearningWorld, IOriginator
     {
         return new LearningWorldMemento(Name, Shortname, Authors, Language, Description, LearningOutcomeCollection,
             WorldTheme,
-            EvaluationLink, EnrolmentKey, StoryStart, StoryEnd, SavePath,
+            EvaluationLink, EvaluationLinkName, EvaluationLinkText, EnrolmentKey, StoryStart, StoryEnd, SavePath,
             LearningSpaces, PathWayConditions, LearningPathways, Topics, InternalUnsavedChanges,
             UnplacedLearningElements);
     }
@@ -131,6 +137,8 @@ public class LearningWorld : ILearningWorld, IOriginator
         LearningOutcomeCollection = learningWorldMemento.LearningOutcomeCollection;
         WorldTheme = learningWorldMemento.WorldTheme;
         EvaluationLink = learningWorldMemento.EvaluationLink;
+        EvaluationLinkName = learningWorldMemento.EvaluationLinkName;
+        EvaluationLinkText = learningWorldMemento.EvaluationLinkText;
         EnrolmentKey = learningWorldMemento.EnrolmentKey;
         StoryStart = learningWorldMemento.StoryStart;
         StoryEnd = learningWorldMemento.StoryEnd;
@@ -147,7 +155,8 @@ public class LearningWorld : ILearningWorld, IOriginator
     {
         internal LearningWorldMemento(string name, string shortname, string authors, string language,
             string description, LearningOutcomeCollection learningOutcomeCollection, WorldTheme worldTheme,
-            string evaluationLink, string enrolmentKey, string storyStart, string storyEnd, string savePath,
+            string evaluationLink, string evaluationLinkName,
+            string evaluationLinkText, string enrolmentKey, string storyStart, string storyEnd, string savePath,
             List<ILearningSpace> learningSpaces,
             List<PathWayCondition> pathWayConditions,
             List<LearningPathway> learningPathways, List<Topic> topics, bool unsavedChanges,
@@ -162,6 +171,8 @@ public class LearningWorld : ILearningWorld, IOriginator
             WorldTheme = worldTheme;
             SavePath = savePath;
             EvaluationLink = evaluationLink;
+            EvaluationLinkName = evaluationLinkName;
+            EvaluationLinkText = evaluationLinkText;
             EnrolmentKey = enrolmentKey;
             StoryStart = storyStart;
             StoryEnd = storyEnd;
@@ -185,6 +196,8 @@ public class LearningWorld : ILearningWorld, IOriginator
         internal LearningOutcomeCollection LearningOutcomeCollection { get; }
         internal WorldTheme WorldTheme { get; }
         internal string EvaluationLink { get; }
+        internal string EvaluationLinkName { get; }
+        internal string EvaluationLinkText { get; }
         internal string EnrolmentKey { get; }
         internal string StoryStart { get; }
         internal string StoryEnd { get; }

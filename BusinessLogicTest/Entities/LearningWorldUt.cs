@@ -20,6 +20,8 @@ public class LearningWorldUt
         var learningOutcomeCollection = EntityProvider.GetLearningOutcomeCollection();
         const WorldTheme theme = WorldTheme.CampusAschaffenburg;
         const string evaluationLink = "eva";
+        const string evaluationLinkName = "EvaluationName";
+        const string evaluationLinkText = "EvaluationText";
         const string enrolmentKey = "enrolmentkey";
         const string storyStart = "story start";
         const string storyEnd = "story end";
@@ -38,8 +40,8 @@ public class LearningWorldUt
         var selectableObjects = new List<ISelectableObjectInWorld> { space1, pathWayCondition, pathWay };
 
         var systemUnderTest = new LearningWorld(name, shortname, authors, language, description,
-            learningOutcomeCollection, theme, evaluationLink,
-            enrolmentKey, storyStart, storyEnd,
+            learningOutcomeCollection, theme,
+            evaluationLink, evaluationLinkName, evaluationLinkText, enrolmentKey, storyStart, storyEnd,
             savePath: savePath, learningSpaces: learningSpaces, pathWayConditions: pathWayConditions,
             learningPathways: pathWays, topics: topics);
 
@@ -53,6 +55,8 @@ public class LearningWorldUt
             Assert.That(systemUnderTest.LearningOutcomeCollection, Is.EqualTo(learningOutcomeCollection));
             Assert.That(systemUnderTest.WorldTheme, Is.EqualTo(theme));
             Assert.That(systemUnderTest.EvaluationLink, Is.EqualTo(evaluationLink));
+            Assert.That(systemUnderTest.EvaluationLinkName, Is.EqualTo(evaluationLinkName));
+            Assert.That(systemUnderTest.EvaluationLinkText, Is.EqualTo(evaluationLinkText));
             Assert.That(systemUnderTest.EnrolmentKey, Is.EqualTo(enrolmentKey));
             Assert.That(systemUnderTest.StoryStart, Is.EqualTo(storyStart));
             Assert.That(systemUnderTest.StoryEnd, Is.EqualTo(storyEnd));
@@ -77,6 +81,8 @@ public class LearningWorldUt
         var learningOutcomeCollection = EntityProvider.GetLearningOutcomeCollection();
         const WorldTheme theme = WorldTheme.CampusAschaffenburg;
         const string evaluationLink = "eva";
+        const string evaluationLinkName = "EvaluationName";
+        const string evaluationLinkText = "EvaluationText";
         const string enrolmentKey = "enrolmentkey";
         const string storyStart = "story start";
         const string storyEnd = "story end";
@@ -91,9 +97,9 @@ public class LearningWorldUt
         var topics = new List<Topic> { topic1 };
 
         var systemUnderTest = new LearningWorld(name, shortname, authors, language, description,
-            learningOutcomeCollection, theme, evaluationLink,
-            enrolmentKey, storyStart, storyEnd,
-            savePath, learningSpaces, pathWayConditions, pathWays, topics);
+            learningOutcomeCollection, theme,
+            evaluationLink, evaluationLinkName, evaluationLinkText, enrolmentKey, storyStart, storyEnd, savePath,
+            learningSpaces, pathWayConditions, pathWays, topics);
 
         var learningWorldMemento = systemUnderTest.GetMemento();
 
@@ -105,6 +111,8 @@ public class LearningWorldUt
         var learningOutcomeCollectionChanged = EntityProvider.GetLearningOutcomeCollection();
         var themeChanged = WorldTheme.CampusKempten;
         var evaluationLinkChanged = "new evaluation link";
+        var evaluationLinkNameChanged = "new evaluation link name";
+        var evaluationLinkTextChanged = "new evaluation link text";
         var enrolmentKeyChanged = "new enrolment key";
         var storyStartChanged = "new story start";
         var storyEndChanged = "new story end";
@@ -124,6 +132,8 @@ public class LearningWorldUt
         systemUnderTest.LearningOutcomeCollection = learningOutcomeCollectionChanged;
         systemUnderTest.WorldTheme = themeChanged;
         systemUnderTest.EvaluationLink = evaluationLinkChanged;
+        systemUnderTest.EvaluationLinkName = evaluationLinkNameChanged;
+        systemUnderTest.EvaluationLinkText = evaluationLinkTextChanged;
         systemUnderTest.EnrolmentKey = enrolmentKeyChanged;
         systemUnderTest.StoryStart = storyStartChanged;
         systemUnderTest.StoryEnd = storyEndChanged;
@@ -145,6 +155,8 @@ public class LearningWorldUt
             Assert.That(systemUnderTest.LearningOutcomeCollection, Is.EqualTo(learningOutcomeCollectionChanged));
             Assert.That(systemUnderTest.WorldTheme, Is.EqualTo(themeChanged));
             Assert.That(systemUnderTest.EvaluationLink, Is.EqualTo(evaluationLinkChanged));
+            Assert.That(systemUnderTest.EvaluationLinkName, Is.EqualTo(evaluationLinkNameChanged));
+            Assert.That(systemUnderTest.EvaluationLinkText, Is.EqualTo(evaluationLinkTextChanged));
             Assert.That(systemUnderTest.EnrolmentKey, Is.EqualTo(enrolmentKeyChanged));
             Assert.That(systemUnderTest.StoryStart, Is.EqualTo(storyStartChanged));
             Assert.That(systemUnderTest.StoryEnd, Is.EqualTo(storyEndChanged));
@@ -175,6 +187,8 @@ public class LearningWorldUt
             Assert.That(systemUnderTest.LearningOutcomeCollection, Is.EqualTo(learningOutcomeCollection));
             Assert.That(systemUnderTest.WorldTheme, Is.EqualTo(theme));
             Assert.That(systemUnderTest.EvaluationLink, Is.EqualTo(evaluationLink));
+            Assert.That(systemUnderTest.EvaluationLinkName, Is.EqualTo(evaluationLinkName));
+            Assert.That(systemUnderTest.EvaluationLinkText, Is.EqualTo(evaluationLinkText));
             Assert.That(systemUnderTest.EnrolmentKey, Is.EqualTo(enrolmentKey));
             Assert.That(systemUnderTest.StoryStart, Is.EqualTo(storyStart));
             Assert.That(systemUnderTest.StoryEnd, Is.EqualTo(storyEnd));
@@ -201,6 +215,8 @@ public class LearningWorldUt
         var learningOutcomeCollection = EntityProvider.GetLearningOutcomeCollection();
         const WorldTheme theme = WorldTheme.CampusAschaffenburg;
         const string evaluationLink = "https://";
+        const string evaluationLinkName = "EvaluationName";
+        const string evaluationLinkText = "EvaluationText";
         const string enrolmentKey = "enrolmentkey";
         const string storyStart = "story start";
         const string storyEnd = "story end";
@@ -209,7 +225,7 @@ public class LearningWorldUt
         var learningSpaces = new List<ILearningSpace> { space1 };
 
         var systemUnderTest = new LearningWorld(name, shortname, authors, language, description,
-            learningOutcomeCollection, theme, evaluationLink, enrolmentKey, storyStart, storyEnd,
+            learningOutcomeCollection, theme, evaluationLink, evaluationLinkName, evaluationLinkText, enrolmentKey, storyStart, storyEnd,
             savePath: savePath, learningSpaces: learningSpaces);
 
 

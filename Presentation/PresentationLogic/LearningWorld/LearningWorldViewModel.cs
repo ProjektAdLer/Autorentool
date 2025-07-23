@@ -20,6 +20,8 @@ public class LearningWorldViewModel : ILearningWorldViewModel
     private string _storyStart;
     private string _storyEnd;
     private string _evaluationLink;
+    private string _evaluationLinkName;
+    private string _evaluationLinkText;
     private WorldTheme _worldTheme;
     private string _language;
     private ICollection<ILearningPathWayViewModel> _learningPathWays;
@@ -47,6 +49,8 @@ public class LearningWorldViewModel : ILearningWorldViewModel
         LearningOutcomeCollection = new LearningOutcomeCollectionViewModel();
         _worldTheme = default;
         _evaluationLink = "";
+        _evaluationLinkName = "";
+        _evaluationLinkText = "";
         _enrolmentKey = "";
         _storyStart = "";
         _storyEnd = "";
@@ -69,7 +73,10 @@ public class LearningWorldViewModel : ILearningWorldViewModel
     /// <param name="description">A description of the learning world and its contents.</param>
     /// <param name="learningOutcomes">The learning outcomes of the learning world.</param>
     /// <param name="worldTheme">The theme of the learning world.</param>
+    /// <param name="worldTheme">The theme of the learning world.</param>
     /// <param name="evaluationLink">Link to the evaluation on completion.</param>
+    /// <param name="evaluationLinkName">Name of the evaluation link.</param>
+    /// <param name="evaluationLinkText">Description text of the evaluation link.</param>
     /// <param name="enrolmentKey">Key for users to enrol in the learning world.</param>
     /// <param name="storyStart">The story start of the learning world.</param>
     /// <param name="storyEnd">The story end of the learning world.</param>
@@ -83,7 +90,8 @@ public class LearningWorldViewModel : ILearningWorldViewModel
     /// <param name="topics">Optional collection of topics in the learning world.</param>
     public LearningWorldViewModel(string name, string shortname, string authors, string language, string description,
         LearningOutcomeCollectionViewModel learningOutcomes, WorldTheme worldTheme, string evaluationLink,
-        string enrolmentKey, string storyStart, string storyEnd,
+        string evaluationLinkName, string evaluationLinkText, string enrolmentKey,
+        string storyStart, string storyEnd,
         string savePath = "", bool unsavedChanges = true,
         List<ILearningSpaceViewModel>? learningSpaces = null,
         List<PathWayConditionViewModel>? pathWayConditions = null,
@@ -100,6 +108,8 @@ public class LearningWorldViewModel : ILearningWorldViewModel
         LearningOutcomeCollection = learningOutcomes;
         _worldTheme = worldTheme;
         _evaluationLink = evaluationLink;
+        _evaluationLinkName = evaluationLinkName;
+        _evaluationLinkText = evaluationLinkText;
         _enrolmentKey = enrolmentKey;
         _storyStart = storyStart;
         _storyEnd = storyEnd;
@@ -220,6 +230,18 @@ public class LearningWorldViewModel : ILearningWorldViewModel
     {
         get => _evaluationLink;
         set => SetField(ref _evaluationLink, value);
+    }
+
+    public string EvaluationLinkName
+    {
+        get => _evaluationLinkName;
+        set => SetField(ref _evaluationLinkName, value);
+    }
+
+    public string EvaluationLinkText
+    {
+        get => _evaluationLinkText;
+        set => SetField(ref _evaluationLinkText, value);
     }
 
     public string EnrolmentKey

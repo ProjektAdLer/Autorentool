@@ -20,10 +20,11 @@ public class WorldCommandFactory : IWorldCommandFactory
     public ICreateLearningWorld GetCreateCommand(AuthoringToolWorkspace authoringToolWorkspace, string name,
         string shortname, string authors, string language, string description,
         LearningOutcomeCollection learningOutcomeCollection, WorldTheme worldTheme,
-        string evaluationLink, string enrolmentKey, string storyStart, string storyEnd,
+        string evaluationLink, string evaluationLinkName, string evaluationLinkText, string enrolmentKey,
+        string storyStart, string storyEnd,
         Action<AuthoringToolWorkspace> mappingAction) =>
         new CreateLearningWorld(authoringToolWorkspace, name, shortname, authors, language, description,
-            learningOutcomeCollection, worldTheme, evaluationLink, enrolmentKey, storyStart, storyEnd,
+            learningOutcomeCollection, worldTheme, evaluationLink, evaluationLinkName, evaluationLinkText, enrolmentKey, storyStart, storyEnd,
             mappingAction, LoggerFactory.CreateLogger<CreateLearningWorld>());
 
     public ICreateLearningWorld GetCreateCommand(AuthoringToolWorkspace authoringToolWorkspace,
@@ -38,10 +39,11 @@ public class WorldCommandFactory : IWorldCommandFactory
 
     public IEditLearningWorld GetEditCommand(LearningWorld learningWorld, string name, string shortname, string authors,
         string language, string description, LearningOutcomeCollection learningOutcomeCollection,
-        WorldTheme worldTheme, string evaluationLink, string enrolmentKey, string storyStart, string storyEnd,
+        WorldTheme worldTheme, string evaluationLink, string evaluationLinkName, string evaluationLinkText, string enrolmentKey, string storyStart, string storyEnd,
         Action<LearningWorld> mappingAction) =>
         new EditLearningWorld(learningWorld, name, shortname, authors, language, description, learningOutcomeCollection,
-            worldTheme, evaluationLink, enrolmentKey, storyStart, storyEnd,
+            worldTheme, evaluationLink,evaluationLinkName, evaluationLinkText,
+            enrolmentKey, storyStart, storyEnd,
             mappingAction, LoggerFactory.CreateLogger<EditLearningWorld>());
 
     public ILoadLearningWorld GetLoadCommand(AuthoringToolWorkspace workspace, string filepath,

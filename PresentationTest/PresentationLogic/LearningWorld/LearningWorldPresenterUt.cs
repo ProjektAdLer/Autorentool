@@ -37,9 +37,10 @@ public class LearningWorldPresenterUt
         systemUnderTest.LearningWorldVm = world;
         var learningOutcomeCollection = ViewModelProvider.GetLearningOutcomeCollection();
         systemUnderTest.EditLearningWorld("n", "s", "a", "l", "d", learningOutcomeCollection,
-            WorldTheme.CampusAschaffenburg, "h", "f", "ss", "se");
+            WorldTheme.CampusAschaffenburg, "el", "eln",
+            "elt", "ek", "ss", "se");
         presentationLogic.Received().EditLearningWorld(world, "n", "s", "a", "l", "d", learningOutcomeCollection,
-            WorldTheme.CampusAschaffenburg, "h", "f", "ss", "se");
+            WorldTheme.CampusAschaffenburg, "el", "eln", "elt", "ek", "ss", "se");
     }
 
     [Test]
@@ -55,7 +56,8 @@ public class LearningWorldPresenterUt
             errorService: mockErrorService);
 
         systemUnderTest.EditLearningWorld("n", "s", "a", "l", "d", ViewModelProvider.GetLearningOutcomeCollection(),
-            WorldTheme.CampusAschaffenburg, "h", "f", "ss", "se");
+            WorldTheme.CampusAschaffenburg, "el", "eln",
+            "elt", "ek", "ss", "se");
 
         mockErrorService.Received().SetError("Operation failed", "No learning world selected");
     }

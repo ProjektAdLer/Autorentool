@@ -33,7 +33,7 @@ public class AuthoringToolWorkspacePresenterUt
     // ANF-ID: [ASE1]
     public void CreateLearningWorld_CallsCreateLearningWorldOnPresentationLogic()
     {
-        var workspaceVm = new AuthoringToolWorkspaceViewModel();
+        var workspaceVm = ViewModelProvider.GetAuthoringToolWorkspace();
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
         var systemUnderTest = CreatePresenterForTesting(workspaceVm, presentationLogic: presentationLogic,
@@ -42,11 +42,12 @@ public class AuthoringToolWorkspacePresenterUt
         systemUnderTest.AuthoringToolWorkspaceVm.LearningWorlds.Add(ViewModelProvider.GetLearningWorld());
         var loc = ViewModelProvider.GetLearningOutcomeCollection();
 
-        systemUnderTest.CreateLearningWorld("n", "s", "a", "l", "d", loc, WorldTheme.CampusAschaffenburg, "e", "f",
+        systemUnderTest.CreateLearningWorld("n", "s", "a", "l", "d", loc, WorldTheme.CampusAschaffenburg, "el", "eln",
+            "elt", "ek",
             "ss", "se");
 
         presentationLogic.Received(1).CreateLearningWorld(workspaceVm, "n", "s", "a", "l", "d", loc,
-            WorldTheme.CampusAschaffenburg, "e", "f", "ss", "se");
+            WorldTheme.CampusAschaffenburg, "el", "eln", "elt", "ek", "ss", "se");
     }
 
     [Test]

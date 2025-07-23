@@ -52,11 +52,38 @@
                                   Placeholder="@Localizer["CreateWorldForm.General.Field.Language.Text"]"
                                   Typo="Typo.body1"
                                   Margin="Margin.Normal"/>
-                    <MudTextField @bind-Value="FormDataContainer.FormModel.EvaluationLink"
-                                  For="@(() => FormModel.EvaluationLink)"
+                </div>
+            </Collapsable>
+
+            <Collapsable Title=@Localizer["CreateWorldForm.Finalization.Text"] InitiallyCollapsed="true">
+                <div class="rounded-lg w-4/4 px-6">
+                    <p class="text-xs pt-3">@Localizer["CreateWorldForm.Finalization.Collapsable.Description.Text"]</p>
+                    <MudTooltip Placement="Placement.Right"
+                                Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed"
+                                Text="@Localizer["CreateWorldForm.Finalization.Tooltip"]">
+                        <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info"
+                                 Class="text-adlergrey hover:text-adlerdarkblue"></MudIcon>
+                    </MudTooltip>
+                    <MudTextField @bind-Value="FormDataContainer.FormModel.EvaluationLinkText"
+                                  For="@(() => FormModel.EvaluationLinkText)"
+                                  Lines="3"
+                                  Placeholder="@Localizer["CreateWorldForm.Finalization.Field.EvaluationLinkText.Placeholder.Text"]"
+                                  Variant="Variant.Outlined"
+                                  DebounceInterval="DebounceInterval"/>
+                    <MudTextField @bind-Value="FormDataContainer.FormModel.EvaluationLinkName"
+                                  For="@(() => FormModel.EvaluationLinkName)"
+                                  @ref="_evaluationLinkNameField"
                                   DebounceInterval="DebounceInterval"
                                   OnKeyUp="HandleKeyEvent"
-                                  Placeholder="@Localizer["CreateWorldForm.General.Field.EvaluationLink.Text"]"
+                                  Placeholder="@Localizer["CreateWorldForm.Finalization.Field.EvaluationLinkName.Placeholder.Text"]"
+                                  Typo="Typo.body1"
+                                  Margin="Margin.Normal"/>
+                    <MudTextField @bind-Value="FormDataContainer.FormModel.EvaluationLink"
+                                  For="@(() => FormModel.EvaluationLink)"
+                                  @ref="_evaluationLinkField"
+                                  DebounceInterval="DebounceInterval"
+                                  OnKeyUp="HandleKeyEvent"
+                                  Placeholder="@Localizer["CreateWorldForm.Finalization.Field.EvaluationLink.Placeholder.Text"]"
                                   Typo="Typo.body1"
                                   Margin="Margin.Normal"/>
                 </div>
@@ -196,7 +223,8 @@
 
     private BaseForm<LearningWorldFormModel, LearningWorld> _form = null!;
     private MudTextField<string> _nameField = null!;
-
+private MudTextField<string> _evaluationLinkNameField = null!;
+    private MudTextField<string> _evaluationLinkField = null!;
     private WorldTheme[] _themes = (WorldTheme[])Enum.GetValues(typeof(WorldTheme));
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -210,7 +238,7 @@
 
     private void OnValidSubmit(LearningWorldFormModel model)
     {
-        AuthoringToolWorkspacePresenter.CreateLearningWorld(model.Name, model.Shortname, model.Authors, model.Language, model.Description, model.LearningOutcomeCollection, model.WorldTheme, model.EvaluationLink, model.EnrolmentKey, model.StoryStart, model.StoryEnd);
+        AuthoringToolWorkspacePresenter.CreateLearningWorld(model.Name, model.Shortname, model.Authors, model.Language, model.Description, model.LearningOutcomeCollection, model.WorldTheme, model.EvaluationLink, model.EvaluationLinkName, model.EvaluationLinkText, model.EnrolmentKey, model.StoryStart, model.StoryEnd);
         OnSubmitted.InvokeAsync();
     }
 
@@ -224,6 +252,22 @@
         if (arg.Key == "Enter")
         {
             await _form.SubmitAsync();
+        }
+        else
+        {
+            await ValidateEvaluationLinkFields();
+        }
+    }
+
+    private async Task ValidateEvaluationLinkFields()
+    {
+        // ReSharper disable ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
+        if (_evaluationLinkField != null && _evaluationLinkNameField != null)
+            // ReSharper restore ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
+        {
+            await Task.Delay(DebounceInterval);
+            await _evaluationLinkField.Validate();
+            await _evaluationLinkNameField.Validate();
         }
     }
 

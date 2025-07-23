@@ -26,8 +26,8 @@ public static class EntityProvider
     public static LearningWorld GetLearningWorld(string name = "a", bool unsavedChanges = false, string append = "")
     {
         return new LearningWorld(name + append, "b" + append, "c" + append, "d" + append, "e" + append,
-                GetLearningOutcomeCollection(unsavedChanges: unsavedChanges), WorldTheme.CampusAschaffenburg,
-                "g" + append)
+                GetLearningOutcomeCollection(unsavedChanges: unsavedChanges), WorldTheme.CampusAschaffenburg, "g" + append, "h" + append, "i" + append, "j" + append, "k" + append,
+                "l" + append)
             { UnsavedChanges = unsavedChanges };
     }
 

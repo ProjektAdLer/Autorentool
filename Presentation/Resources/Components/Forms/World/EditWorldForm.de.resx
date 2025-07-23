@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <root>
-    <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root"
+    <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata"
+                id="root"
                 xmlns="">
         <xsd:element name="root" msdata:IsDataSet="true">
 
@@ -53,9 +54,6 @@
     <data name="EditWorldForm.Fields.Collapsable.General.Field.Shortname.Text" xml:space="preserve">
         <value>Kurzname</value>
     </data>
-    <data name="EditWorldForm.Fields.Collapsable.General.Field.EvaluationLink.Text" xml:space="preserve">
-        <value>Link zur Evaluation</value>
-    </data>
     <data name="EditWorldForm.Text" xml:space="preserve">
         <value>* Erforderliche Angabe</value>
     </data>
@@ -94,6 +92,24 @@
     </data>
     <data name="EditWorldForm.Theme.Field.Theme.Text" xml:space="preserve">
         <value>Auswahl an Themes mit verschiedenen Themenwelten für die Lernwelt</value>
+    </data>
+    <data name="EditWorldForm.Finalization.Text" xml:space="preserve">
+        <value>Link zum Lernweltabschluss</value>
+    </data>
+    <data name="EditWorldForm.Finalization.Collapsable.Description.Text" xml:space="preserve">
+        <value>Sie können in diesem Abschntt einen Link zu einer eigens erstellten Online-Umfrage, zu Ihrem Hochschul-Moodle o.ä. angeben und zusätzlich einen Hinweistext formulieren.</value>
+    </data>
+    <data name="EditWorldForm.Finalization.Tooltip" xml:space="preserve">
+        <value>Wenn Sie keinen Link und Hinweistext angeben, wird standardmäßig der Platzhaltertext in der 3D-Lernumgebung angezeigt.</value>
+    </data>
+    <data name="EditWorldForm.Finalization.Field.EvaluationLinkText.Placeholder.Text" xml:space="preserve">
+        <value>Sie haben alle Lernräume erfolgreich abgeschlossen und somit die Lernwelt bestanden, herzlichen Glückwunsch!</value>
+    </data>
+    <data name="EditWorldForm.Finalization.Field.EvaluationLinkName.Placeholder.Text" xml:space="preserve">
+        <value>z.B. Online-Umfrage</value>
+    </data>
+    <data name="EditWorldForm.Finalization.Field.EvaluationLink.Placeholder.Text" xml:space="preserve">
+        <value>Link zum Lernweltabschluss</value>
     </data>
     <data name="EditWorldForm.Goals.Button" xml:space="preserve">
         <value>Lernziel-Formulierung</value>

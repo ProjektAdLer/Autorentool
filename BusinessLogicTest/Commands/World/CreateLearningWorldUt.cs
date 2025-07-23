@@ -24,6 +24,8 @@ public class CreateLearningWorldUt
         var learningOutcomeCollection = new LearningOutcomeCollection();
         var theme = WorldTheme.CampusAschaffenburg;
         var evaluationLink = "el";
+        var evaluationLinkName = "eln";
+        var evaluationLinkText = "elt";
         var enrolmentKey = "ek";
         var storyStart = "ss";
         var storyEnd = "se";
@@ -31,7 +33,7 @@ public class CreateLearningWorldUt
         Action<AuthoringToolWorkspace> mappingAction = _ => actionWasInvoked = true;
 
         var command = new CreateLearningWorld(workspace, name, shortname, authors, language, description,
-            learningOutcomeCollection, theme, evaluationLink, enrolmentKey, storyStart, storyEnd,
+            learningOutcomeCollection, theme, evaluationLink, evaluationLinkName, evaluationLinkText, enrolmentKey, storyStart, storyEnd,
             mappingAction, new NullLogger<CreateLearningWorld>());
 
         Assert.Multiple(() =>
@@ -58,6 +60,11 @@ public class CreateLearningWorldUt
             Assert.That(world.LearningOutcomeCollection, Is.EqualTo(learningOutcomeCollection));
             Assert.That(world.WorldTheme, Is.EqualTo(WorldTheme.CampusAschaffenburg));
             Assert.That(world.EvaluationLink, Is.EqualTo("el"));
+            Assert.That(world.EvaluationLinkName, Is.EqualTo("eln"));
+            Assert.That(world.EvaluationLinkText, Is.EqualTo("elt"));
+            Assert.That(world.EnrolmentKey, Is.EqualTo("ek"));
+            Assert.That(world.StoryStart, Is.EqualTo("ss"));
+            Assert.That(world.StoryEnd, Is.EqualTo("se"));
         });
     }
 
@@ -70,7 +77,8 @@ public class CreateLearningWorldUt
 
         var systemUnderTest = new CreateLearningWorld(workspace, "Foo", "", "", "", "",
             EntityProvider.GetLearningOutcomeCollection(), default, "", "", "", "",
-            _ => { },
+           "",
+            "", _ => { },
             new NullLogger<CreateLearningWorld>());
 
         systemUnderTest.Execute();
@@ -116,6 +124,8 @@ public class CreateLearningWorldUt
         var learningOutcomeCollection = new LearningOutcomeCollection();
         var theme = WorldTheme.CampusAschaffenburg;
         var evaluationLink = "el";
+        var evaluationLinkName = "eln";
+        var evaluationLinkText = "elt";
         var enrolmentKey = "ek";
         var storyStart = "ss";
         var storyEnd = "se";
@@ -123,7 +133,7 @@ public class CreateLearningWorldUt
         Action<AuthoringToolWorkspace> mappingAction = _ => actionWasInvoked = true;
 
         var command = new CreateLearningWorld(workspace, name, shortname, authors, language, description,
-            learningOutcomeCollection, theme, evaluationLink, enrolmentKey, storyStart, storyEnd,
+            learningOutcomeCollection, theme, evaluationLink, evaluationLinkName, evaluationLinkText, enrolmentKey, storyStart, storyEnd,
             mappingAction, new NullLogger<CreateLearningWorld>());
 
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
@@ -148,6 +158,8 @@ public class CreateLearningWorldUt
         var learningOutcomeCollection = new LearningOutcomeCollection();
         var theme = WorldTheme.CampusAschaffenburg;
         var evaluationLink = "el";
+        var evaluationLinkName = "eln";
+        var evaluationLinkText = "elt";
         var enrolmentKey = "ek";
         var storyStart = "ss";
         var storyEnd = "se";
@@ -155,7 +167,7 @@ public class CreateLearningWorldUt
         Action<AuthoringToolWorkspace> mappingAction = _ => actionWasInvoked = true;
 
         var command = new CreateLearningWorld(workspace, name, shortname, authors, language, description,
-            learningOutcomeCollection, theme, evaluationLink, enrolmentKey, storyStart, storyEnd,
+            learningOutcomeCollection, theme, evaluationLink, evaluationLinkName, evaluationLinkText, enrolmentKey, storyStart, storyEnd,
             mappingAction, new NullLogger<CreateLearningWorld>());
 
         Assert.Multiple(() =>

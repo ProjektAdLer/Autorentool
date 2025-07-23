@@ -12,6 +12,7 @@ public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
 {
     public LearningWorldPe(string name, string shortname, string authors, string language, string description,
         LearningOutcomeCollectionPe learningOutcomeCollection, WorldTheme worldTheme, string evaluationLink,
+        string evaluationLinkName, string evaluationLinkText,
         string enrolmentKey, string storyStart, string storyEnd, string savePath,
         List<LearningSpacePe>? learningSpaces = null,
         List<PathWayConditionPe>? pathWayConditions = null,
@@ -26,6 +27,8 @@ public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
         LearningOutcomeCollection = learningOutcomeCollection;
         WorldTheme = worldTheme;
         EvaluationLink = evaluationLink;
+        EvaluationLinkName = evaluationLinkName;
+        EvaluationLinkText = evaluationLinkText;
         EnrolmentKey = enrolmentKey;
         StoryStart = storyStart;
         StoryEnd = storyEnd;
@@ -51,6 +54,8 @@ public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
         LearningOutcomeCollection = new LearningOutcomeCollectionPe();
         WorldTheme = default;
         EvaluationLink = "";
+        EvaluationLinkName = "";
+        EvaluationLinkText = "";
         EnrolmentKey = "";
         StoryStart = "";
         StoryEnd = "";
@@ -94,10 +99,13 @@ public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
     public string? Goals { get; set; }
 
     [DataMember] public LearningOutcomeCollectionPe LearningOutcomeCollection { get; set; }
-
     [DataMember] public WorldTheme WorldTheme { get; set; }
 
     [DataMember] public string EvaluationLink { get; set; }
+
+    [DataMember] public string EvaluationLinkName { get; set; }
+
+    [DataMember] public string EvaluationLinkText { get; set; }
 
     [DataMember] public string EnrolmentKey { get; set; }
 

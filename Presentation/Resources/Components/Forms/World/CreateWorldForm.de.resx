@@ -33,9 +33,6 @@
     <data name="CreateWorldForm.General.Field.Language.Text" xml:space="preserve">
         <value>Sprache</value>
     </data>
-    <data name="CreateWorldForm.General.Field.EvaluationLink.Text" xml:space="preserve">
-        <value>Link zur Evaluation</value>
-    </data>
     <data name="CreateWorldForm.Goals.Field.Description.Text" xml:space="preserve">
         <value>Beschreibung für diese Lernwelt</value>
     </data>
@@ -89,6 +86,24 @@
     </data>
     <data name="CreateWorldForm.Theme.Field.Theme.Text" xml:space="preserve">
         <value>Auswahl an Themes mit verschiedenen Themenwelten für die Lernwelt</value>
+    </data>
+    <data name="CreateWorldForm.Finalization.Text" xml:space="preserve">
+        <value>Link zum Lernweltabschluss</value>
+    </data>
+    <data name="CreateWorldForm.Finalization.Collapsable.Description.Text" xml:space="preserve">
+        <value>Sie können in diesem Abschntt einen Link zu einer eigens erstellten Online-Umfrage, zu Ihrem Hochschul-Moodle o.ä. angeben und zusätzlich einen Hinweistext formulieren.</value>
+    </data>
+    <data name="CreateWorldForm.Finalization.Tooltip" xml:space="preserve">
+        <value>Wenn Sie keinen Link und Hinweistext angeben, wird standardmäßig der Platzhaltertext in der 3D-Lernumgebung angezeigt.</value>
+    </data>
+    <data name="CreateWorldForm.Finalization.Field.EvaluationLinkText.Placeholder.Text" xml:space="preserve">
+        <value>Sie haben alle Lernräume erfolgreich abgeschlossen und somit die Lernwelt bestanden, herzlichen Glückwunsch!</value>
+    </data>
+    <data name="CreateWorldForm.Finalization.Field.EvaluationLinkName.Placeholder.Text" xml:space="preserve">
+        <value>z.B. Online-Umfrage</value>
+    </data>
+    <data name="CreateWorldForm.Finalization.Field.EvaluationLink.Placeholder.Text" xml:space="preserve">
+        <value>Link zum Lernweltabschluss</value>
     </data>
     <data name="CreateWorldForm.Goals.Button" xml:space="preserve">
         <value>Lernziel-Formulierung</value>

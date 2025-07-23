@@ -324,7 +324,8 @@ public class PresentationLogicUt
         Substitute.For<ILogger<WorldCommandFactory>>();
         workspaceVm.LearningWorlds.Add(mockWorldVm);
         mockWorldCommandFactory.GetCreateCommand(workspaceEntity, "f", "f", "f", "f", "f",
-                Arg.Any<LearningOutcomeCollection>(), WorldTheme.CampusAschaffenburg, "f", "f", "f", "f",
+                Arg.Any<LearningOutcomeCollection>(),
+                WorldTheme.CampusAschaffenburg, "f", "f", "f", "f", "f", "f",
                 Arg.Any<Action<BusinessLogic.Entities.AuthoringToolWorkspace>>())
             .Returns(mockCommand);
 
@@ -332,7 +333,8 @@ public class PresentationLogicUt
             selectedViewModelsProvider: mockSelectedViewModelsProvider, worldCommandFactory: mockWorldCommandFactory);
 
         systemUnderTest.CreateLearningWorld(workspaceVm, "f", "f", "f", "f", "f",
-            ViewModelProvider.GetLearningOutcomeCollection(), WorldTheme.CampusAschaffenburg, "f", "f", "f", "f");
+            ViewModelProvider.GetLearningOutcomeCollection(), WorldTheme.CampusAschaffenburg,
+            "f", "f", "f", "f", "f", "f");
 
         mockBusinessLogic.Received().ExecuteCommand(mockCommand);
         mockSelectedViewModelsProvider.Received().SetLearningWorld(workspaceVm.LearningWorlds.Last(), mockCommand);
@@ -354,7 +356,8 @@ public class PresentationLogicUt
             .Returns(worldEntity);
         mockWorldCommandFactory
             .GetEditCommand(worldEntity, "f", "f", "f", "f", "f", Arg.Any<LearningOutcomeCollection>(),
-                WorldTheme.CampusAschaffenburg, "f", "f", "f", "f",
+                WorldTheme.CampusAschaffenburg, "f", "f", "f",
+                "f", "f", "f",
                 Arg.Any<Action<BusinessLogic.Entities.LearningWorld>>())
             .Returns(mockCommand);
 
@@ -362,7 +365,8 @@ public class PresentationLogicUt
             worldCommandFactory: mockWorldCommandFactory);
 
         systemUnderTest.EditLearningWorld(worldVm, "f", "f", "f", "f", "f",
-            ViewModelProvider.GetLearningOutcomeCollection(), WorldTheme.CampusAschaffenburg, "f", "f", "f", "f");
+            ViewModelProvider.GetLearningOutcomeCollection(), WorldTheme.CampusAschaffenburg, "f",
+            "f", "f", "f", "f", "f");
 
         mockBusinessLogic.Received().ExecuteCommand(mockCommand);
     }
@@ -385,7 +389,7 @@ public class PresentationLogicUt
         var locVm = ViewModelProvider.GetLearningOutcomeCollection();
         mockWorldCommandFactory
             .GetEditCommand(worldEntity, "f", "f", "f", "f", "f", loc, WorldTheme.CampusAschaffenburg, "f", "f", "f",
-                "f",
+                "f", "f", "f",
                 Arg.Any<Action<BusinessLogic.Entities.LearningWorld>>())
             .Returns(mockCommand);
 
@@ -393,7 +397,7 @@ public class PresentationLogicUt
             worldCommandFactory: mockWorldCommandFactory);
 
         systemUnderTest.EditLearningWorld(worldVm, "f", "f", "f", "f", "f", locVm, WorldTheme.CampusAschaffenburg, "f",
-            "f", "f", "f");
+            "f", "f", "f", "f", "f");
 
         mockBusinessLogic.DidNotReceive().ExecuteCommand(mockCommand);
     }

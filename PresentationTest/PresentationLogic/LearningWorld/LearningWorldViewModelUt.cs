@@ -27,6 +27,8 @@ public class LearningWorldViewModelUt
         var learningOutcomeCollection = ViewModelProvider.GetLearningOutcomeCollection();
         var worldTheme = WorldTheme.CampusAschaffenburg;
         var evaluationLink = "https://www.prjekt-adler.eu";
+        var evaluationLinkName = "EvaluationName";
+        var evaluationLinkText = "EvaluationText";
         var enrolmentKey = "asdf";
         var storyStart = "story start";
         var storyEnd = "story end";
@@ -42,8 +44,8 @@ public class LearningWorldViewModelUt
         var learningPathways = new List<ILearningPathWayViewModel> { pathWay };
 
         var systemUnderTest = new LearningWorldViewModel(name, shortname, authors, language, description,
-            learningOutcomeCollection, worldTheme, evaluationLink, enrolmentKey, storyStart, storyEnd,
-            unsavedChanges: false, learningSpaces: learningSpaces, pathWayConditions: pathWayConditions,
+            learningOutcomeCollection, worldTheme, evaluationLink, evaluationLinkName, evaluationLinkText, enrolmentKey,
+            storyStart, storyEnd, unsavedChanges: false, learningSpaces: learningSpaces, pathWayConditions: pathWayConditions,
             learningPathWays: learningPathways, topics: topics);
 
         Assert.Multiple(() =>
@@ -56,6 +58,8 @@ public class LearningWorldViewModelUt
             Assert.That(systemUnderTest.LearningOutcomeCollection, Is.EqualTo(learningOutcomeCollection));
             Assert.That(systemUnderTest.WorldTheme, Is.EqualTo(worldTheme));
             Assert.That(systemUnderTest.EvaluationLink, Is.EqualTo(evaluationLink));
+            Assert.That(systemUnderTest.EvaluationLinkName, Is.EqualTo(evaluationLinkName));
+            Assert.That(systemUnderTest.EvaluationLinkText, Is.EqualTo(evaluationLinkText));
             Assert.That(systemUnderTest.EnrolmentKey, Is.EqualTo(enrolmentKey));
             Assert.That(systemUnderTest.StoryStart, Is.EqualTo(storyStart));
             Assert.That(systemUnderTest.StoryEnd, Is.EqualTo(storyEnd));
@@ -72,8 +76,9 @@ public class LearningWorldViewModelUt
     {
         const string expectedFileEnding = "awf";
         var systemUnderTest = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
-            ViewModelProvider.GetLearningOutcomeCollection(), WorldTheme.CampusAschaffenburg, "foo", "foo", "foo",
-            "foo");
+            ViewModelProvider.GetLearningOutcomeCollection(),
+            WorldTheme.CampusAschaffenburg, "foo", "foo", "foo",
+            "foo", "foo", "foo");
         Assert.That(systemUnderTest.FileEnding, Is.EqualTo(expectedFileEnding));
     }
 
@@ -81,8 +86,9 @@ public class LearningWorldViewModelUt
     public void Workload_ReturnsCorrectWorkload()
     {
         var systemUnderTest = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
-            ViewModelProvider.GetLearningOutcomeCollection(), WorldTheme.CampusAschaffenburg, "foo", "foo", "foo",
-            "foo");
+            ViewModelProvider.GetLearningOutcomeCollection(),
+            WorldTheme.CampusAschaffenburg, "foo", "foo", "foo",
+            "foo", "foo", "foo");
         var space = new LearningSpaceViewModel("a", "d", SpaceTheme.LearningArea,
             layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.R_20X30_8L));
         var spaceElement = ViewModelProvider.GetLearningElement(workload: 6);
