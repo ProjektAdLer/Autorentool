@@ -12,7 +12,7 @@ public class FileContentPe : IFileContentPe, IEquatable<FileContentPe>
         string type, 
         string filepath,
         bool isH5P = false,
-        H5PContentState h5pState = H5PContentState.NotUsable)
+        H5PContentState h5pState = H5PContentState.NotValidated)
     {
         Name = name;
         Type = type;
@@ -31,7 +31,7 @@ public class FileContentPe : IFileContentPe, IEquatable<FileContentPe>
         Type = "";
         Filepath = "";
         IsH5P = false;
-        H5PState = H5PContentState.NotUsable;
+        H5PState = H5PContentState.NotValidated;
     }
 
     public bool Equals(FileContentPe? other)

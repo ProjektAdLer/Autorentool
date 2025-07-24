@@ -12,7 +12,7 @@ public class FileContentFormModel : IFileContentFormModel, IEquatable<FileConten
         Name = "";
         Type = "";
         Filepath = "";
-        H5PState = H5PContentState.NotUsable;
+        H5PState = H5PContentState.NotValidated;
     }
 
     public FileContentFormModel(string name, string type, string filepath)
@@ -20,7 +20,7 @@ public class FileContentFormModel : IFileContentFormModel, IEquatable<FileConten
         Name = name;
         Type = type;
         Filepath = filepath;
-        H5PState = H5PContentState.NotUsable;
+        H5PState = H5PContentState.NotValidated;
     }
 
     public string Name { get; set; }
