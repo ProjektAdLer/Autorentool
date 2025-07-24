@@ -3,7 +3,6 @@
 @using Microsoft.Extensions.Localization
 @using Presentation.Components.Forms.Buttons
 @using Presentation.Components.Forms.Models
-@using Presentation.Components.LearningOutcomes
 @using Presentation.PresentationLogic.AuthoringToolWorkspace
 @using Shared.Theme
 <div class="absolute w-full z-30">
@@ -223,7 +222,7 @@
 
     private BaseForm<LearningWorldFormModel, LearningWorld> _form = null!;
     private MudTextField<string> _nameField = null!;
-private MudTextField<string> _evaluationLinkNameField = null!;
+    private MudTextField<string> _evaluationLinkNameField = null!;
     private MudTextField<string> _evaluationLinkField = null!;
     private WorldTheme[] _themes = (WorldTheme[])Enum.GetValues(typeof(WorldTheme));
 
@@ -273,20 +272,7 @@ private MudTextField<string> _evaluationLinkNameField = null!;
 
     private async void OpenLearningOutcomesOverview()
     {
-        var options = new DialogOptions
-        {
-            BackdropClick = true,
-            MaxWidth = MaxWidth.Small,
-            FullWidth = true,
-            CloseButton = true,
-        };
-        var parameters = new DialogParameters
-        {
-            { nameof(LearningOutcomesOverview.LearningOutcomeCollection), FormDataContainer.FormModel.LearningOutcomeCollection },
-            { nameof(LearningOutcomesOverview.EntityType), typeof(LearningWorld) }
-        };
-        var dialog = await DialogService.ShowAsync<LearningOutcomesOverview>("", parameters, options);
-        _ = await dialog.Result;
+        await LearningOutcomesOverviewHelper.ShowOverviewAsync(DialogService, FormDataContainer.FormModel.LearningOutcomeCollection, typeof(LearningWorld));
         StateHasChanged();
     }
 

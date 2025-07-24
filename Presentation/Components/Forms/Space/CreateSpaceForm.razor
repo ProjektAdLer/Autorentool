@@ -3,7 +3,6 @@
 @using Microsoft.Extensions.Localization
 @using Presentation.Components.Forms.Buttons
 @using Presentation.Components.Forms.Models
-@using Presentation.Components.LearningOutcomes
 @using Presentation.PresentationLogic.LearningWorld
 @using Shared.Theme
 <div class="absolute w-full z-30">
@@ -45,7 +44,8 @@
                     </p>
                     <p class="text-xs text-adlerblue-600">0
                         <span class="text-adlergrey-800"> / </span> 0
-                        <span class="text-adlergrey-800"> @Localizer["CreateSpaceForm.Fields.Collapsable.CompletionConditions.Description.Appendix"] </span>
+                        <span
+                            class="text-adlergrey-800"> @Localizer["CreateSpaceForm.Fields.Collapsable.CompletionConditions.Description.Appendix"] </span>
                     </p>
                     <ul class="py-2 pl-2 mt-0 border border-adlergrey-300 rounded w-full list-disc list-inside">
                         <li class="text-xs">...</li>
@@ -55,18 +55,18 @@
 
             <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.Theme.Title"] InitiallyCollapsed="true">
                 <p class="text-xs px-6 pt-3">@Localizer["CreateSpaceForm.Fields.Collapsable.Theme.Field.Theme.Text"]</p>
-                  <div class="px-6 py-2">
-                      <MudSelect @bind-Value="FormDataContainer.FormModel.SpaceTheme"
-                                 OnKeyUp="HandleKeyEvent"
-                                 Text="@FormDataContainer.FormModel.SpaceTheme.ToString()"
-                                 For="@(() => FormModel.SpaceTheme)">
-                          @foreach (var theme in _themes)
-                          {
-                              <MudSelectItem
+                <div class="px-6 py-2">
+                    <MudSelect @bind-Value="FormDataContainer.FormModel.SpaceTheme"
+                               OnKeyUp="HandleKeyEvent"
+                               Text="@FormDataContainer.FormModel.SpaceTheme.ToString()"
+                               For="@(() => FormModel.SpaceTheme)">
+                        @foreach (var theme in _themes)
+                        {
+                            <MudSelectItem
                                 Value="@(theme)">@(ThemeHelper<SpaceTheme>.Localize(theme, LearningWorldPresenter.LearningWorldVm?.WorldTheme.ToString()))</MudSelectItem>
-                          }
-                      </MudSelect>
-                  </div>
+                        }
+                    </MudSelect>
+                </div>
             </Collapsable>
 
             <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.Goals.Title"] InitiallyCollapsed="true">
@@ -162,20 +162,7 @@
 
     private async void OpenLearningOutcomesOverview()
     {
-        var options = new DialogOptions
-        {
-            BackdropClick = true,
-            MaxWidth = MaxWidth.Small,
-            FullWidth = true,
-            CloseButton = true,
-        };
-        var parameters = new DialogParameters
-        {
-            { nameof(LearningOutcomesOverview.LearningOutcomeCollection), FormDataContainer.FormModel.LearningOutcomeCollection },
-            { nameof(LearningOutcomesOverview.EntityType), typeof(LearningSpace) }
-        };
-        var dialog = await DialogService.ShowAsync<LearningOutcomesOverview>("", parameters, options);
-        _ = await dialog.Result;
+        await LearningOutcomesOverviewHelper.ShowOverviewAsync(DialogService, FormDataContainer.FormModel.LearningOutcomeCollection, typeof(LearningSpace));
         StateHasChanged();
     }
 

@@ -21,4 +21,11 @@ public class LearningOutcomeCollectionPe : ILearningOutcomeCollectionPe
     }
 
     [DataMember] public List<ILearningOutcomePe> LearningOutcomes { get; set; }
+
+    public string[] OutcomesToStringArray()
+    {
+        return LearningOutcomes
+            .Select(lo => lo.GetOutcome())
+            .ToArray();
+    }
 }

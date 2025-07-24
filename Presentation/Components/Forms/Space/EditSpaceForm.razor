@@ -5,7 +5,6 @@
 @using Microsoft.Extensions.Localization
 @using Presentation.Components.Forms.Buttons
 @using Presentation.Components.Forms.Models
-@using Presentation.Components.LearningOutcomes
 @using Presentation.PresentationLogic.LearningSpace
 @using Presentation.PresentationLogic.LearningWorld
 @using Shared.Theme
@@ -243,23 +242,7 @@
 
     private async void OpenLearningOutcomesOverview()
     {
-        var options = new DialogOptions
-        {
-            BackdropClick = true,
-            MaxWidth = MaxWidth.Small,
-            FullWidth = true,
-            CloseButton = true,
-        };
-
-        await MapIntoContainer();
-
-        var parameters = new DialogParameters
-        {
-            { nameof(LearningOutcomesOverview.LearningOutcomeCollection), FormDataContainer.FormModel.LearningOutcomeCollection },
-            { nameof(LearningOutcomesOverview.EntityType), typeof(LearningSpace) }
-        };
-        var dialog = await DialogService.ShowAsync<LearningOutcomesOverview>("", parameters, options);
-        _ = await dialog.Result;
+        await LearningOutcomesOverviewHelper.ShowOverviewAsync(DialogService, FormDataContainer.FormModel.LearningOutcomeCollection, typeof(LearningWorld));
         StateHasChanged();
     }
 
