@@ -49,7 +49,10 @@
                             Placement="Placement.Right"
                             Class="bg-adlergrey-200 shadow-xl text-adlergrey-800"
                             Duration="Double.Epsilon">
-                    <p class="pt-2 cursor-pointer max-w-full">@context.Name</p>
+                    <p style="color:@(IsNameDisabled(context) ? "#a0a0a0" : "inherit"); cursor:@(IsNameDisabled(context) ? "default" : "pointer")"
+                       class="pt-2 max-w-full">
+                        @context.Name
+                    </p>
                 </MudTooltip>
             </MudTd>
             <MudTd Class="p-0 cursor-default" DataLabel="Type">
@@ -88,9 +91,30 @@
 
     private string? _searchString;
 
+    
+    private bool IsNameDisabled(ILearningContentFormModel item)
+    {
+        if (item is FileContentFormModel file)
+        {
+            return file.Type == "h5p" && 
+                   !(file.H5PState == H5PContentState.Completable || file.H5PState == H5PContentState.Primitive);
+        }
+        return false;
+    }
     private void RowClickEvent(TableRowClickEventArgs<ILearningContentFormModel> tableRowClickEventArgs)
     {
-        MudDialog?.Close(DialogResult.Ok(tableRowClickEventArgs.Item));
+        if (tableRowClickEventArgs.Item is FileContentFormModel fileContent)
+        {
+            if (fileContent.Type == "h5p" &&
+                (fileContent.H5PState == H5PContentState.Completable || fileContent.H5PState == H5PContentState.Primitive))
+            {
+                MudDialog?.Close(DialogResult.Ok(tableRowClickEventArgs.Item));
+            }
+        }
+        else
+        {
+            MudDialog?.Close(DialogResult.Ok(tableRowClickEventArgs.Item));
+        }
     }
 
     private string SelectedRowClassFunc(ILearningContentFormModel element, int rowNumber)
