@@ -1,12 +1,19 @@
 @using System.Diagnostics.CodeAnalysis
 @using AutoMapper
 @using Microsoft.Extensions.Localization
+@using Presentation.Components.ContentFiles
 @using Presentation.Components.Forms.Models
 @using Presentation.PresentationLogic.LearningWorld
 @using Shared.H5P
 @using Presentation.H5P
+@using Presentation.PresentationLogic.API
+@using Presentation.PresentationLogic.LearningContent.FileContent
+
+
+@using Presentation.PresentationLogic.LearningContent
 @inherits MudBaseInput<ILearningContentFormModel>
 
+@inject NavigationManager Navigation
 
 <p class="text-sm px-6">@Localizer["LearningContentDialog.LearningMaterial.Dialog.Subtitle"]</p>
 <div class="rounded border-4 border-adlergrey-200 m-4">
@@ -41,6 +48,7 @@
             <MudTd Class="py-0 px-2">
                 <MudIconButton Icon="@Icons.Material.Filled.RemoveRedEye"
                                Class="show-content-preview"
+                               OnClick="() => ShowLearningContent(context)"
                                title="@Localizer["LearningContentDialog.LearningMaterial.Preview"]"/>
             </MudTd>
             <MudTd Class="p-0 w-full" DataLabel="Name">
@@ -132,4 +140,25 @@
         return string.IsNullOrWhiteSpace(searchString) || searchableStrings.Any(str => str.ToLowerInvariant().Contains(searchString.ToLower()));
     }
 
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
+    internal  IH5PPlayerPluginManager H5PPlayerPluginManager { get; set; }    
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
+    internal  IPresentationLogic PresentationLogic { get; set; }
+    private async Task ShowLearningContent(ILearningContentFormModel context)
+    {
+        if (context is FileContentFormModel fileContentFm && fileContentFm.Type =="h5p")
+        {
+            var fileContentVm = new FileContentViewModel(fileContentFm.Name,fileContentFm.Type,fileContentFm.Filepath);
+            fileContentFm.H5PState = fileContentFm.H5PState;
+            fileContentVm.IsH5P = true;
+            var startH5PPlayerTO = new StartH5PPlayerTO();
+            startH5PPlayerTO.FileContentVm = fileContentVm;
+            startH5PPlayerTO.NavigationManager = Navigation;
+            await H5PPlayerPluginManager.StartH5pPlayerToValidateAsync(startH5PPlayerTO);
+        }
+        else
+        {
+            await PresentationLogic.ShowLearningContentAsync(context);
+        }
+    }
 }
