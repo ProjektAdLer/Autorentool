@@ -13,7 +13,6 @@
 @using Presentation.PresentationLogic.LearningWorld
 @using Shared
 @using Shared.Observer
-
 <div class="absolute w-full z-30">
     <header class="py-2 2xl:py-3 bg-adlerbgbright border-b-2 border-adlergrey-100 overflow-hidden flex justify-center">
         <h2 class="text-base 2xl:text-lg text-center font-bold text-adlertitledarkblue mx-2">@(GetHeaderText())</h2>
@@ -50,18 +49,10 @@
                     @if (ElementMode == ElementMode.Normal)
                     {
                         <div class="flex items-center justify-center gap-2 bg-adlerbggradientto rounded my-1 py-1">
-                            <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
-                                <MudText
-                                    Color="@(!IsRequired ? Color.Info : Color.Dark)">@Localizer["EditElementForm.Fields.Collapsable.Element.Mandatory"]</MudText>
-
-                                <MudSwitch @bind-Value="IsRequired"
-                                           Color="Color.Info"
-                                           UnCheckedColor="Color.Info"
-                                           Style="margin-right: 0; margin-left: 2px"/>
-
-                                <MudText
-                                    Color="@(IsRequired ? Color.Info : Color.Dark)">@Localizer["EditElementForm.Fields.Collapsable.Element.Optional"]</MudText>
-                            </MudStack>
+                            <LabelledSwitch @bind-IsLeftSelected="IsRequired"
+                                            IsRightSelected="null"
+                                            LeftLabel="@Localizer["EditElementForm.Fields.Collapsable.Element.Mandatory"]"
+                                            RightLabel="@Localizer["EditElementForm.Fields.Collapsable.Element.Optional"]"/>
                         </div>
 
                         <div class="flex flex-row gap-2 w-full">
@@ -299,6 +290,16 @@
                     @if (ElementMode == ElementMode.Story && StoryContentModel != null)
                     {
                         <p class="text-xs font-bold pt-3 cursor-default">
+                            @Localizer["EditElementForm.Fields.Collapsable.3DRepresentation.Field.ExitAfterStorySequence.Title"]
+                        </p>
+                        <LabelledSwitch @bind-IsRightSelected="@(StoryContentModel.ExitAfterStorySequence)"
+                                        IsLeftSelected="null"
+                                        LeftLabel="@Localizer["EditElementForm.Fields.Collapsable.3DRepresentation.Field.ExitAfterStorySequence.Stay"]"
+                                        LeftLabelIconSvg="@CustomIcons.SpaceStay"
+                                        RightLabel="@Localizer["EditElementForm.Fields.Collapsable.3DRepresentation.Field.ExitAfterStorySequence.Leave"]"
+                                        RightLabelIconSvg="@CustomIcons.SpaceLeave"/>
+
+                        <p class="text-xs font-bold pt-3 cursor-default">
                             @Localizer["EditElementForm.Fields.Collapsable.3DRepresentation.Field.NpcName.Title"]
                         </p>
                         <MudTextField @bind-Value="StoryContentModel.NpcName"
@@ -415,8 +416,8 @@
 
     public bool IsRequired
     {
-        get => FormModel.Points == 0;
-        set => FormModel.Points = value ? 0 : 1;
+        get => FormModel.Points == 1;
+        set => FormModel.Points = value ? 1 : 0;
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)

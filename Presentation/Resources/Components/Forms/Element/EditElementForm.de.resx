@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <root>
-    <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root"
+    <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata"
+                id="root"
                 xmlns="">
         <xsd:element name="root" msdata:IsDataSet="true">
 
@@ -209,5 +210,17 @@ Die dazugehörigen Slots sind in jedem Grundriss an der Position der Eingangs- u
     </data>
     <data name="EditStoryElementForm.Collapsable.Story.Length" xml:space="preserve">
         <value>Zeichen</value>
+    </data>
+    <data name="EditElementForm.Fields.Collapsable.3DRepresentation.Field.ExitAfterStorySequence.Title"
+          xml:space="preserve">
+        <value>Verhalten nach der Story</value>
+    </data>
+    <data name="EditElementForm.Fields.Collapsable.3DRepresentation.Field.ExitAfterStorySequence.Stay"
+          xml:space="preserve">
+        <value>bleibt im Raum</value>
+    </data>
+    <data name="EditElementForm.Fields.Collapsable.3DRepresentation.Field.ExitAfterStorySequence.Leave"
+          xml:space="preserve">
+        <value>verlässt den Raum</value>
     </data>
 </root>
