@@ -7,6 +7,7 @@ using BusinessLogic.Validation.Validators;
 using Microsoft.Extensions.Localization;
 using NSubstitute;
 using NUnit.Framework;
+using Shared.H5P;
 using TestHelpers;
 
 namespace BusinessLogicTest.Validators;
@@ -278,5 +279,62 @@ public class LearningWorldStructureValidatorUt
 
         Assert.That(result.Errors.Any(e => e.Contains("TaskReferencesUnplacedElement")), Is.True);
         Assert.That(result.IsValid, Is.False);
+    }
+    
+    
+  
+    // ANF-ID: [AHO22]
+    [TestCase(H5PContentState.NotUsable)]
+    [TestCase(H5PContentState.NotValidated)]
+    public void ValidateForGeneration_H5PFileContentWithInvalidH5P_ReturnsError(H5PContentState h5pState)
+    {
+        var world = EntityProvider.GetLearningWorld();
+        var h5pContent = CreateH5PContent(h5pState);
+        var learningElement = CreateLearningElementWith(h5pContent);
+        var space = CreateValideLearningSpaceWith(learningElement);
+        world.LearningSpaces.Add(space);
+        var contentFilesFromDataAccess = CreateContentFilesFromDataAccess(h5pContent);
+
+        var result = _validator.ValidateForGeneration(world, contentFilesFromDataAccess);
+
+        Assert.That(result.IsValid, Is.False);
+    }
+
+    private static ILearningSpace CreateValideLearningSpaceWith(LearningElement learningElement)
+    {
+        var space = CreateValideLearningSpace();
+
+        space.ContainedLearningElements.Returns(new[] { learningElement });
+        return space;
+    }
+
+    private static ILearningSpace CreateValideLearningSpace()
+    {
+        var space = Substitute.For<ILearningSpace>();
+        space.Points.Returns(5); 
+        space.RequiredPoints.Returns(3);
+        return space;
+    }
+
+    private static FileContent CreateH5PContent(H5PContentState h5pState)
+    {
+        var h5pContent = EntityProvider.GetFileContent();
+        h5pContent.IsH5P = true;
+        h5pContent.H5PState = h5pState;
+        return h5pContent;
+    }
+
+    private static LearningElement CreateLearningElementWith(FileContent h5pContent)
+    {
+        var learningElement = EntityProvider.GetLearningElement();
+        learningElement.LearningContent = h5pContent;
+        return learningElement;
+    }
+
+    private static List<ILearningContent> CreateContentFilesFromDataAccess(FileContent h5pContent)
+    {
+        var contentFilesFromDataAccess = new List<ILearningContent>();
+        contentFilesFromDataAccess.Add(h5pContent);
+        return contentFilesFromDataAccess;
     }
 }
