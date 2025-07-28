@@ -134,16 +134,8 @@
                 }
                 await HandleFileAsync(file);
                 
-#if DEBUG
-                 // fileContentVm is written in HandleFileAsync !!!!!!!
-                 var startH5pPlayerTO = new StartH5PPlayerTO
-                 {
-                     FileContentVm = fileContentVm!,
-                     NavigationManager = Navigation
-                 };
-                 await H5PPlayerPluginManager.StartH5pPlayerToValidateAsync(startH5pPlayerTO);
-                
-#endif
+                await OpenImportDialog();
+         
             }
 
             Logger.LogTrace("Rerendering ContentFilesContainer");
@@ -159,6 +151,32 @@
         }
 
     }
+    private async Task OpenImportDialog()
+    {
+        // fileContentVm is written in HandleFileAsync !!!!!!!
+        var startH5pPlayerTO = new StartH5PPlayerTO
+        {
+            FileContentVm = fileContentVm!,
+            NavigationManager = Navigation
+        };
+ 
+
+        var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
+
+        var dialog = await DialogService.ShowAsync<ImportH5PDialog>("H5P Import", options);
+        var result = await  dialog.Result;
+
+        if (result != null)
+        {
+            if (!result.Canceled)
+            {
+                await H5PPlayerPluginManager.StartH5pPlayerToValidateAsync(startH5pPlayerTO);
+                
+            }
+        }
+      
+    }
+
 
 
 
