@@ -482,7 +482,7 @@
     internal  IH5PPlayerPluginManager H5PPlayerPluginManager { get; set; }
     private async Task ShowLearningContent(ILearningContentViewModel context)
     {
-        if (context is FileContentViewModel fileContentVm && fileContentVm.IsH5P)
+        if (context is FileContentViewModel fileContentVm && fileContentVm.Type == "h5p")
         {
             var startH5PPlayerTO = new StartH5PPlayerTO();
             startH5PPlayerTO.FileContentVm = fileContentVm;
