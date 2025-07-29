@@ -66,12 +66,13 @@
             <MudTd Class="p-0 cursor-default" DataLabel="Type">
                 @if (context is FileContentFormModel fileContentContext)
                 {
+                    var fileContent = context as FileContentFormModel;
                     <div style="display: flex; align-items: center; gap: 8px;">
                         <span>@fileContentContext.Type</span>
 
                         @if (fileContentContext.Type == "h5p")
                         {
-                            <H5PStateIcon State="@fileContentContext.H5PState" />
+                            <H5PStateIcon FileContentVm="@FileContentFormModelToViewModel(fileContent!)" />
                         }
                     </div>
                 }
@@ -148,9 +149,7 @@
     {
         if (context is FileContentFormModel fileContentFm && fileContentFm.Type =="h5p")
         {
-            var fileContentVm = new FileContentViewModel(fileContentFm.Name,fileContentFm.Type,fileContentFm.Filepath);
-            fileContentFm.H5PState = fileContentFm.H5PState;
-            fileContentVm.IsH5P = true;
+            var fileContentVm = FileContentFormModelToViewModel(fileContentFm);
             var startH5PPlayerTO = new StartH5PPlayerTO();
             startH5PPlayerTO.FileContentVm = fileContentVm;
             startH5PPlayerTO.NavigationManager = Navigation;
@@ -160,5 +159,15 @@
         {
             await PresentationLogic.ShowLearningContentAsync(context);
         }
+    }
+
+
+    private IFileContentViewModel FileContentFormModelToViewModel(FileContentFormModel fileContentFm)
+    {
+        var fileContentVm = new FileContentViewModel(fileContentFm.Name,fileContentFm.Type,fileContentFm.Filepath);
+        fileContentVm.H5PState = fileContentFm.H5PState;
+        fileContentVm.IsH5P = true;
+
+        return fileContentVm;
     }
 }

@@ -1,26 +1,59 @@
-﻿@using Shared.H5P
+﻿@using System.ComponentModel.DataAnnotations
+@using System.Diagnostics.CodeAnalysis
+@using Presentation.Components.ContentFiles
+@using Presentation.PresentationLogic.API
+@using Presentation.PresentationLogic.LearningContent.FileContent
+@using Shared.H5P
 
-@code {
-    [Parameter]
-    public H5PContentState State { get; set; }
-}
+@inject NavigationManager Navigation
 
-@switch (State)
+@switch (FileContentVm.H5PState)
 {
     case H5PContentState.NotValidated:
         <MudTooltip Text="Noch nicht validiert">
-            <MudIconButton Icon="@Icons.Material.Filled.HelpOutline" Color="Color.Default" />
+            <MudIconButton 
+                Icon="@Icons.Material.Filled.HelpOutline" 
+                Color="Color.Default" 
+                OnClick="() => ShowH5PContent()"/>
         </MudTooltip>
         break;
     case H5PContentState.Primitive:
     case H5PContentState.Completable:
         <MudTooltip Text="Nutzbar">
-            <MudIconButton Icon="@Icons.Material.Filled.TaskAlt" Color="Color.Success" />
+            <MudIconButton 
+                Icon="@Icons.Material.Filled.TaskAlt" 
+                Color="Color.Success"
+                OnClick="() => ShowH5PContent()"/>
         </MudTooltip>
         break;
     case H5PContentState.NotUsable:
         <MudTooltip Text="Nicht nutzbar">
-            <MudIconButton Icon="@Icons.Material.Filled.Block" Color="Color.Error" />
+            <MudIconButton 
+                Icon="@Icons.Material.Filled.Block" 
+                Color="Color.Error"
+                OnClick="() => ShowH5PContent()"/>
         </MudTooltip>
         break;
+}
+
+
+@code {
+
+    [Parameter, Required] public required IFileContentViewModel FileContentVm { get; set; }
+    
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
+    internal  IH5PPlayerPluginManager H5PPlayerPluginManager { get; set; }
+    
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
+    internal IPresentationLogic PresentationLogic { get; set; }
+    private async Task ShowH5PContent()
+    {
+        if (FileContentVm.Type == "h5p")
+        {
+            var startH5PPlayerTO = new StartH5PPlayerTO();
+            startH5PPlayerTO.FileContentVm = FileContentVm;
+            startH5PPlayerTO.NavigationManager = Navigation;
+            await H5PPlayerPluginManager.StartH5pPlayerToValidateAsync(startH5PPlayerTO);
+        }
+    }
 }

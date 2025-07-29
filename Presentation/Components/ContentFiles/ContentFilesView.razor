@@ -118,12 +118,13 @@
                 <MudTd DataLabel="Type" Class="py-0 pl-0 cursor-default">
                     @if (context is FileContentViewModel fileContentContext)
                     {
+                        var fileContent = context as IFileContentViewModel;
                         <div style="display: flex; align-items: center; gap: 8px;">
                         <span>@fileContentContext.Type</span>
 
                         @if (fileContentContext.Type == "h5p")
                         {
-                            <H5PStateIcon State="@fileContentContext.H5PState" />
+                            <H5PStateIcon FileContentVm="@fileContent" />
                         }
                         </div>
                     }
