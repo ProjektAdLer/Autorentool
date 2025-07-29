@@ -99,7 +99,7 @@
     private H5pPlayerResultTO? h5PPlayerResultTo { get; set; }
 
     private MudFileUpload<IReadOnlyList<IBrowserFile>> _fileUpload = null!;
-    private IFileContentViewModel? fileContentVm;
+    private IFileContentViewModel? _fileContentVm;
 
     /// <summary>
     /// Iterates all files, copies them into a new stream and passes said stream to presentation logic
@@ -134,7 +134,7 @@
                 }
                 await HandleFileAsync(file);
                 
-                await OpenImportDialog();
+                await HandleH5PImport();
          
             }
 
@@ -151,12 +151,15 @@
         }
 
     }
-    private async Task OpenImportDialog()
+    private async Task HandleH5PImport()
     {
+        if (IsNotH5PFile(_fileContentVm!))
+            return;
+        
         // fileContentVm is written in HandleFileAsync !!!!!!!
         var startH5pPlayerTO = new StartH5PPlayerTO
         {
-            FileContentVm = fileContentVm!,
+            FileContentVm = _fileContentVm!,
             NavigationManager = Navigation
         };
  
@@ -175,6 +178,11 @@
             }
         }
       
+    }
+    private bool IsNotH5PFile(IFileContentViewModel fileContentVm)
+    {
+        var fileEnding = fileContentVm.Name.Split(".").Last();
+        return  fileEnding != "h5p";
     }
 
 
@@ -303,7 +311,7 @@
         try
         {
             var learningContentVm  = await PresentationLogic.LoadLearningContentViewModelAsync(fileName, memoryStream);
-            fileContentVm = learningContentVm as IFileContentViewModel;
+            _fileContentVm = learningContentVm as IFileContentViewModel;
             Snackbar.Add(@Localizer["ContentFilesAdd.AddedMaterial.Success"]);
         }
         catch (IOException e)
