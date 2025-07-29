@@ -28,4 +28,7 @@ Klicken Sie in der unteren Auflistung auf das jeweilige nebenstehende Symbol, um
   <data name="Dialog.OkButton" xml:space="preserve">
     <value>OK</value>
   </data>
+  <data name="Dialog.ValidateLaterButton" xml:space="preserve">
+    <value>Später validieren</value>
+  </data>
 </root>

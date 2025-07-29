@@ -28,4 +28,7 @@ Click the corresponding icon next to each unvalidated H5P in the list below to v
     <data name="Dialog.OkButton" xml:space="preserve">
     <value>OK</value>
   </data>
+  <data name="Dialog.ValidateLaterButton" xml:space="preserve">
+    <value>Validate later</value>
+  </data>
 </root>
