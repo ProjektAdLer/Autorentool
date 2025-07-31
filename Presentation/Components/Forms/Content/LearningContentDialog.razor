@@ -118,6 +118,10 @@
                 (fileContent.H5PState == H5PContentState.Completable || fileContent.H5PState == H5PContentState.Primitive))
             {
                 MudDialog?.Close(DialogResult.Ok(tableRowClickEventArgs.Item));
+            } 
+            else if (fileContent.Type != "h5p")
+            {
+                MudDialog?.Close(DialogResult.Ok(tableRowClickEventArgs.Item));
             }
         }
         else
