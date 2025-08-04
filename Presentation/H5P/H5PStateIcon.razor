@@ -10,28 +10,43 @@
 @switch (FileContentVm.H5PState)
 {
     case H5PContentState.NotValidated:
-        <MudTooltip Text="Noch nicht validiert">
-            <MudIconButton 
-                Icon="@Icons.Material.Filled.HelpOutline" 
-                Color="Color.Default" 
-                OnClick="() => ShowH5PContent()"/>
+        <MudTooltip Text="H5P-Validator öffnen">
+            <div class="flex flex-row items-center justify-start gap-1">
+                <MudIconButton
+                    Icon="@Icons.Material.Filled.HelpOutline"
+                    Size="Size.Small"
+                    Color="Color.Default"
+                    OnClick="() => ShowH5PContent()"
+                    Class="p-0"/>
+                <p class="text-xs text-adlergrey">ungeprüft</p>
+            </div>
         </MudTooltip>
-        break;
+    break;
     case H5PContentState.Primitive:
     case H5PContentState.Completable:
-        <MudTooltip Text="Nutzbar">
-            <MudIconButton 
-                Icon="@Icons.Material.Filled.TaskAlt" 
+        <MudTooltip Text="H5P-Validator öffnen">
+            <div class="flex flex-row items-center justify-start gap-1">
+            <MudIconButton
+                Icon="@Icons.Material.Filled.TaskAlt"
+                Size="Size.Small"
                 Color="Color.Success"
-                OnClick="() => ShowH5PContent()"/>
+                OnClick="() => ShowH5PContent()"
+                Class="p-0"/>
+                <p class="text-xs text-adlergrey">nutzbar</p>
+            </div>
         </MudTooltip>
         break;
     case H5PContentState.NotUsable:
-        <MudTooltip Text="Nicht nutzbar">
-            <MudIconButton 
-                Icon="@Icons.Material.Filled.Block" 
-                Color="Color.Error"
-                OnClick="() => ShowH5PContent()"/>
+        <MudTooltip Text="H5P-Validator öffnen">
+            <div class="flex flex-row items-center justify-start gap-1">
+                <MudIconButton 
+                    Icon="@Icons.Material.Filled.Block"
+                    Size="Size.Small"
+                    Color="Color.Error"
+                    OnClick="() => ShowH5PContent()"
+                    Class="p-0"/>
+                <p class="text-xs text-adlergrey" style="white-space: nowrap;">nicht nutzbar</p>
+            </div>
         </MudTooltip>
         break;
 }

@@ -113,7 +113,7 @@ public class H5PPlayerPluginManager : IH5PPlayerPluginManager
             CloseButton = false,
         };
 
-       await DialogService.ShowAsync<PlayerH5p>("H5P-Player", parameters, options);
+       await DialogService.ShowAsync<PlayerH5p>("H5P-Validator", parameters, options);
   
         return await tcs.Task;
     }
