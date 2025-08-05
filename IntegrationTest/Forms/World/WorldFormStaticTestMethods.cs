@@ -47,7 +47,6 @@ public static class WorldFormStaticTestMethods
             Assert.That(() => formModel.Authors, Is.EqualTo(expected).After(3).Seconds.PollEvery(250));
             Assert.That(() => formModel.Language, Is.EqualTo(expected).After(3).Seconds.PollEvery(250));
             Assert.That(() => formModel.Description, Is.EqualTo(expected).After(3).Seconds.PollEvery(250));
-            Assert.That(() => formModel.Goals, Is.EqualTo(expected).After(3).Seconds.PollEvery(250));
             Assert.That(() => formModel.EvaluationLink, Is.EqualTo(expected).After(3).Seconds.PollEvery(250));
             Assert.That(() => formModel.EvaluationLinkName, Is.EqualTo(expected).After(3).Seconds.PollEvery(250));
             Assert.That(() => formModel.EvaluationLinkText, Is.EqualTo(expected).After(3).Seconds.PollEvery(250));

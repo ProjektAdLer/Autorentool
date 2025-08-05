@@ -1,8 +1,10 @@
 using BusinessLogic.Commands.World;
 using BusinessLogic.Entities;
+using BusinessLogic.Entities.LearningOutcome;
 using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 using Shared.Theme;
+using TestHelpers;
 
 namespace BusinessLogicTest.Commands.World;
 
@@ -13,13 +15,13 @@ public class CreateLearningWorldUt
     // ANF-ID: [ASE1]
     public void Execute_CreatesLearningWorld()
     {
-        var workspace = new AuthoringToolWorkspace(new List<ILearningWorld>());
+        var workspace = EntityProvider.GetAuthoringToolWorkspace();
         var name = "n";
         var shortname = "sn";
         var authors = "a";
         var language = "l";
         var description = "d";
-        var goals = "g";
+        var learningOutcomeCollection = new LearningOutcomeCollection();
         var theme = WorldTheme.CampusAschaffenburg;
         var evaluationLink = "el";
         var evaluationLinkName = "eln";
@@ -30,8 +32,8 @@ public class CreateLearningWorldUt
         var actionWasInvoked = false;
         Action<AuthoringToolWorkspace> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new CreateLearningWorld(workspace, name, shortname, authors, language, description, goals, theme,
-            evaluationLink, evaluationLinkName, evaluationLinkText, enrolmentKey, storyStart, storyEnd,
+        var command = new CreateLearningWorld(workspace, name, shortname, authors, language, description,
+            learningOutcomeCollection, theme, evaluationLink, evaluationLinkName, evaluationLinkText, enrolmentKey, storyStart, storyEnd,
             mappingAction, new NullLogger<CreateLearningWorld>());
 
         Assert.Multiple(() =>
@@ -55,7 +57,7 @@ public class CreateLearningWorldUt
             Assert.That(world.Authors, Is.EqualTo("a"));
             Assert.That(world.Language, Is.EqualTo("l"));
             Assert.That(world.Description, Is.EqualTo("d"));
-            Assert.That(world.Goals, Is.EqualTo("g"));
+            Assert.That(world.LearningOutcomeCollection, Is.EqualTo(learningOutcomeCollection));
             Assert.That(world.WorldTheme, Is.EqualTo(WorldTheme.CampusAschaffenburg));
             Assert.That(world.EvaluationLink, Is.EqualTo("el"));
             Assert.That(world.EvaluationLinkName, Is.EqualTo("eln"));
@@ -69,11 +71,13 @@ public class CreateLearningWorldUt
     [Test]
     public void Execute_WithDuplicateName_CreatesWorldWithNewUniqueName()
     {
-        var world1 = new LearningWorld("Foo", "", "", "", "", "", WorldTheme.CampusAschaffenburg);
-        var world2 = new LearningWorld("Foo(1)", "", "", "", "", "", WorldTheme.CampusAschaffenburg);
+        var world1 = EntityProvider.GetLearningWorld(name: "Foo");
+        var world2 = EntityProvider.GetLearningWorld(name: "Foo(1)");
         var workspace = new AuthoringToolWorkspace(new List<ILearningWorld> { world1, world2 });
 
-        var systemUnderTest = new CreateLearningWorld(workspace, "Foo", "", "", "", "", "", default, "", "", "", "", "",
+        var systemUnderTest = new CreateLearningWorld(workspace, "Foo", "", "", "", "",
+            EntityProvider.GetLearningOutcomeCollection(), default, "", "", "", "",
+           "",
             "", _ => { },
             new NullLogger<CreateLearningWorld>());
 
@@ -85,8 +89,8 @@ public class CreateLearningWorldUt
     // ANF-ID: [ASE1]
     public void Execute_AddsLearningWorld()
     {
-        var workspace = new AuthoringToolWorkspace(new List<ILearningWorld>());
-        var world = new LearningWorld("n", "sn", "a", "l", "d", "g", WorldTheme.CampusAschaffenburg, "el");
+        var workspace = EntityProvider.GetAuthoringToolWorkspace();
+        var world = EntityProvider.GetLearningWorld();
         var actionWasInvoked = false;
         Action<AuthoringToolWorkspace> mappingAction = _ => actionWasInvoked = true;
 
@@ -111,13 +115,13 @@ public class CreateLearningWorldUt
     [Test]
     public void Undo_MementoIsNull_ThrowsException()
     {
-        var workspace = new AuthoringToolWorkspace(new List<ILearningWorld>());
+        var workspace = EntityProvider.GetAuthoringToolWorkspace();
         var name = "n";
         var shortname = "sn";
         var authors = "a";
         var language = "l";
         var description = "d";
-        var goals = "g";
+        var learningOutcomeCollection = new LearningOutcomeCollection();
         var theme = WorldTheme.CampusAschaffenburg;
         var evaluationLink = "el";
         var evaluationLinkName = "eln";
@@ -128,8 +132,8 @@ public class CreateLearningWorldUt
         var actionWasInvoked = false;
         Action<AuthoringToolWorkspace> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new CreateLearningWorld(workspace, name, shortname, authors, language, description, goals, theme,
-            evaluationLink, evaluationLinkName, evaluationLinkText, enrolmentKey, storyStart, storyEnd,
+        var command = new CreateLearningWorld(workspace, name, shortname, authors, language, description,
+            learningOutcomeCollection, theme, evaluationLink, evaluationLinkName, evaluationLinkText, enrolmentKey, storyStart, storyEnd,
             mappingAction, new NullLogger<CreateLearningWorld>());
 
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
@@ -143,15 +147,15 @@ public class CreateLearningWorldUt
     [Test]
     public void UndoRedo_UndoesAndRedoesCreateLearningSpace()
     {
-        var workspace = new AuthoringToolWorkspace(new List<ILearningWorld>());
-        var world = new LearningWorld("a", "b", "c", "d", "e", "f", default, "g", "h", "i", "j", "k", "l");
+        var workspace = EntityProvider.GetAuthoringToolWorkspace();
+        var world = EntityProvider.GetLearningWorld();
         workspace.LearningWorlds.Add(world);
         var name = "n";
         var shortname = "sn";
         var authors = "a";
         var language = "l";
         var description = "d";
-        var goals = "g";
+        var learningOutcomeCollection = new LearningOutcomeCollection();
         var theme = WorldTheme.CampusAschaffenburg;
         var evaluationLink = "el";
         var evaluationLinkName = "eln";
@@ -162,8 +166,8 @@ public class CreateLearningWorldUt
         var actionWasInvoked = false;
         Action<AuthoringToolWorkspace> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new CreateLearningWorld(workspace, name, shortname, authors, language, description, goals, theme,
-            evaluationLink, evaluationLinkName, evaluationLinkText, enrolmentKey, storyStart, storyEnd,
+        var command = new CreateLearningWorld(workspace, name, shortname, authors, language, description,
+            learningOutcomeCollection, theme, evaluationLink, evaluationLinkName, evaluationLinkText, enrolmentKey, storyStart, storyEnd,
             mappingAction, new NullLogger<CreateLearningWorld>());
 
         Assert.Multiple(() =>

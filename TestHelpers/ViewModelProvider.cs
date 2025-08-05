@@ -1,6 +1,5 @@
 ﻿using System.Collections.ObjectModel;
 using System.Globalization;
-using AutoMapper;
 using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningContent;
@@ -12,9 +11,9 @@ using Presentation.PresentationLogic.LearningContent.FileContent;
 using Presentation.PresentationLogic.LearningContent.LinkContent;
 using Presentation.PresentationLogic.LearningContent.Story;
 using Presentation.PresentationLogic.LearningElement;
+using Presentation.PresentationLogic.LearningOutcome;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
-using Presentation.PresentationLogic.LearningSpace.LearningOutcomeViewModel;
 using Presentation.PresentationLogic.LearningSpace.SpaceLayout;
 using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.Topic;
@@ -32,10 +31,11 @@ public static class ViewModelProvider
         return new AuthoringToolWorkspaceViewModel();
     }
 
-    public static LearningWorldViewModel GetLearningWorld()
+    public static LearningWorldViewModel GetLearningWorld(bool unsavedChanges = false)
     {
-        return new LearningWorldViewModel("LWVMn", "LWVMsn", "LWVMa", "LWVMl", "LWVMd", "LWVMg",
-            WorldTheme.CampusAschaffenburg, "LWVMev", "LWVMevN", "LWVMevT", "LWVMek", "LWVMss", "LWVMse");
+        return new LearningWorldViewModel("LWVMn", "LWVMsn", "LWVMa", "LWVMl", "LWVMd", GetLearningOutcomeCollection(),
+                WorldTheme.CampusAschaffenburg, "LWVMev", "LWVMevN", "LWVMevT", "LWVMek", "LWVMss", "LWVMse")
+            { UnsavedChanges = unsavedChanges };
     }
 
     public static LearningSpaceViewModel GetLearningSpace(bool unsavedChanges = false, FloorPlanEnum? floorPlan = null,
@@ -254,6 +254,7 @@ public static class ViewModelProvider
 
     public static LearningWorldViewModel GetBlankLearningWorld()
     {
-        return new LearningWorldViewModel("", "", "", "", "", "", default, "", "", "", "", "", "");
+        return new LearningWorldViewModel("", "", "", "", "", new LearningOutcomeCollectionViewModel(), default, "", "",
+            "", "", "", "");
     }
 }

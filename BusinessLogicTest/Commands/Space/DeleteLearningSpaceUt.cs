@@ -2,7 +2,6 @@ using BusinessLogic.Commands.Space;
 using BusinessLogic.Entities;
 using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
-using Shared.Theme;
 using TestHelpers;
 
 namespace BusinessLogicTest.Commands.Space;
@@ -14,35 +13,20 @@ public class DeleteLearningSpaceUt
     // ANF-ID: [AWA0024]
     public void Execute_DeletesLearningSpace()
     {
-        var world = new LearningWorld("a", "b", "c", "d", "e", "f", WorldTheme.CampusAschaffenburg)
-        {
-            UnsavedChanges = false
-        };
-        var space1 = new LearningSpace("a", "d", 4, SpaceTheme.LearningArea,
-            EntityProvider.GetLearningOutcomeCollection())
-        {
-            UnsavedChanges = false
-        };
-        var space2 = new LearningSpace("g", "j", 5, SpaceTheme.LearningArea,
-            EntityProvider.GetLearningOutcomeCollection())
-        {
-            UnsavedChanges = false
-        };
-        var space3 = new LearningSpace("g", "j", 5, SpaceTheme.LearningArea,
-            EntityProvider.GetLearningOutcomeCollection())
-        {
-            UnsavedChanges = false
-        };
+        var world = EntityProvider.GetLearningWorld(unsavedChanges: false);
+        var space1 = EntityProvider.GetLearningSpace(unsavedChanges: false);
+        var space2 = EntityProvider.GetLearningSpace(unsavedChanges: false);
+        var space3 = EntityProvider.GetLearningSpace(unsavedChanges: false);
         world.LearningSpaces.Add(space1);
         world.LearningSpaces.Add(space2);
         world.LearningSpaces.Add(space3);
         var actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
 
-        world.LearningPathways.Add(new LearningPathway(space1, space2));
+        world.LearningPathways.Add(EntityProvider.GetLearningPathway(source: space1, target: space2));
         space1.OutBoundObjects.Add(space2);
         space2.InBoundObjects.Add(space1);
-        world.LearningPathways.Add(new LearningPathway(space2, space3));
+        world.LearningPathways.Add(EntityProvider.GetLearningPathway(source: space2, target: space3));
         space2.OutBoundObjects.Add(space3);
         space3.InBoundObjects.Add(space2);
 
@@ -69,9 +53,8 @@ public class DeleteLearningSpaceUt
     [Test]
     public void Undo_MementoIsNull_ThrowsException()
     {
-        var world = new LearningWorld("a", "b", "c", "d", "e", "f", WorldTheme.CampusAschaffenburg);
-        var space = new LearningSpace("g", "j", 5, SpaceTheme.LearningArea,
-            EntityProvider.GetLearningOutcomeCollection());
+        var world = EntityProvider.GetLearningWorld();
+        var space = EntityProvider.GetLearningSpace();
         var actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
 
@@ -89,20 +72,9 @@ public class DeleteLearningSpaceUt
     [Test]
     public void UndoRedo_UndoesAndRedoesDeleteLearningSpace()
     {
-        var world = new LearningWorld("a", "b", "c", "d", "e", "f", WorldTheme.CampusAschaffenburg)
-        {
-            UnsavedChanges = false
-        };
-        var space1 = new LearningSpace("g", "j", 5, SpaceTheme.LearningArea,
-            EntityProvider.GetLearningOutcomeCollection())
-        {
-            UnsavedChanges = false
-        };
-        var space2 = new LearningSpace("l", "o", 7, SpaceTheme.LearningArea,
-            EntityProvider.GetLearningOutcomeCollection())
-        {
-            UnsavedChanges = false
-        };
+        var world = EntityProvider.GetLearningWorld(unsavedChanges: false);
+        var space1 = EntityProvider.GetLearningSpace(unsavedChanges: false);
+        var space2 = EntityProvider.GetLearningSpace(unsavedChanges: false);
         world.LearningSpaces.Add(space1);
         world.LearningSpaces.Add(space2);
         var actionWasInvoked = false;

@@ -1,19 +1,21 @@
+using System;
 using System.Collections.ObjectModel;
 using Bunit;
 using Bunit.TestDoubles;
+using BusinessLogic.Entities;
 using Microsoft.Extensions.DependencyInjection;
 using MudBlazor;
 using NSubstitute;
 using NUnit.Framework;
 using Presentation.Components.LearningOutcomes;
-using Presentation.PresentationLogic.LearningSpace.LearningOutcomeViewModel;
+using Presentation.PresentationLogic.LearningOutcome;
 using TestHelpers;
 using TestContext = Bunit.TestContext;
 
 namespace PresentationTest.Components.LearningOutcomes;
 
 [TestFixture]
-public class LearningOutcomesSpaceOverviewUt
+public class LearningOutcomesOverviewUt
 {
     private TestContext _context;
     private IDialogService _dialogService;
@@ -23,7 +25,7 @@ public class LearningOutcomesSpaceOverviewUt
     {
         _context = new TestContext();
         _dialogService = Substitute.For<IDialogService>();
-        _context.AddLocalizerForTest<LearningOutcomesSpaceOverview>();
+        _context.AddLocalizerForTest<LearningOutcomesOverview>();
         _context.Services.AddSingleton(_dialogService);
         _context.ComponentFactories.AddStub<LearningOutcomeItem>();
     }
@@ -87,12 +89,14 @@ public class LearningOutcomesSpaceOverviewUt
             Arg.Any<DialogOptions>());
     }
 
-    private IRenderedComponent<LearningOutcomesSpaceOverview> GetRenderedComponent(
-        LearningOutcomeCollectionViewModel learningOutcomeCollection)
+    private IRenderedComponent<LearningOutcomesOverview> GetRenderedComponent(
+        LearningOutcomeCollectionViewModel learningOutcomeCollection, Type? entityType = null)
     {
-        return _context.RenderComponent<LearningOutcomesSpaceOverview>(pBuilder =>
+        entityType ??= typeof(LearningSpace);
+        return _context.RenderComponent<LearningOutcomesOverview>(pBuilder =>
         {
             pBuilder.Add(p => p.LearningOutcomeCollection, learningOutcomeCollection);
+            pBuilder.Add(p => p.EntityType, entityType);
         });
     }
 }

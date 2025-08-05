@@ -3,7 +3,7 @@ using System.Text;
 using JetBrains.Annotations;
 using Shared.LearningOutcomes;
 
-namespace Presentation.PresentationLogic.LearningSpace.LearningOutcomeViewModel;
+namespace Presentation.PresentationLogic.LearningOutcome;
 
 public class StructuredLearningOutcomeViewModel : ILearningOutcomeViewModel
 {

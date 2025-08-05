@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 using Shared;
 using Shared.Theme;
+using TestHelpers;
 
 namespace BusinessLogicTest.Commands.Condition;
 
@@ -14,7 +15,7 @@ public class CreatePathWayConditionUt
     // ANF-ID: [AHO61]
     public void Execute_CreatesPathWayCondition()
     {
-        var world = new LearningWorld("a", "b", "c", "d", "e", "f", WorldTheme.CampusAschaffenburg);
+        var world = EntityProvider.GetLearningWorld();
         var condition = ConditionEnum.And;
         var positionX = 1;
         var positionY = 2;
@@ -50,7 +51,7 @@ public class CreatePathWayConditionUt
     // ANF-ID: [AHO61]
     public void Execute_CreatesPathWayConditionBetweenGivenObjects()
     {
-        var world = new LearningWorld("a", "b", "c", "d", "e", "f", WorldTheme.CampusAschaffenburg);
+        var world = EntityProvider.GetLearningWorld();
         var previousCondition = new PathWayCondition(ConditionEnum.And, 2, 1);
         var previousSpace =
             new LearningSpace("a", "d", 5, SpaceTheme.LearningArea, positionX: 200, positionY: 200);
@@ -126,7 +127,7 @@ public class CreatePathWayConditionUt
     // ANF-ID: [AHO61]
     public void Execute_PreviousPathWayIsNull_ThrowsException()
     {
-        var world = new LearningWorld("a", "b", "c", "d", "e", "f", WorldTheme.CampusAschaffenburg);
+        var world = EntityProvider.GetLearningWorld();
         var previousCondition = new PathWayCondition(ConditionEnum.And, 2, 1);
         var previousSpace =
             new LearningSpace("a", "d", 5, SpaceTheme.LearningArea, positionX: 200, positionY: 200);
@@ -153,7 +154,7 @@ public class CreatePathWayConditionUt
     // ANF-ID: [AHO61]
     public void Execute_PreviousInBoundObjectIsNull_ThrowsException()
     {
-        var world = new LearningWorld("a", "b", "c", "d", "e", "f", WorldTheme.CampusAschaffenburg);
+        var world = EntityProvider.GetLearningWorld();
         var previousCondition = new PathWayCondition(ConditionEnum.And, 2, 1);
         var previousSpace =
             new LearningSpace("a", "d", 5, SpaceTheme.LearningArea, positionX: 200, positionY: 200);
@@ -179,7 +180,7 @@ public class CreatePathWayConditionUt
     [Test]
     public void Undo_MementoIsNull_ThrowsException()
     {
-        var world = new LearningWorld("a", "b", "c", "d", "e", "f", WorldTheme.CampusAschaffenburg);
+        var world = EntityProvider.GetLearningWorld();
         var condition = ConditionEnum.And;
         var positionX = 1;
         var positionY = 2;
@@ -199,7 +200,7 @@ public class CreatePathWayConditionUt
     [Test]
     public void UndoRedo_UndoesAndRedoesCreateLearningSpace()
     {
-        var world = new LearningWorld("a", "b", "c", "d", "e", "f", WorldTheme.CampusAschaffenburg);
+        var world = EntityProvider.GetLearningWorld();
         var pathWayCondition = new PathWayCondition(ConditionEnum.And, 1, 2);
         world.PathWayConditions.Add(pathWayCondition);
         var condition = ConditionEnum.Or;

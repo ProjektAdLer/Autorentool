@@ -12,9 +12,8 @@ using Presentation.Components.Forms;
 using Presentation.Components.Forms.Buttons;
 using Presentation.Components.Forms.Models;
 using Presentation.Components.Forms.Space;
-using Presentation.PresentationLogic.LearningSpace.LearningOutcomeViewModel;
+using Presentation.PresentationLogic.LearningOutcome;
 using Presentation.PresentationLogic.LearningWorld;
-using Shared;
 using Shared.Theme;
 
 namespace IntegrationTest.Forms.Space;

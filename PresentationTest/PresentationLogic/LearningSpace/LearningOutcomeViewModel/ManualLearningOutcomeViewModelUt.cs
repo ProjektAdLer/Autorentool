@@ -1,5 +1,5 @@
 using NUnit.Framework;
-using Presentation.PresentationLogic.LearningSpace.LearningOutcomeViewModel;
+using Presentation.PresentationLogic.LearningOutcome;
 
 namespace PresentationTest.PresentationLogic.LearningSpace.LearningOutcomeViewModel;
 

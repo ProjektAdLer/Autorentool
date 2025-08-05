@@ -17,7 +17,7 @@ public class BatchCommandUt
     [Test]
     public void Execute_Undo_Redo_BatchCommand()
     {
-        var world = new LearningWorld("a", "b", "c", "d", "e", "f", WorldTheme.CampusAschaffenburg);
+        var world = EntityProvider.GetLearningWorld();
         var name = "topic1";
         var actionWasInvoked1 = false;
         var actionWasInvoked2 = false;

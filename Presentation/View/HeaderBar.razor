@@ -5,22 +5,14 @@
 @using ElectronWrapper
 @using Microsoft.Extensions.Localization
 @using Presentation.Components
+@using Presentation.Components.ContentFiles
 @using Presentation.Components.Dialogues
+@using Presentation.Components.Dialogues.AdministrationDialog
 @using Presentation.Components.LearningOutcomes
 @using Presentation.PresentationLogic
 @using Presentation.PresentationLogic.API
 @using Presentation.PresentationLogic.AuthoringToolWorkspace
-@using Presentation.PresentationLogic.Extensions
-@using Presentation.PresentationLogic.LearningContent
-@using Presentation.PresentationLogic.LearningContent.AdaptivityContent
-@using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Action
-@using Presentation.PresentationLogic.LearningContent.FileContent
-@using Presentation.PresentationLogic.LearningContent.LinkContent
-@using Presentation.PresentationLogic.LearningElement
-@using Presentation.PresentationLogic.LearningSpace
 @using Presentation.PresentationLogic.LearningWorld
-@using Presentation.Components.ContentFiles
-@using Presentation.Components.Dialogues.AdministrationDialog
 @using Presentation.PresentationLogic.Mediator
 @using Presentation.PresentationLogic.SelectedViewModels
 @using Shared
@@ -474,10 +466,11 @@
         var parameters = new DialogParameters
         {
             {
-                nameof(LearningOutcomesWorldOverview.LearningWorld), SelectedViewModelsProvider.LearningWorld
-            }
+                nameof(LearningOutcomesOverview.LearningOutcomeCollection), SelectedViewModelsProvider.LearningWorld!.LearningOutcomeCollection
+            },
+            { nameof(LearningOutcomesOverview.EntityType), nameof(BusinessLogic.Entities.LearningWorld) }
         };
-        DialogService.ShowAsync<LearningOutcomesWorldOverview>("", parameters, options);
+        DialogService.ShowAsync<LearningOutcomesOverview>("", parameters, options);
     }
 
     private void OpenAdministrationDialog()

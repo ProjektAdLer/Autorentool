@@ -119,7 +119,7 @@ public class HeaderBarUt
     {
         var world = ViewModelProvider.GetLearningWorld();
         var space = ViewModelProvider.GetLearningSpace();
-        var element = ViewModelProvider.GetLearningElement();
+        var element = ViewModelProvider.GetLearningElement(parent: space);
         space.LearningSpaceLayout.LearningElements.Add(0, element);
         world.LearningSpaces.Add(space);
         _selectedViewModelsProvider.LearningWorld.Returns(world);
@@ -179,7 +179,7 @@ public class HeaderBarUt
     {
         var world = ViewModelProvider.GetLearningWorld();
         var space = ViewModelProvider.GetLearningSpace();
-        var element = ViewModelProvider.GetLearningElement();
+        var element = ViewModelProvider.GetLearningElement(parent: space);
         space.LearningSpaceLayout.LearningElements.Add(0, element);
         world.LearningSpaces.Add(space);
         _selectedViewModelsProvider.LearningWorld.Returns(world);
@@ -209,7 +209,7 @@ public class HeaderBarUt
     {
         var world = ViewModelProvider.GetLearningWorld();
         var space = ViewModelProvider.GetLearningSpace();
-        var element = ViewModelProvider.GetLearningElement();
+        var element = ViewModelProvider.GetLearningElement(parent: space);
         space.LearningSpaceLayout.LearningElements.Add(0, element);
         world.LearningSpaces.Add(space);
         _selectedViewModelsProvider.LearningWorld.Returns(world);
@@ -300,7 +300,7 @@ public class HeaderBarUt
     {
         var world = ViewModelProvider.GetLearningWorld();
         var space = ViewModelProvider.GetLearningSpace();
-        var element = ViewModelProvider.GetLearningElement();
+        var element = ViewModelProvider.GetLearningElement(parent: space);
         space.LearningSpaceLayout.LearningElements.Add(0, element);
         world.LearningSpaces.Add(space);
         _selectedViewModelsProvider.LearningWorld.Returns(world);
@@ -338,7 +338,7 @@ public class HeaderBarUt
     {
         var world = ViewModelProvider.GetLearningWorld();
         var space = ViewModelProvider.GetLearningSpace();
-        var element = ViewModelProvider.GetLearningElement();
+        var element = ViewModelProvider.GetLearningElement(parent: space);
         space.LearningSpaceLayout.LearningElements.Add(0, element);
         world.LearningSpaces.Add(space);
         _selectedViewModelsProvider.LearningWorld.Returns(world);
@@ -375,7 +375,7 @@ public class HeaderBarUt
     {
         var world = ViewModelProvider.GetLearningWorld();
         var space = ViewModelProvider.GetLearningSpace();
-        var element = ViewModelProvider.GetLearningElement();
+        var element = ViewModelProvider.GetLearningElement(parent: space);
         space.LearningSpaceLayout.LearningElements.Add(0, element);
         world.LearningSpaces.Add(space);
         _selectedViewModelsProvider.LearningWorld.Returns(world);

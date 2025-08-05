@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 using Presentation.PresentationLogic.LearningElement;
-using Presentation.PresentationLogic.LearningSpace.LearningOutcomeViewModel;
+using Presentation.PresentationLogic.LearningOutcome;
 using Presentation.PresentationLogic.LearningSpace.SpaceLayout;
 using Presentation.PresentationLogic.Topic;
 using Shared;
@@ -87,7 +87,7 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
 
     // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Local - required for automapper n.stich
     public int Points => ContainedLearningElements.Sum(element => element.Points);
-    
+
     public int NumberOfElements => ContainedLearningElements.Count();
 
     public int NumberOfRequiredElements => ContainedLearningElements.Count(element => element.IsRequired);

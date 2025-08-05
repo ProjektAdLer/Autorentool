@@ -3,6 +3,7 @@ using Microsoft.Extensions.Localization;
 using MudBlazor;
 using Presentation.Components.Dialogues;
 using Presentation.PresentationLogic.API;
+using Presentation.PresentationLogic.LearningOutcome;
 using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.SelectedViewModels;
 using Shared.Theme;
@@ -70,12 +71,14 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
 
     /// <inheritdoc cref="IAuthoringToolWorkspacePresenter.CreateLearningWorld"/>
     public void CreateLearningWorld(string name, string shortname, string authors, string language, string description,
-        string goals, WorldTheme worldTheme, string evaluationLink, string evaluationLinkName,
+        LearningOutcomeCollectionViewModel learningOutcomeCollection, WorldTheme worldTheme, string evaluationLink,
+        string evaluationLinkName,
         string evaluationLinkText, string enrolmentKey, string storyStart, string storyEnd)
     {
         _presentationLogic.CreateLearningWorld(AuthoringToolWorkspaceVm, name, shortname, authors, language,
-            description, goals, worldTheme, evaluationLink, evaluationLinkName, evaluationLinkText, enrolmentKey,
-            storyStart, storyEnd);
+            description, learningOutcomeCollection, worldTheme, evaluationLink, evaluationLinkName, evaluationLinkText, enrolmentKey,
+            storyStart,
+            storyEnd);
     }
 
     /// <inheritdoc cref="IAuthoringToolWorkspacePresenter.DeleteLearningWorld"/>

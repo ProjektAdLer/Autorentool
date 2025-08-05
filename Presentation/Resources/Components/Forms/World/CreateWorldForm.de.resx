@@ -105,4 +105,7 @@
     <data name="CreateWorldForm.Finalization.Field.EvaluationLink.Placeholder.Text" xml:space="preserve">
         <value>Link zum Lernweltabschluss</value>
     </data>
+    <data name="CreateWorldForm.Goals.Button" xml:space="preserve">
+        <value>Lernziel-Formulierung</value>
+    </data>
 </root>

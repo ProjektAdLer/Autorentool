@@ -129,7 +129,7 @@
                 </div>
             </Collapsable>
 
-            <Collapsable Title=@Localizer["CreateWorldForm.Goals.Text"] InitiallyCollapsed="true">
+            @*<Collapsable Title=@Localizer["CreateWorldForm.Goals.Text"] InitiallyCollapsed="true">
                 <div class="rounded-lg w-4/4 px-6">
                     <p class="text-xs pt-3">@Localizer["CreateWorldForm.Goals.Field.Goals.Text"]</p>
                     <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
@@ -137,6 +137,15 @@
                                   Lines="3"
                                   Variant="Variant.Outlined"
                                   DebounceInterval="DebounceInterval"/>
+                </div>
+            </Collapsable>*@
+            <Collapsable Title=@Localizer["CreateWorldForm.Goals.Text"] InitiallyCollapsed="true">
+                <div class="w-4/4 px-6 flex flex-col">
+                    <p class="text-xs pt-3">@Localizer["CreateWorldForm.Goals.Field.Goals.Text"]</p>
+                    <div class="flex justify-center">
+                        <MudButton Class="w-72 btn-standard"
+                                   OnClick="OpenLearningOutcomesOverview">@Localizer["CreateWorldForm.Goals.Button"]</MudButton>
+                    </div>
                 </div>
             </Collapsable>
 
@@ -200,6 +209,9 @@
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal IFormDataContainer<LearningWorldFormModel, LearningWorld> FormDataContainer { get; set; }
 
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types
+    internal IDialogService DialogService { get; set; }
+
     [Parameter] public EventCallback OnSubmitted { get; set; }
 
     [Parameter] public int DebounceInterval { get; set; } = 300;
@@ -212,7 +224,6 @@
     private MudTextField<string> _nameField = null!;
     private MudTextField<string> _evaluationLinkNameField = null!;
     private MudTextField<string> _evaluationLinkField = null!;
-
     private WorldTheme[] _themes = (WorldTheme[])Enum.GetValues(typeof(WorldTheme));
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -226,7 +237,7 @@
 
     private void OnValidSubmit(LearningWorldFormModel model)
     {
-        AuthoringToolWorkspacePresenter.CreateLearningWorld(model.Name, model.Shortname, model.Authors, model.Language, model.Description, model.Goals, model.WorldTheme, model.EvaluationLink, model.EvaluationLinkName, model.EvaluationLinkText, model.EnrolmentKey, model.StoryStart, model.StoryEnd);
+        AuthoringToolWorkspacePresenter.CreateLearningWorld(model.Name, model.Shortname, model.Authors, model.Language, model.Description, model.LearningOutcomeCollection, model.WorldTheme, model.EvaluationLink, model.EvaluationLinkName, model.EvaluationLinkText, model.EnrolmentKey, model.StoryStart, model.StoryEnd);
         OnSubmitted.InvokeAsync();
     }
 
@@ -257,6 +268,12 @@
             await _evaluationLinkField.Validate();
             await _evaluationLinkNameField.Validate();
         }
+    }
+
+    private async void OpenLearningOutcomesOverview()
+    {
+        await LearningOutcomesOverviewHelper.ShowOverviewAsync(DialogService, FormDataContainer.FormModel.LearningOutcomeCollection, typeof(LearningWorld));
+        StateHasChanged();
     }
 
 }
