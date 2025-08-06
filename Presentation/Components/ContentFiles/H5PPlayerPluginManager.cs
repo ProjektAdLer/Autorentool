@@ -108,17 +108,14 @@ public class H5PPlayerPluginManager : IH5PPlayerPluginManager
         var options = new DialogOptions
         {
             BackdropClick = false,
-            MaxWidth = MaxWidth.Large,
+            MaxWidth = MaxWidth.Medium,
             FullWidth = true,
-            CloseButton = false,
         };
 
-       await DialogService.ShowAsync<PlayerH5p>("H5P-Validator", parameters, options);
+       await DialogService.ShowAsync<PlayerH5p>("", parameters, options);
   
         return await tcs.Task;
     }
-
-
     
     private IFileContentViewModel? FileContentVm { get; set; }
     public ILogger<H5PPlayerPluginManager> Logger { get;  }

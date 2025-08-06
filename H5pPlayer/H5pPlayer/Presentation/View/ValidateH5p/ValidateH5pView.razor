@@ -2,39 +2,43 @@
 @using MudBlazor
 @inject IDialogService DialogService
 
-<div class="flex justify-end items-start text-2xl text-adlergrey-800 adler">
-    <p class="text-sm text-formerror font-bold whitespace-nowrap">
-        Dieses Fenster muss offen bleiben bis die Validierung abgeschlossen ist!
-    </p>
-</div>
+<div class="flex flex-col gap-2">
+    <header class="flex-none px-4">
+        <p class="text-lg">H5P-Validator</p>
+    </header>
+    <div class="bg-adlergrey-100 px-4">
+       
+        <ValidationNecessaryView></ValidationNecessaryView>
+            
+        <div class="bg-white border-adlergrey-300 gap-2 border-2 rounded py-1">
 
-<ValidationNecessaryView></ValidationNecessaryView>
+            <div style="height: 450px; overflow: auto;" scrolling="yes" id="h5p-container"></div>
 
-<div style="margin-top: 20px;"></div>
-<div id="h5p-container"></div>
-<div style="margin-top: 20px;"></div>
-
-@if (ValidateH5pVm != null)
-{
-    @if (ValidateH5pVm.IsCompletable)
-    {
-        <div style="color: green; display: flex; align-items: center;">
-            <span>&#10003;</span> <!-- Grüner Haken -->
-            <span style="margin-left: 5px;">H5P ist abschließbar</span>
+            @if (ValidateH5pVm != null)
+            {
+                @if (ValidateH5pVm.IsCompletable)
+                {
+                    <div style="color: green; display: flex; align-items: center;">
+                        <span>&#10003;</span> <!-- Grüner Haken -->
+                        <span style="margin-left: 5px;">H5P ist abschließbar</span>
+                    </div>
+                }
+            }
         </div>
-    }
+        
+        <footer class="flex flex-row gap-4 justify-end items-end">
+            <NotUsableH5pButton ValidateH5pController="@ValidateH5pController"/>
+            <PrimitiveH5pButton ValidateH5pController="@ValidateH5pController"/>
+            <CompletableH5pButton IsEnabled="@ValidateH5pVm.IsCompletable"
+                                  ValidateH5pController="@ValidateH5pController"/>
+            <CancelValidateH5pButton ValidateH5pController="ValidateH5pController"
+                                     DialogService="@DialogService"></CancelValidateH5pButton>
 
-    <div class="fixed bottom-4 right-4 flex flex-row gap-4 justify-end items-center z-50">
-        <NotUsableH5pButton ValidateH5pController="@ValidateH5pController" />
-        <PrimitiveH5pButton ValidateH5pController="@ValidateH5pController" />
-        <CompletableH5pButton IsEnabled="@ValidateH5pVm.IsCompletable"
-                              ValidateH5pController="@ValidateH5pController" />
-        <CancelValidateH5pButton ValidateH5pController="ValidateH5pController"
-                                 DialogService="@DialogService"></CancelValidateH5pButton>
+        </footer>
         
     </div>
-
-}
+</div>
+        
 
 @code {
     private bool showDefectExplanation = false;
@@ -49,8 +53,4 @@
     {
         ValidateH5pVm.OnChange += StateHasChanged;
     }
-    
-  
-
-
 }

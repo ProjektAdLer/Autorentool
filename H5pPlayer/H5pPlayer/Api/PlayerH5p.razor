@@ -12,13 +12,14 @@
     see: https://www.reddit.com/r/Blazor/comments/iuumr2/avoid_my_idiocy/
     see only intern: https://wiki.projekt-adler.eu/de/AMG/Blazor/Naming
 -->
-
-<H5pPlayerView 
-    H5pZipSourcePath="@H5pZipSourcePath"
-    UnzippedH5psPath="@UnzippedH5psPath"
-    DisplayMode="@DisplayMode"
-    OnPlayerFinished="HandleFinish">
-</H5pPlayerView>
+<div class="flex flex-col h-full w-full">
+        <H5pPlayerView
+            H5pZipSourcePath="@H5pZipSourcePath"
+            UnzippedH5psPath="@UnzippedH5psPath"
+            DisplayMode="@DisplayMode"
+            OnPlayerFinished="HandleFinish">
+        </H5pPlayerView>
+</div>
 
 @code {
 
