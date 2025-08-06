@@ -1,7 +1,7 @@
 using System;
 using System.Globalization;
 using NUnit.Framework;
-using Presentation.PresentationLogic.LearningSpace.LearningOutcomeViewModel;
+using Presentation.PresentationLogic.LearningOutcome;
 using Shared.LearningOutcomes;
 
 namespace PresentationTest.PresentationLogic.LearningSpace.LearningOutcomeViewModel;

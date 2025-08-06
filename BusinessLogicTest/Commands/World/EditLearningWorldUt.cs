@@ -3,6 +3,7 @@ using BusinessLogic.Entities;
 using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 using Shared.Theme;
+using TestHelpers;
 
 namespace BusinessLogicTest.Commands.World;
 
@@ -13,7 +14,8 @@ public class EditLearningWorldUt
     // ANF-ID: [ASE3]
     public void Execute_EditsLearningSpace()
     {
-        var world = new LearningWorld("a", "b", "c", "d", "e", "f", WorldTheme.CampusAschaffenburg, "g", "h", "i", "j",
+        var world = new LearningWorld("a", "b", "c", "d", "e", EntityProvider.GetLearningOutcomeCollection(),
+            WorldTheme.CampusAschaffenburg, "g", "h", "i", "j",
             "k", "l")
         {
             UnsavedChanges = false
@@ -23,7 +25,8 @@ public class EditLearningWorldUt
         var authors = "a";
         var language = "l";
         var description = "d";
-        var goals = "g";
+        var learningOutcomeCollection = EntityProvider.GetLearningOutcomeCollection();
+        learningOutcomeCollection.LearningOutcomes.AddRange(EntityProvider.GetLearningOutcomes());
         var theme = WorldTheme.CampusKempten;
         var evaluationLink = "el";
         var evaluationLinkName = "eln";
@@ -35,10 +38,8 @@ public class EditLearningWorldUt
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
 
         var command =
-            new EditLearningWorld(world, name, shortname, authors, language, description, goals, theme,
-                evaluationLink, evaluationLinkName, evaluationLinkText,
-                enrolmentKey, storyStart, storyEnd,
-                mappingAction,
+            new EditLearningWorld(world, name, shortname, authors, language, description, learningOutcomeCollection,
+                theme, evaluationLink,evaluationLinkName, evaluationLinkText, enrolmentKey, storyStart, storyEnd, mappingAction,
                 new NullLogger<EditLearningWorld>());
 
         Assert.Multiple(() =>
@@ -49,7 +50,8 @@ public class EditLearningWorldUt
             Assert.That(world.Authors, Is.EqualTo("c"));
             Assert.That(world.Language, Is.EqualTo("d"));
             Assert.That(world.Description, Is.EqualTo("e"));
-            Assert.That(world.Goals, Is.EqualTo("f"));
+            Assert.That(world.LearningOutcomeCollection.LearningOutcomes, Has.Count.EqualTo(3));
+            Assert.That(world.WorldTheme, Is.EqualTo(WorldTheme.CampusAschaffenburg));
             Assert.That(world.WorldTheme, Is.EqualTo(WorldTheme.CampusAschaffenburg));
             Assert.That(world.EvaluationLink, Is.EqualTo("g"));
             Assert.That(world.EvaluationLinkName, Is.EqualTo("h"));
@@ -70,7 +72,8 @@ public class EditLearningWorldUt
             Assert.That(world.Authors, Is.EqualTo("a"));
             Assert.That(world.Language, Is.EqualTo("l"));
             Assert.That(world.Description, Is.EqualTo("d"));
-            Assert.That(world.Goals, Is.EqualTo("g"));
+            Assert.That(world.LearningOutcomeCollection.LearningOutcomes, Has.Count.EqualTo(6));
+            Assert.That(world.WorldTheme, Is.EqualTo(WorldTheme.CampusKempten));
             Assert.That(world.WorldTheme, Is.EqualTo(WorldTheme.CampusKempten));
             Assert.That(world.EvaluationLink, Is.EqualTo("el"));
             Assert.That(world.EvaluationLinkName, Is.EqualTo("eln"));
@@ -85,14 +88,16 @@ public class EditLearningWorldUt
     [Test]
     public void Undo_MementoIsNull_ThrowsException()
     {
-        var world = new LearningWorld("a", "b", "c", "d", "e", "f", WorldTheme.CampusAschaffenburg, "g", "h", "i", "j",
+        var world = new LearningWorld("a", "b", "c", "d", "e", EntityProvider.GetLearningOutcomeCollection(),
+            WorldTheme.CampusAschaffenburg, "g", "h", "i", "j",
             "k", "l");
         var name = "n";
         var shortname = "sn";
         var authors = "a";
         var language = "l";
         var description = "d";
-        var goals = "g";
+        var learningOutcomeCollection = EntityProvider.GetLearningOutcomeCollection();
+        learningOutcomeCollection.LearningOutcomes.AddRange(EntityProvider.GetLearningOutcomes());
         var theme = WorldTheme.CampusKempten;
         var evaluationLink = "el";
         var evaluationLinkName = "eln";
@@ -104,9 +109,8 @@ public class EditLearningWorldUt
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
 
         var command =
-            new EditLearningWorld(world, name, shortname, authors, language, description, goals, theme, evaluationLink,
-                evaluationLinkName, evaluationLinkText, enrolmentKey, storyStart, storyEnd,
-                mappingAction,
+            new EditLearningWorld(world, name, shortname, authors, language, description, learningOutcomeCollection,
+                theme, evaluationLink,evaluationLinkName, evaluationLinkText, enrolmentKey, storyStart, storyEnd, mappingAction,
                 new NullLogger<EditLearningWorld>());
 
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
@@ -120,7 +124,8 @@ public class EditLearningWorldUt
     [Test]
     public void UndoRedo_UndoesAndRedoesEditLearningWorld()
     {
-        var world = new LearningWorld("a", "b", "c", "d", "e", "f", WorldTheme.CampusAschaffenburg, "g", "h", "i", "j",
+        var world = new LearningWorld("a", "b", "c", "d", "e", EntityProvider.GetLearningOutcomeCollection(),
+            WorldTheme.CampusAschaffenburg, "g", "h", "i", "j",
             "k", "l")
         {
             UnsavedChanges = false
@@ -130,7 +135,8 @@ public class EditLearningWorldUt
         var authors = "a";
         var language = "l";
         var description = "d";
-        var goals = "g";
+        var learningOutcomeCollection = EntityProvider.GetLearningOutcomeCollection();
+        learningOutcomeCollection.LearningOutcomes.AddRange(EntityProvider.GetLearningOutcomes());
         var theme = WorldTheme.CampusKempten;
         var evaluationLink = "el";
         var evaluationLinkName = "eln";
@@ -142,9 +148,8 @@ public class EditLearningWorldUt
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
 
         var command =
-            new EditLearningWorld(world, name, shortname, authors, language, description, goals, theme, evaluationLink,
-                evaluationLinkName, evaluationLinkText, enrolmentKey, storyStart, storyEnd,
-                mappingAction,
+            new EditLearningWorld(world, name, shortname, authors, language, description, learningOutcomeCollection,
+                theme, evaluationLink,evaluationLinkName, evaluationLinkText, enrolmentKey, storyStart, storyEnd, mappingAction,
                 new NullLogger<EditLearningWorld>());
 
         Assert.Multiple(() =>
@@ -155,7 +160,8 @@ public class EditLearningWorldUt
             Assert.That(world.Authors, Is.EqualTo("c"));
             Assert.That(world.Language, Is.EqualTo("d"));
             Assert.That(world.Description, Is.EqualTo("e"));
-            Assert.That(world.Goals, Is.EqualTo("f"));
+            Assert.That(world.LearningOutcomeCollection.LearningOutcomes, Has.Count.EqualTo(3));
+            Assert.That(world.WorldTheme, Is.EqualTo(WorldTheme.CampusAschaffenburg));
             Assert.That(world.WorldTheme, Is.EqualTo(WorldTheme.CampusAschaffenburg));
             Assert.That(world.EvaluationLink, Is.EqualTo("g"));
             Assert.That(world.EvaluationLinkName, Is.EqualTo("h"));
@@ -176,7 +182,8 @@ public class EditLearningWorldUt
             Assert.That(world.Authors, Is.EqualTo("a"));
             Assert.That(world.Language, Is.EqualTo("l"));
             Assert.That(world.Description, Is.EqualTo("d"));
-            Assert.That(world.Goals, Is.EqualTo("g"));
+            Assert.That(world.LearningOutcomeCollection.LearningOutcomes, Has.Count.EqualTo(6));
+            Assert.That(world.WorldTheme, Is.EqualTo(WorldTheme.CampusKempten));
             Assert.That(world.WorldTheme, Is.EqualTo(WorldTheme.CampusKempten));
             Assert.That(world.EvaluationLink, Is.EqualTo("el"));
             Assert.That(world.EvaluationLinkName, Is.EqualTo("eln"));
@@ -198,7 +205,8 @@ public class EditLearningWorldUt
             Assert.That(world.Authors, Is.EqualTo("c"));
             Assert.That(world.Language, Is.EqualTo("d"));
             Assert.That(world.Description, Is.EqualTo("e"));
-            Assert.That(world.Goals, Is.EqualTo("f"));
+            Assert.That(world.LearningOutcomeCollection.LearningOutcomes, Has.Count.EqualTo(3));
+            Assert.That(world.WorldTheme, Is.EqualTo(WorldTheme.CampusAschaffenburg));
             Assert.That(world.WorldTheme, Is.EqualTo(WorldTheme.CampusAschaffenburg));
             Assert.That(world.EvaluationLink, Is.EqualTo("g"));
             Assert.That(world.EvaluationLinkName, Is.EqualTo("h"));
@@ -220,7 +228,8 @@ public class EditLearningWorldUt
             Assert.That(world.Authors, Is.EqualTo("a"));
             Assert.That(world.Language, Is.EqualTo("l"));
             Assert.That(world.Description, Is.EqualTo("d"));
-            Assert.That(world.Goals, Is.EqualTo("g"));
+            Assert.That(world.LearningOutcomeCollection.LearningOutcomes, Has.Count.EqualTo(6));
+            Assert.That(world.WorldTheme, Is.EqualTo(WorldTheme.CampusKempten));
             Assert.That(world.WorldTheme, Is.EqualTo(WorldTheme.CampusKempten));
             Assert.That(world.EvaluationLink, Is.EqualTo("el"));
             Assert.That(world.EvaluationLinkName, Is.EqualTo("eln"));

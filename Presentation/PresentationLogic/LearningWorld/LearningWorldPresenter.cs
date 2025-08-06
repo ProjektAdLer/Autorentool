@@ -12,9 +12,9 @@ using Presentation.PresentationLogic.LearningContent.FileContent;
 using Presentation.PresentationLogic.LearningContent.LinkContent;
 using Presentation.PresentationLogic.LearningContent.Story;
 using Presentation.PresentationLogic.LearningElement;
+using Presentation.PresentationLogic.LearningOutcome;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
-using Presentation.PresentationLogic.LearningSpace.LearningOutcomeViewModel;
 using Presentation.PresentationLogic.Mediator;
 using Presentation.PresentationLogic.SelectedViewModels;
 using Presentation.PresentationLogic.Topic;
@@ -142,16 +142,16 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
 
     /// <inheritdoc cref="ILearningWorldPresenter.EditLearningWorld"/>
     public void EditLearningWorld(string name, string shortname, string authors, string language, string description,
-        string goals, WorldTheme worldTheme, string evaluationLink, string evaluationLinkName,
+        LearningOutcomeCollectionViewModel learningOutcomeCollection, WorldTheme worldTheme, string evaluationLink,
+        string evaluationLinkName,
         string evaluationLinkText, string enrolmentKey, string storyStart, string storyEnd)
     {
         if (!CheckLearningWorldNotNull("EditLearningWorld"))
             return;
 
         //Nullability of LearningWorldVm is checked in CheckLearningWorldNotNull
-        _presentationLogic.EditLearningWorld(LearningWorldVm!, name, shortname, authors, language, description, goals,
-            worldTheme,
-            evaluationLink, evaluationLinkName, evaluationLinkText, enrolmentKey, storyStart, storyEnd);
+        _presentationLogic.EditLearningWorld(LearningWorldVm!, name, shortname, authors, language, description,
+            learningOutcomeCollection, worldTheme, evaluationLink, evaluationLinkName, evaluationLinkText, enrolmentKey, storyStart, storyEnd);
     }
 
     /// <inheritdoc cref="ILearningWorldPresenter.SaveLearningWorld"/>

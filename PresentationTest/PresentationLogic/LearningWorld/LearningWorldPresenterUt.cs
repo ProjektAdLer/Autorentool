@@ -12,9 +12,9 @@ using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningContent.AdaptivityContent;
+using Presentation.PresentationLogic.LearningOutcome;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
-using Presentation.PresentationLogic.LearningSpace.LearningOutcomeViewModel;
 using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.Mediator;
 using Presentation.PresentationLogic.SelectedViewModels;
@@ -35,9 +35,11 @@ public class LearningWorldPresenterUt
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
         systemUnderTest.LearningWorldVm = world;
-        systemUnderTest.EditLearningWorld("n", "s", "a", "l", "d", "g", WorldTheme.CampusAschaffenburg, "el", "eln",
+        var learningOutcomeCollection = ViewModelProvider.GetLearningOutcomeCollection();
+        systemUnderTest.EditLearningWorld("n", "s", "a", "l", "d", learningOutcomeCollection,
+            WorldTheme.CampusAschaffenburg, "el", "eln",
             "elt", "ek", "ss", "se");
-        presentationLogic.Received().EditLearningWorld(world, "n", "s", "a", "l", "d", "g",
+        presentationLogic.Received().EditLearningWorld(world, "n", "s", "a", "l", "d", learningOutcomeCollection,
             WorldTheme.CampusAschaffenburg, "el", "eln", "elt", "ek", "ss", "se");
     }
 
@@ -53,7 +55,8 @@ public class LearningWorldPresenterUt
             selectedViewModelsProvider: mockSelectedViewModelsProvider,
             errorService: mockErrorService);
 
-        systemUnderTest.EditLearningWorld("n", "s", "a", "l", "d", "g", WorldTheme.CampusAschaffenburg, "el", "eln",
+        systemUnderTest.EditLearningWorld("n", "s", "a", "l", "d", ViewModelProvider.GetLearningOutcomeCollection(),
+            WorldTheme.CampusAschaffenburg, "el", "eln",
             "elt", "ek", "ss", "se");
 
         mockErrorService.Received().SetError("Operation failed", "No learning world selected");

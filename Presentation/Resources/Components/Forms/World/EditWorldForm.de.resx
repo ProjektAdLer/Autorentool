@@ -111,4 +111,7 @@
     <data name="EditWorldForm.Finalization.Field.EvaluationLink.Placeholder.Text" xml:space="preserve">
         <value>Link zum Lernweltabschluss</value>
     </data>
+    <data name="EditWorldForm.Goals.Button" xml:space="preserve">
+        <value>Lernziel-Formulierung</value>
+    </data>
 </root>

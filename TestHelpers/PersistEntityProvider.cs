@@ -18,9 +18,9 @@ public static class PersistEntityProvider
     public static LearningWorldPe GetLearningWorld(string append = "", List<LearningSpacePe>? learningSpaces = null)
     {
         return new LearningWorldPe("LWPn" + append, "LWPsn" + append, "LWPa" + append, "LWPl" + append, "LWPd" + append,
-            "LWPg" + append, WorldTheme.CampusAschaffenburg, "LWPev" + append, "LWPevN" + append, "LWPevT" + append,
-            "LWPek" + append, "LWPss" + append,
-            "LWPse" + append, "LWPsp" + append, learningSpaces: learningSpaces);
+            GetLearningOutcomeCollection(), WorldTheme.CampusAschaffenburg, "LWPev" + append, "LWPevN" + append,
+            "LWPevT" + append, "LWPek" + append,
+            "LWPss" + append, "LWPse" + append, "LWPsp" + append, learningSpaces: learningSpaces);
     }
 
     public static LearningSpacePe GetLearningSpace(string append = "", FloorPlanEnum? floorPlan = null,
@@ -225,6 +225,7 @@ public static class PersistEntityProvider
 
     public static LearningWorldPe GetBlankLearningWorld()
     {
-        return new LearningWorldPe("", "", "", "", "", "", default, "", "", "", "", "", "", "");
+        return new LearningWorldPe("", "", "", "", "", new LearningOutcomeCollectionPe(), default, "", "", "", "",
+            "", "", "");
     }
 }

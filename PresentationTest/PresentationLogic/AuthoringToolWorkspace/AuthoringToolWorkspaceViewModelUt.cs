@@ -1,8 +1,7 @@
 using System.Linq;
 using NUnit.Framework;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
-using Presentation.PresentationLogic.LearningWorld;
-using Shared.Theme;
+using TestHelpers;
 
 namespace PresentationTest.PresentationLogic.AuthoringToolWorkspace;
 
@@ -20,7 +19,7 @@ public class AuthoringToolWorkspaceViewModelUt
     [Test]
     public void AuthoringToolWorkspaceViewModel_RemoveLearningWorld_RemovesLearningWorldFromEnumerable()
     {
-        var viewModel = GetLearningWorldViewModelForTesting();
+        var viewModel = ViewModelProvider.GetLearningWorld();
 
         var systemUnderTest = GetViewModelForTesting();
         systemUnderTest._learningWorlds.Add(viewModel);
@@ -37,7 +36,7 @@ public class AuthoringToolWorkspaceViewModelUt
     [Test]
     public void AuthoringToolWorkspaceViewModel_RemoveLearningWorld_RaisesStateChangeEventWithCurrentState()
     {
-        var viewModel = GetLearningWorldViewModelForTesting();
+        var viewModel = ViewModelProvider.GetLearningWorld();
         var handlerCalled = false;
 
         var systemUnderTest = GetViewModelForTesting();
@@ -67,11 +66,5 @@ public class AuthoringToolWorkspaceViewModelUt
     private AuthoringToolWorkspaceViewModel GetViewModelForTesting()
     {
         return new AuthoringToolWorkspaceViewModel();
-    }
-
-    private LearningWorldViewModel GetLearningWorldViewModelForTesting()
-    {
-        return new LearningWorldViewModel("foo", "bar", "foo", "bar", "foo", "bar", WorldTheme.CampusAschaffenburg,
-            "foo", "foo", "foo", "foo", "foo", "foo");
     }
 }

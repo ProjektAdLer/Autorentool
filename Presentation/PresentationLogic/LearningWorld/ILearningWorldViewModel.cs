@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using Presentation.PresentationLogic.LearningElement;
+using Presentation.PresentationLogic.LearningOutcome;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.Topic;
@@ -25,7 +26,7 @@ public interface ILearningWorldViewModel : ISerializableViewModel, IDisplayableL
     string Authors { get; set; }
     string Language { get; set; }
     string Description { get; set; }
-    string Goals { get; set; }
+    LearningOutcomeCollectionViewModel LearningOutcomeCollection { get; set; }
     WorldTheme WorldTheme { get; set; }
     string SavePath { get; set; }
     bool UnsavedChanges { get; set; }

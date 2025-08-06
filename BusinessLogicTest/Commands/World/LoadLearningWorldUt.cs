@@ -4,7 +4,7 @@ using BusinessLogic.Entities;
 using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
 using NUnit.Framework;
-using Shared.Theme;
+using TestHelpers;
 
 namespace BusinessLogicTest.Commands.World;
 
@@ -15,9 +15,9 @@ public class LoadLearningWorldUt
     // ANF-ID: [ASE2]
     public void Execute_LoadsLearningWorld()
     {
-        var authoringToolWorkspace = new AuthoringToolWorkspace(new List<ILearningWorld>());
+        var authoringToolWorkspace = EntityProvider.GetAuthoringToolWorkspace();
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        var world = new LearningWorld("a", "b", "b", "b", "b", "b", WorldTheme.CampusAschaffenburg);
+        var world = EntityProvider.GetLearningWorld();
         const string filepath = "c:\\temp\\test";
         mockBusinessLogic.LoadLearningWorld(filepath).Returns(world);
         var actionWasInvoked = false;

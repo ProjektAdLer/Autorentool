@@ -13,6 +13,7 @@ using Presentation.Components.Forms;
 using Presentation.Components.Forms.Buttons;
 using Presentation.Components.Forms.Models;
 using Presentation.Components.Forms.World;
+using Presentation.PresentationLogic.LearningOutcome;
 using Presentation.PresentationLogic.LearningWorld;
 using PresentationTest;
 using Shared.Theme;
@@ -155,7 +156,8 @@ public class EditWorldFormIt : MudFormTestFixture<EditWorldForm, LearningWorldFo
         systemUnderTest.FindComponent<SubmitThenRemapButton>().Find("button").Click();
 
         WorldPresenter.Received(2).EditLearningWorld(Expected, Expected, Expected, Expected,
-            Expected, Expected, WorldTheme.CampusAschaffenburg, Expected, Expected, Expected, Expected, Expected,
+            Expected, Arg.Any<LearningOutcomeCollectionViewModel>(), WorldTheme.CampusAschaffenburg, Expected, Expected,
+            Expected, Expected, Expected,
             Expected);
         Mapper.Received(1).Map(worldToMap, FormDataContainer.FormModel);
     }

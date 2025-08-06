@@ -10,8 +10,8 @@ using BusinessLogic.Entities.LearningContent.Adaptivity.Question;
 using BusinessLogic.Entities.LearningContent.Adaptivity.Trigger;
 using BusinessLogic.Entities.LearningContent.FileContent;
 using BusinessLogic.Entities.LearningContent.LinkContent;
-using BusinessLogic.Entities.LearningOutcome;
 using BusinessLogic.Entities.LearningContent.Story;
+using BusinessLogic.Entities.LearningOutcome;
 using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningContent;
@@ -23,9 +23,9 @@ using Presentation.PresentationLogic.LearningContent.FileContent;
 using Presentation.PresentationLogic.LearningContent.LinkContent;
 using Presentation.PresentationLogic.LearningContent.Story;
 using Presentation.PresentationLogic.LearningElement;
+using Presentation.PresentationLogic.LearningOutcome;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
-using Presentation.PresentationLogic.LearningSpace.LearningOutcomeViewModel;
 using Presentation.PresentationLogic.LearningSpace.SpaceLayout;
 using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.Topic;
@@ -139,9 +139,9 @@ public class ViewModelEntityMappingProfile : Profile
             .Union(destination.LearningElements)
             .ToDictionary(tup => tup.Key, tup => tup.Value);
     }
-    
-    private static void MapSpaceLayoutStoryElements(ILearningSpaceLayout source, LearningSpaceLayoutViewModel destination,
-        ResolutionContext ctx)
+
+    private static void MapSpaceLayoutStoryElements(ILearningSpaceLayout source,
+        LearningSpaceLayoutViewModel destination, ResolutionContext ctx)
     {
         //gather view models for all elements that are in source but not in destination
         var sourceNewElementsViewModels = source.StoryElements
@@ -173,7 +173,7 @@ public class ViewModelEntityMappingProfile : Profile
     private static bool SameIdAtSameIndex(ILearningSpaceLayoutViewModel destination,
         KeyValuePair<int, ILearningElement> kvp) =>
         destination.LearningElements.Any(y => y.Key == kvp.Key && y.Value.Id == kvp.Value.Id);
-    
+
     private static bool SameIdAtSameIndexStory(ILearningSpaceLayoutViewModel destination,
         KeyValuePair<int, ILearningElement> kvp) =>
         destination.StoryElements.Any(y => y.Key == kvp.Key && y.Value.Id == kvp.Value.Id);
@@ -325,6 +325,7 @@ public class ViewModelEntityMappingProfile : Profile
                 {
                     element.Parent = d;
                 }
+
                 //analogous for story
                 foreach (var (_, se) in d.LearningSpaceLayout.StoryElements)
                 {
@@ -726,8 +727,8 @@ public class ViewModelEntityMappingProfile : Profile
             .IncludeBase<IAdaptivityRule, IAdaptivityRuleViewModel>()
             .ForMember(x => x.Action, cfg => cfg.Ignore())
             .ForMember(x => x.UnsavedChanges, opt => opt.Ignore())
-            .AfterMap(
-                (entity, vm, context) => vm.Action = context.Mapper.Map<IAdaptivityActionViewModel>(entity.Action))
+            .AfterMap((entity, vm, context) =>
+                vm.Action = context.Mapper.Map<IAdaptivityActionViewModel>(entity.Action))
             .ForMember(x => x.Trigger, cfg => cfg.Ignore())
             .AfterMap((entity, vm, context) =>
                 vm.Trigger = context.Mapper.Map<IAdaptivityTriggerViewModel>(entity.Trigger))
