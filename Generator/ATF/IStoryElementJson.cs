@@ -9,4 +9,5 @@ public interface IStoryElementJson
     string ElementModel { get; set; }
     string ModelFacialExpression { get; set; }
     string StoryNpcName { get; set; }
+    bool ExitAfterStorySequence { get; set; }
 }

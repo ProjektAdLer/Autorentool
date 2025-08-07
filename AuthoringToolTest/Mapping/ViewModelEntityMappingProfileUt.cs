@@ -52,6 +52,7 @@ public class ViewModelEntityMappingProfileUt
     private const string Filepath = "bar/baz/buz.txt";
     private const string NameNpc = "nameNpc";
     private const NpcMood MoodNpc = NpcMood.Welcome;
+    private const bool ExitAfterStorySequence = true;
     private static readonly List<string> ConfigureStoryText = new() { "storyText1", "storyText2", "storyText3" };
     private const LearningElementDifficultyEnum Difficulty = LearningElementDifficultyEnum.Easy;
     private const ElementModel SelectedElementModel = ElementModel.l_h5p_slotmachine_1;
@@ -85,6 +86,7 @@ public class ViewModelEntityMappingProfileUt
     private const string NewFilepath = "/foo/bar/baz.txt";
     private const string NewNameNpc = "newNameNpc";
     private const NpcMood NewMoodNpc = NpcMood.Tired;
+    private const bool NewExitAfterStorySequence = false;
 
     private static readonly List<string> ConfigureNewStoryText =
         new() { "NewStoryText1", "NewStoryText2", "NewStoryText3" };
@@ -726,7 +728,7 @@ public class ViewModelEntityMappingProfileUt
 
     private static StoryContent GetTestableStoryContent()
     {
-        return new StoryContent(Name, false, ConfigureStoryText, NameNpc, MoodNpc);
+        return new StoryContent(Name, false, ConfigureStoryText, NameNpc, MoodNpc, ExitAfterStorySequence);
     }
 
     private static FileContentViewModel GetTestableNewContentViewModel()
@@ -736,7 +738,8 @@ public class ViewModelEntityMappingProfileUt
 
     private static StoryContentViewModel GetTestableNewStoryContentViewModel()
     {
-        return new StoryContentViewModel(NewName, ConfigureNewStoryText, NewNameNpc, NewMoodNpc);
+        return new StoryContentViewModel(NewName, ConfigureNewStoryText, NewNameNpc, NewMoodNpc,
+            NewExitAfterStorySequence);
     }
 
     private static LearningElement GetTestableElementWithParent(LearningSpace parent)
@@ -1022,6 +1025,8 @@ public class ViewModelEntityMappingProfileUt
                         Is.EqualTo(useNewFields ? ConfigureNewStoryText : ConfigureStoryText));
                     Assert.That(content.NpcName, Is.EqualTo(useNewFields ? NewNameNpc : NameNpc));
                     Assert.That(content.NpcMood, Is.EqualTo(useNewFields ? NewMoodNpc : MoodNpc));
+                    Assert.That(content.ExitAfterStorySequence,
+                        Is.EqualTo(useNewFields ? NewExitAfterStorySequence : ExitAfterStorySequence));
                 });
                 break;
             case StoryContentViewModel content:
@@ -1032,6 +1037,8 @@ public class ViewModelEntityMappingProfileUt
                         Is.EqualTo(useNewFields ? ConfigureNewStoryText : ConfigureStoryText));
                     Assert.That(content.NpcName, Is.EqualTo(useNewFields ? NewNameNpc : NameNpc));
                     Assert.That(content.NpcMood, Is.EqualTo(useNewFields ? NewMoodNpc : MoodNpc));
+                    Assert.That(content.ExitAfterStorySequence,
+                        Is.EqualTo(useNewFields ? NewExitAfterStorySequence : ExitAfterStorySequence));
                 });
                 break;
             default:
