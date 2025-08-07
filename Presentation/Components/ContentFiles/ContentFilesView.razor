@@ -59,27 +59,26 @@
                                         <MudMenuItem OnClick="OnSelectAll">@Localizer["Content.Select.Option.All"]</MudMenuItem>
                                         <MudMenuItem OnClick="OnSelectAllUnused">@Localizer["Content.Select.Option.AllUnused"]</MudMenuItem>
                                     </ChildContent>
-                            </MudMenu>
-
-                        </div>
-                    </MudTh>
-                    <MudTh Class="px-2 p-1 h-8">
-                        <MudTableSortLabel InitialDirection="SortDirection.Ascending"
+                                </MudMenu>
+                            </div>
+                        </MudTh>
+                        <MudTh Class="px-2 p-1 h-8">
+                            <MudTableSortLabel InitialDirection="SortDirection.Ascending"
                                            SortBy="new Func<ILearningContentViewModel, object>(x => x.Name)">
-                            @Localizer["Content.MudTh.Name"]
-                        </MudTableSortLabel>
-                    </MudTh>
-                    <MudTh Class="px-0 p-1 h-8" Style="width: 25%;">
-                        <MudTableSortLabel SortBy="new Func<ILearningContentViewModel, object>(TypeSortBy)">
-                            @Localizer["Content.MudTh.Type"]
-                        </MudTableSortLabel>
-                    </MudTh>
-                    @if (_showFilepath)
-                    {
-                        <MudTh Class="px-0 p-1 h-8 w-full">@Localizer["Content.MudTh.FilepathOrLink"]</MudTh>
-                    }
-                </MudTHeadRow>
-            </HeaderContent>
+                                @Localizer["Content.MudTh.Name"]
+                            </MudTableSortLabel>
+                        </MudTh>
+                        <MudTh Class="px-0 p-1 h-8" Style="width: 25%;">
+                            <MudTableSortLabel SortBy="new Func<ILearningContentViewModel, object>(TypeSortBy)">
+                                @Localizer["Content.MudTh.Type"]
+                            </MudTableSortLabel>
+                        </MudTh>
+                        @if (_showFilepath)
+                        {
+                            <MudTh Class="px-0 p-1 h-8 w-full">@Localizer["Content.MudTh.FilepathOrLink"]</MudTh>
+                        }
+                    </MudTHeadRow>
+                </HeaderContent>
             <RowTemplate>
                 <MudTd Class="py-0 px-4 flex flex-row gap-6" DataLabel="Delete">
 
