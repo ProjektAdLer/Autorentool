@@ -149,7 +149,10 @@ module.exports = {
         "ml-1",
         "mr-1",
         "list-disc",
-        "list-inside"
+        "list-inside",
+        "bg-formerror",
+        "text-formerror",
+        "hover:bg-formerror",
     ]
 
 }
