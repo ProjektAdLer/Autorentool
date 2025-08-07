@@ -1,5 +1,6 @@
 @using System.Diagnostics.CodeAnalysis
 @using System.Runtime.Serialization
+@using BusinessLogic.Entities.LearningContent.FileContent
 @using Microsoft.Extensions.Localization
 @using MudBlazor.Extensions
 @using Presentation.Components.Dialogues
@@ -13,6 +14,7 @@
 @using Presentation.PresentationLogic.Mediator
 @using Presentation.H5P
 @using Presentation.PresentationLogic.SelectedViewModels
+@using Shared.H5P
 @inject ISnackbar Snackbar
 @inject NavigationManager Navigation
 
@@ -77,6 +79,11 @@
                         {
                             <MudTh Class="px-0 p-1 h-8 w-full">@Localizer["Content.MudTh.FilepathOrLink"]</MudTh>
                         }
+                        <MudTh Class="px-0 p-1 h-8" Style="width: 25%;">
+                            <MudTableSortLabel SortBy="new Func<ILearningContentViewModel, object>(SortByH5pState)">
+                                Zustand
+                            </MudTableSortLabel>
+                        </MudTh>
                     </MudTHeadRow>
                 </HeaderContent>
             <RowTemplate>
@@ -134,14 +141,33 @@
                             </MudIconButton>
                         </MudPopover>
                     </MudTd>
-
+                    @if (_showFilepath)
+                    {
+                        <MudTd Class="p-0 w-full whitespace-nowrap" Style="white-space: nowrap;" DataLabel="Filepath/Link">
+                            @switch (context)
+                           {
+                                case FileContentViewModel fileContentContext:
+                                    @fileContentContext.Filepath
+                                    break;
+                                case LinkContentViewModel linkContentContext:
+                                    @linkContentContext.Link
+                                    break;
+                            }
+                        </MudTd>
+                    }
                     <MudTd DataLabel="Type" Class="p-0 cursor-default">
                         @if (context is FileContentViewModel fileContentContext)
                         {
-                            var fileContent = context as IFileContentViewModel;
                             <div class="flex flex-row items-center gap-4 px-2">
                                 <span class="w-8 text-sm">@fileContentContext.Type</span>
-
+                            </div>
+                        }
+                    </MudTd>
+                    <MudTd DataLabel="State" Class="p-0 cursor-default">
+                       @if (context is FileContentViewModel fileContentContext)
+                        {
+                            var fileContent = context as IFileContentViewModel;
+                            <div class="flex flex-row items-center gap-4 px-2">
                                 @if (fileContentContext.Type == "h5p")
                                 {
                                     <H5PStateIcon FileContentVm="@fileContent"/>
@@ -149,7 +175,7 @@
                                 else if (new[] { "pdf", "png", "jpg", "jpeg", "bmp", "txt", "c", "h", "cpp", "cc", "c++", "py", "cs", "js", "php", "html", "css", "webp" }.Contains(fileContentContext.Type?.ToLower()))
                                 {
                                     <MudTooltip>
-                                        <div class="flex flex-row items-center justify-start gap-1">
+                                         <div class="flex flex-row items-center justify-start gap-1">
                                             <MudIcon Icon="@Icons.Material.Filled.TaskAlt" Color="Color.Success" Size="Size.Small" Class="p-0"/>
                                             <p class="text-xs text-adlergrey">nutzbar</p>
                                         </div>
@@ -170,21 +196,7 @@
                             </div>
                         }
                     </MudTd>
-
-                    @if (_showFilepath)
-                    {
-                        <MudTd Class="p-0 w-full whitespace-nowrap" Style="white-space: nowrap;" DataLabel="Filepath/Link">
-                            @switch (context)
-                            {
-                                case FileContentViewModel fileContentContext:
-                                    @fileContentContext.Filepath
-                                    break;
-                                case LinkContentViewModel linkContentContext:
-                                    @linkContentContext.Link
-                                    break;
-                            }
-                        </MudTd>
-                    }
+       
                 </RowTemplate>
                 <PagerContent>
                     <MudTablePager HideRowsPerPage="true" HorizontalAlignment="HorizontalAlignment.Center" Class="h-8"/>
@@ -509,4 +521,16 @@
             await PresentationLogic.ShowLearningContentAsync(context);
         }
     }
+
+    private object SortByH5pState(ILearningContentViewModel context)
+    {
+        
+        if (context is FileContentViewModel fileContentVm && fileContentVm.Type == "h5p")
+        {
+            return fileContentVm.H5PState;
+        }
+     
+        return H5PContentState.Completable; // oder was auch immer als Standard
+    }
+
 }
