@@ -113,6 +113,8 @@ module.exports = {
                 //neue Farben
                 adlerbgbright: "#f6f6f6",
                 formerror: "rgb(244,67,54)",
+                formerrorlight: "#f9a19a",
+                formerrordark: "#f77b72",
                 adlergreybright: "#fafafa",
             },
             fontFamily: {
@@ -153,6 +155,9 @@ module.exports = {
         "bg-formerror",
         "text-formerror",
         "hover:bg-formerror",
+        "h-96",
+        "bg-formerrorlight",
+        "hover:bg-formerrordark",
     ]
 
 }
