@@ -1,7 +1,7 @@
 ﻿@using H5pPlayer.Presentation.PresentationLogic.ValidateH5p
 
 <button @onclick="MarkAsCompletable"
-        class="btn-standard bg-[#99d699] p-3 min-w-[150px] text-right font-bold text-lg shadow-lg"
+        class="@GetButtonClass()"
         disabled="@(!IsEnabled)">
     Überprüfung erfolgreich
 </button>
@@ -17,5 +17,16 @@
     {
         ValidateH5pController.SetActiveH5pStateToCompletable();
         ValidateH5pController.TerminateValidateH5p();
+    }
+    
+    private string GetButtonClass()
+    {
+        var baseClasses = "btn-standard uppercase shadow-lg";
+
+        if (IsEnabled)
+        {
+            return $"{baseClasses} bg-adlergreenlight hover:bg-adlergreendark text-adlerdarkblue hover:text-white";
+        }
+        return $"{baseClasses} btn-standard";
     }
 }

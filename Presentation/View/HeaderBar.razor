@@ -10,14 +10,6 @@
 @using Presentation.PresentationLogic
 @using Presentation.PresentationLogic.API
 @using Presentation.PresentationLogic.AuthoringToolWorkspace
-@using Presentation.PresentationLogic.Extensions
-@using Presentation.PresentationLogic.LearningContent
-@using Presentation.PresentationLogic.LearningContent.AdaptivityContent
-@using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Action
-@using Presentation.PresentationLogic.LearningContent.FileContent
-@using Presentation.PresentationLogic.LearningContent.LinkContent
-@using Presentation.PresentationLogic.LearningElement
-@using Presentation.PresentationLogic.LearningSpace
 @using Presentation.PresentationLogic.LearningWorld
 @using Presentation.Components.ContentFiles
 @using Presentation.Components.Dialogues.AdministrationDialog
@@ -82,19 +74,14 @@
         @if (SelectedViewModelsProvider.LearningWorld?.Name == null)
         {
             <div class="flex justify-center items-center gap-2 cursor-default">
-                @* ReSharper disable Html.PathError *@
                 <img class="w-5 h-5 drop-shadow opacity-60" src="/CustomIcons/HeaderBar/autorentool-logo-icon.png"
                      alt="authoringtool-logo"/>
-                @* ReSharper restore Html.PathError *@
                 <p class="font-bold text-base 2xl:text-lg text-adlertitledarkblue">@Localizer["AuthoringTool.Text"] @(Constants.ApplicationVersion)</p>
             </div>
         }
         @if (SelectedViewModelsProvider.LearningWorld?.Name != null)
         {
             <div class="flex justify-center items-center gap-2 cursor-default max-w-[85%] 2xl:w-full">
-                @* ReSharper disable Html.PathError *@
-                @*<img class="w-5 h-5 drop-shadow opacity-60" src="CustomIcons/World/world-icon.png" alt="learningworld"/>*@
-                @* ReSharper restore Html.PathError *@
                 <p class="font-bold text-base 2xl:text-lg truncate text-adlertitledarkblue"
                    title="@SelectedViewModelsProvider.LearningWorld?.Name"> @SelectedViewModelsProvider.LearningWorld?.Name</p>
                 <MudIconButton Size="Size.Small" Class="flex items-center h-5 w-5 text-adlerdarkblue opacity-70"

@@ -116,6 +116,8 @@ module.exports = {
                 formerrorlight: "#f9a19a",
                 formerrordark: "#f77b72",
                 adlergreybright: "#fafafa",
+                adlergreenlight: "#99d699",
+                adlergreendark: "#66c166",
             },
             fontFamily: {
                 'sans': ['Roboto']
@@ -156,8 +158,6 @@ module.exports = {
         "text-formerror",
         "hover:bg-formerror",
         "h-96",
-        "bg-formerrorlight",
-        "hover:bg-formerrordark",
     ]
 
 }

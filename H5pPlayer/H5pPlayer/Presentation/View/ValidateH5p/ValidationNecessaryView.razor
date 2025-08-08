@@ -1,22 +1,17 @@
 ﻿@using MudBlazor
 
-<div class="flex flex-row justify-end items-center gap-2 max-w-xl py-2">
+<div class="flex flex-row justify-start items-center gap-2 w-full py-2">
     <p class="text-sm text-formerror font-bold whitespace-nowrap">
         Dieses Fenster muss offen bleiben, bis die Validierung abgeschlossen ist!
     </p>
-    <MudTooltip Placement="Placement.Right" Class="w-[300px] p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed">
+    <MudTooltip Placement="Placement.Bottom" Class="w-96 p-4 bg-adlerdarkblue-200 shadow-lg text-start leading-relaxed">
         <TooltipContent>
-            <MudText Class="cursor-default text-xs">Sie haben H5Ps als externes Lernmaterial hinzugefügt.
-                H5Ps müssen zunächst auf ihre Funktion hin überprüft werden,
+            <MudText Class="cursor-default text-xs">H5Ps müssen zunächst auf ihre Funktion hin überprüft werden,
                 bevor sie in einer Lernwelt erfolgreich verwendet werden können.
                 Dabei wird überprüft, ob innerhalb des H5Ps Punkte durch das Beantworten
-                von Fragen erzielt werden können (z.B. H5P „Interactive Video“) und das
-                H5P somit abschließbar ist (Anzeige als abschließbares H5P =   ) oder ob
-                es sich um ein nicht abschließbares H5P handelt, bei dem lediglich
-                durch das Öffnen des H5Ps (z.B. H5P „Image Slider“) Punkte vergeben
-                werden (Anzeige als nicht abschließbares H5P =   ). Auch ist es
-                möglich, dass ein H5P nicht angezeigt wird oder fehlerhaft ist
-                (Anzeige als defektes H5P =   ). Mehr dazu erfahren Sie hier.</MudText>
+                von Fragen erzielt werden können und das H5P somit abschließbar ist oder ob
+                es sich um ein nicht abschließbares H5P handelt, bei dem lediglich das Durchklicken der einzelnen Folien entscheidend ist. Auch ist es
+                möglich, dass ein H5P fehlerhaft ist, indem es nicht angezeigt wird oder fehlerhaft ist.</MudText>
         </TooltipContent>
         <ChildContent>
             <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info" Class="text-adlergrey-500 hover:text-adlerdarkblue" />
