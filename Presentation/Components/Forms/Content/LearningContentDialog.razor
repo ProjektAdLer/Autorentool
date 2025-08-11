@@ -64,12 +64,12 @@
                 </MudTooltip>
             </MudTd>
             <MudTd Class="p-0 cursor-default" DataLabel="Type">
-                <div class="flex flex-col items-start gap-1 px-2">
+                
                     @if (context is FileContentFormModel fileContentContext)
                     {
                         var fileContent = context as FileContentFormModel;
-                        <div class="flex flex-row items-center justify-end gap-2">
-                            <p class="text-sm">@fileContentContext.Type</p>
+                        <div class="flex flex-row items-center justify-start">
+                            <p class="text-sm w-14">@fileContentContext.Type</p>
 
                             @if (fileContentContext.Type == "h5p")
                             {
@@ -88,8 +88,8 @@
                     }
                     else
                     {
-                        <div class="flex flex-row items-center justify-end gap-2">
-                        <p class="text-sm">video</p>
+                        <div class="flex flex-row items-center justify-start">
+                        <p class="text-sm w-14">video</p>
                             <MudTooltip>
                                 <div class="flex flex-row items-center justify-start gap-1">
                                     <MudIcon Icon="@Icons.Material.Filled.TaskAlt" Color="Color.Success" Size="Size.Small" Class="p-0"/>
@@ -98,7 +98,7 @@
                             </MudTooltip>
                         </div>
                     }
-                </div>
+                
             </MudTd>
         </RowTemplate>
     </MudTable>

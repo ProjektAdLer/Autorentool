@@ -158,8 +158,8 @@
                     <MudTd DataLabel="Type" Class="p-0 cursor-default">
                         @if (context is FileContentViewModel fileContentContext)
                         {
-                            <div class="flex flex-row items-center gap-4 px-2">
-                                <span class="w-8 text-sm">@fileContentContext.Type</span>
+                            <div class="flex flex-row items-center justify-start">
+                                <span class="w-12 text-sm">@fileContentContext.Type</span>
                             </div>
                         }
                     </MudTd>
@@ -167,7 +167,7 @@
                        @if (context is FileContentViewModel fileContentContext)
                         {
                             var fileContent = context as IFileContentViewModel;
-                            <div class="flex flex-row items-center gap-4 px-2">
+                            <div class="flex flex-row items-center justify-start">
                                 @if (fileContentContext.Type == "h5p")
                                 {
                                     <H5PStateIcon FileContentVm="@fileContent"/>
@@ -185,8 +185,8 @@
                         }
                         else
                         {
-                            <div class="flex flex-row items-center gap-4 px-2">
-                                <span class="w-8 text-sm">video</span>
+                            <div class="flex flex-row items-center justify-start">
+                                <span class="w-12 text-sm">video</span>
                                 <MudTooltip>
                                     <div class="flex flex-row items-center justify-start gap-1">
                                         <MudIcon Icon="@Icons.Material.Filled.TaskAlt" Color="Color.Success" Size="Size.Small" Class="p-0"/>
