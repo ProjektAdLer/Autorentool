@@ -52,16 +52,18 @@
                                title="@Localizer["LearningContentDialog.LearningMaterial.Preview"]"/>
             </MudTd>
             <MudTd Class="p-0 w-full" DataLabel="Name">
+                <div style="cursor:@(IsNameDisabled(context) ? "not-allowed" : "pointer")">
                 <MudTooltip Text="@context.Name"
                             Arrow="true"
                             Placement="Placement.Right"
                             Class="bg-adlergrey-200 shadow-xl text-adlergrey-800"
                             Duration="Double.Epsilon">
-                    <p style="color:@(IsNameDisabled(context) ? "#a0a0a0" : "inherit"); cursor:@(IsNameDisabled(context) ? "default" : "pointer")"
+                    <p style="color:@(IsNameDisabled(context) ? "#a0a0a0" : "inherit");"
                        class="pt-2 max-w-[98%] overflow-hidden text-ellipsis">
                         @context.Name
                     </p>
                 </MudTooltip>
+                </div>
             </MudTd>
             <MudTd Class="p-0 cursor-default" DataLabel="Type">
                 
