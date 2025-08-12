@@ -1,0 +1,128 @@
+@using Microsoft.Extensions.Localization
+@using System.Diagnostics.CodeAnalysis
+@using System.Linq.Expressions
+@using MudBlazor.Utilities
+@using Shared.Theme
+@using BusinessLogic.Entities
+@using Presentation.Components.Forms.Models
+@using Microsoft.AspNetCore.Components.Forms
+
+@inject IFormDataContainer<LearningWorldFormModel, LearningWorld> FormDataContainer
+
+    <div class="p-2 bg-adlergrey-100 border-adlergrey-200 border rounded">
+        <div class="grid gap-2">
+            @foreach (var theme in _themes)
+            {
+                var disabled = DisableCompany && theme == WorldTheme.Company;
+                var isSelected = Selected == theme && !disabled;
+
+                <MudTooltip Class="bg-adlergrey-200 shadow-xl"
+                            Placement="Placement.Top" Delay="150" Duration="250" Arrow="true">
+                    <ChildContent>
+                        <MudPaper Class="@BuildItemCss(theme, disabled)"
+                                  @onclick="@(() => OnPick(theme, disabled))"
+                                  role="button"
+                                  aria-pressed="@isSelected"
+                                  aria-label="@(ThemeHelper<WorldTheme>.Localize(theme))">
+                            <div class="flex items-center gap-2 p-2">
+                                <MudImage Src="@GetThemeImagePath(theme)"
+                                          Alt="Lernwelttheme"
+                                          Class="w-14 h-14 rounded-xl object-cover"/>
+                                <div class="flex flex-col">
+                                    <p class="text-sm 2xl:text-base">
+                                        @(ThemeHelper<WorldTheme>.Localize(theme))
+                                    </p>
+                                </div>
+                            </div>
+                        </MudPaper>
+                    </ChildContent>
+                    <TooltipContent>
+                        <div class="flex flex-col gap-2 justify-center items-center w-80 p-2">
+                            <p class="text-sm 2xl:text-base">
+                                @(ThemeHelper<WorldTheme>.Localize(theme))
+                            </p>
+                            <MudImage Src="@GetThemeImagePath(theme, true)"
+                                      Width="350"
+                                      Alt="Lernraumtheme"/>
+                        </div>
+                    </TooltipContent>
+                </MudTooltip>
+            }
+        </div>
+    </div>
+
+
+@code {
+
+    [Parameter] public bool DisableCompany { get; set; } = true;
+
+    private readonly WorldTheme[] _themes = (WorldTheme[])Enum.GetValues(typeof(WorldTheme));
+
+    private LearningWorldFormModel FormModel => FormDataContainer.FormModel;
+    
+    [Parameter] public WorldTheme Value { get; set; }
+    
+    [Parameter] public EventCallback<WorldTheme> ValueChanged { get; set; }
+    
+    [Parameter] public Expression<Func<WorldTheme>>? ValueExpression { get; set; }
+    
+    private bool UsingBinding => ValueChanged.HasDelegate || ValueExpression is not null;
+    
+    private WorldTheme Selected => UsingBinding ? Value : FormModel.WorldTheme;
+    
+    [CascadingParameter] 
+    public EditContext? EditContext { get; set; }
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types
+    internal IStringLocalizer<ElementModelGridSelect> Localizer { get; set; }
+
+    private string GetThemeImagePath(WorldTheme theme, bool large = false)
+    {
+        var suffix = large ? "_lg.png" : "_sm.png";
+        return theme switch
+        {
+            WorldTheme.Suburb => $"/CustomIcons/World/WorldTheme/Suburb/theme-bg-narrativeframework-suburb{suffix}",
+            WorldTheme.CampusKempten => $"/CustomIcons/World/WorldTheme/CampusKE/theme-bg-narrativeframework-campuske{suffix}",
+            WorldTheme.CampusAschaffenburg => $"/CustomIcons/World/WorldTheme/CampusAB/theme-bg-narrativeframework-campusab{suffix}",
+            WorldTheme.Company => $"/CustomIcons/World/WorldTheme/Company/theme-bg-narrativeframework-company{suffix}",
+            _ => ""
+        };
+    }
+
+    private async Task OnPick(WorldTheme theme, bool disabled)
+    {
+        if (disabled) return;
+
+        if (UsingBinding)
+        {
+            Value = theme;
+            await ValueChanged.InvokeAsync(theme);
+
+            if (EditContext is not null && ValueExpression is not null)
+            {
+                var field = FieldIdentifier.Create(ValueExpression);
+                EditContext.NotifyFieldChanged(field);
+            }
+        }
+        else
+        {
+            // Fallback: direkt ins FormModel schreiben (wenn nicht gebunden aufgerufen)
+            FormModel.WorldTheme = theme;
+        }
+        StateHasChanged();
+    }
+
+
+    private string BuildItemCss(WorldTheme theme, bool disabled)
+    {
+        var isSelected = Selected == theme && !disabled;
+
+        return new CssBuilder("rounded-2xl transition-all")
+            .AddClass("cursor-pointer", !disabled)
+            .AddClass("opacity-50 cursor-not-allowed", disabled)
+            .AddClass("bg-adlerblue-600 shadow-lg", isSelected)
+            .AddClass("bg-white hover:bg-adlergrey-100", !isSelected && !disabled)
+            .AddClass("border-default", !isSelected || disabled)
+            .Build();
+    }
+}
