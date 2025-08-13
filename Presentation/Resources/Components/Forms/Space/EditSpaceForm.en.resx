@@ -74,4 +74,7 @@
     <data name="EditSpaceForm.Fields.Collapsable.CompletionConditions.Description.Appendix" xml:space="preserve">
         <value>elem.:</value>
     </data>
+    <data name="EditSpaceForm.Fields.Collapsable.NoElements" xml:space="preserve">
+        <value>No elements added yet.</value>
+    </data>
 </root>

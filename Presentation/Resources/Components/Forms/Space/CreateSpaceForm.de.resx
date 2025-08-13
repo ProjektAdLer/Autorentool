@@ -80,4 +80,10 @@
     <data name="CreateSpaceForm.Fields.Collapsable.CompletionConditions.Description.Text" xml:space="preserve">
         <value>Abzuschließende, verpflichtende Lern- und Adaptivitätselemente.</value>
     </data>
+    <data name="CreateSpaceForm.Fields.Collapsable.NoElements" xml:space="preserve">
+        <value>Noch keine Elemente hinzugefügt.</value>
+    </data>
+    <data name="CreateAdaptivityElementForm.Fields.Collapsable.Tasks.Button.Task.More" xml:space="preserve">
+        <value>Aufgaben</value>
+    </data>
 </root>

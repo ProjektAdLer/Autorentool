@@ -195,4 +195,19 @@ The corresponding slots can be found in each floor plan at the position of the e
     <data name="EditStoryElementForm.Collapsable.Story.Length" xml:space="preserve">
         <value>characters</value>
     </data>
+    <data name="EditAdaptivityElementForm.Fields.Collapsable.Tasks.Subtitle" xml:space="preserve">
+        <value>List of tasks included in the adaptivity element:</value>
+    </data>
+    <data name="CreateAdaptivityElementForm.Fields.Collapsable.Tasks.Button.Task.More" xml:space="preserve">
+        <value>Tasks</value>
+    </data>
+    <data name="EditAdaptivityElementForm.Fields.Collapsable.Tasks.Button.Task.One" xml:space="preserve">
+        <value />
+    </data>
+    <data name="EditAdaptivityElementForm.Fields.Collapsable.Tasks.Button.Task.More" xml:space="preserve">
+        <value>Tasks</value>
+    </data>
+    <data name="EditAdaptivityElementForm.Fields.Collapsable.Tasks.Button.NoTask" xml:space="preserve">
+        <value>No tasks added yet.</value>
+    </data>
 </root>

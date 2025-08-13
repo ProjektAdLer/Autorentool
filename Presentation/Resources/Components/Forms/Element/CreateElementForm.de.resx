@@ -213,4 +213,16 @@ Die dazugehörigen Slots sind in jedem Grundriss an der Position der Eingangs- u
     <data name="CreateStoryElementForm.Collapsable.Story.Length" xml:space="preserve">
         <value>Zeichen</value>
     </data>
+    <data name="CreateAdaptivityElementForm.Fields.Collapsable.Tasks.Subtitle" xml:space="preserve">
+        <value>Liste der im Adaptivitätselement enthaltenen Aufgaben:</value>
+    </data>
+    <data name="CreateAdaptivityElementForm.Fields.Collapsable.Tasks.Button.Task.One" xml:space="preserve">
+        <value>Aufgabe</value>
+    </data>
+    <data name="CreateAdaptivityElementForm.Fields.Collapsable.Tasks.Button.NoTask" xml:space="preserve">
+        <value>Noch keine Aufgabe hinzugefügt.</value>
+    </data>
+    <data name="CreateAdaptivityElementForm.Fields.Collapsable.Tasks.Button.Task.More" xml:space="preserve">
+        <value>Aufgaben</value>
+    </data>
 </root>

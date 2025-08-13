@@ -222,7 +222,7 @@
                         <div class="px-6">
                             <p class="text-xs pt-3">
                                 <span class="text-adlergrey-800">
-                                    Liste der im Adaptivitätselement enthaltenen Aufgaben:
+                                    @Localizer["EditAdaptivityElementForm.Fields.Collapsable.Tasks.Subtitle"]
                                 </span>
                             </p>
                             
@@ -230,7 +230,9 @@
                                 var content = (AdaptivityContentFormModel?)FormDataContainer.FormModel.LearningContent;
                                 var tasks = content?.Tasks ?? new List<IAdaptivityTaskViewModel>();
                                 var count = tasks.Count;
-                                string aufgabenLabel = count == 1 ? "Aufgabe" : "Aufgaben";
+                                string aufgabenLabel = count == 1
+                                    ? Localizer["EditAdaptivityElementForm.Fields.Collapsable.Tasks.Button.Task.One"]
+                                    : Localizer["EditAdaptivityElementForm.Fields.Collapsable.Tasks.Button.Task.More"];
                             }
 
                             <p class="text-xs text-adlerblue-600">
@@ -253,7 +255,7 @@
                             {
                                 <div class="pl-2 py-2 mt-0 border border-adlergrey-300 rounded w-full">
                                     <p class="text-xs italic text-adlergrey-600">
-                                        Noch keine Aufgaben vorhanden.
+                                        @Localizer["EditAdaptivityElementForm.Fields.Collapsable.Tasks.Button.NoTask"]
                                     </p>
                                 </div>
                             }

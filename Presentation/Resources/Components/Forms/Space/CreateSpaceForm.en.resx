@@ -68,4 +68,10 @@
     <data name="CreateSpaceForm.Fields.Collapsable.CompletionConditions.Description.Text" xml:space="preserve">
         <value>Mandatory learning and adaptivity elements to be completed.</value>
     </data>
+    <data name="CreateSpaceForm.Fields.Collapsable.NoElements" xml:space="preserve">
+        <value>No elements added yet.</value>
+    </data>
+    <data name="CreateAdaptivityElementForm.Fields.Collapsable.Tasks.Button.Task.More" xml:space="preserve">
+        <value>Tasks</value>
+    </data>
 </root>
