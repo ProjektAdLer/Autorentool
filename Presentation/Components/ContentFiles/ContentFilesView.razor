@@ -162,6 +162,12 @@
                                 <span class="w-12 text-sm">@fileContentContext.Type</span>
                             </div>
                         }
+                        else 
+                        {
+                            <div class="flex flex-row items-center justify-start">
+                                <span class="w-12 text-sm">video</span>
+                            </div>
+                        }
                     </MudTd>
                     <MudTd DataLabel="State" Class="p-0 cursor-default">
                        @if (context is FileContentViewModel fileContentContext)
@@ -172,7 +178,7 @@
                                 {
                                     <H5PStateIcon FileContentVm="@fileContent"/>
                                 }
-                                else if (new[] { "Story", "Text", "Adaptivity", "Image", "video","pdf", "png", "jpg", "jpeg", "bmp", "txt", "c", "h", "cpp", "cc", "c++", "py", "cs", "js", "php", "html", "css", "webp" }.Contains(fileContentContext.Type?.ToLower()))
+                                else 
                                 {
                                     <MudTooltip>
                                          <div class="flex flex-row items-center justify-start gap-1">
@@ -186,7 +192,6 @@
                         else
                         {
                             <div class="flex flex-row items-center justify-start">
-                                <span class="w-12 text-sm">video</span>
                                 <MudTooltip>
                                     <div class="flex flex-row items-center justify-start gap-1">
                                         <MudIcon Icon="@Icons.Material.Filled.TaskAlt" Color="Color.Success" Size="Size.Small" Class="p-0"/>

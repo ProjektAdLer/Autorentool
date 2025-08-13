@@ -43,7 +43,12 @@
             <MudTh Class="bg-adlerbgbright pa-1"></MudTh>
             <MudTh Class="bg-adlerbgbright text-adlerdarkblue-800 font-bold pa-1">Name</MudTh>
             <MudTh Class="bg-adlerbgbright text-adlerdarkblue-800 font-bold pa-1">@Localizer["LearningContentDialog.LearningMaterial.Type"]</MudTh>
-        </HeaderContent>
+            <MudTh Class="bg-adlerbgbright text-adlerdarkblue-800 font-bold pa-1" Style="width: 25%;">
+                <MudTableSortLabel SortBy="new Func<ILearningContentFormModel, object>(SortByH5pState)">
+                    Zustand
+                </MudTableSortLabel>
+            </MudTh>
+            </HeaderContent>
         <RowTemplate>
             <MudTd Class="py-0 px-2">
                 <MudIconButton Icon="@Icons.Material.Filled.RemoveRedEye"
@@ -53,45 +58,54 @@
             </MudTd>
             <MudTd Class="p-0 w-full" DataLabel="Name">
                 <div style="cursor:@(IsNameDisabled(context) ? "not-allowed" : "pointer")">
-                <MudTooltip Text="@context.Name"
-                            Arrow="true"
-                            Placement="Placement.Right"
-                            Class="bg-adlergrey-200 shadow-xl text-adlergrey-800"
-                            Duration="Double.Epsilon">
-                    <p style="color:@(IsNameDisabled(context) ? "#a0a0a0" : "inherit");"
-                       class="pt-2 max-w-[98%] overflow-hidden text-ellipsis">
-                        @context.Name
-                    </p>
-                </MudTooltip>
+                    <MudTooltip Text="@context.Name"
+                                Arrow="true"
+                                Placement="Placement.Right"
+                                Class="bg-adlergrey-200 shadow-xl text-adlergrey-800"
+                                Duration="Double.Epsilon">
+                        <p style="color:@(IsNameDisabled(context) ? "#a0a0a0" : "inherit");"
+                           class="pt-2 max-w-[98%] overflow-hidden text-ellipsis">
+                            @context.Name
+                        </p>
+                    </MudTooltip>
                 </div>
             </MudTd>
-            <MudTd Class="p-0 cursor-default" DataLabel="Type">
+            <MudTd DataLabel="Type" Class="p-0 cursor-default">
+                @if (context is FileContentFormModel fileContentContext)
+                {
+                    <div class="flex flex-row items-center justify-start">
+                        <span class="w-12 text-sm">@fileContentContext.Type</span>
+                    </div>
+                }
+                else
+                {
+                    <div class="flex flex-row items-center justify-start">
+                        <span class="w-12 text-sm">video</span>
+                    </div>
+                }
+            </MudTd>
+            <MudTd Class="p-0 cursor-default" DataLabel="State">
                 
                     @if (context is FileContentFormModel fileContentContext)
                     {
                         var fileContent = context as FileContentFormModel;
-                        <div class="flex flex-row items-center justify-start">
-                            <p class="text-sm w-14">@fileContentContext.Type</p>
-
-                            @if (fileContentContext.Type == "h5p")
-                            {
-                                <H5PStateIcon FileContentVm="@FileContentFormModelToViewModel(fileContent!)"/>
-                            }
-                            else if (new[] { "pdf", "png", "jpg", "jpeg", "bmp", "txt", "c", "h", "cpp", "cc", "c++", "py", "cs", "js", "php", "html", "css", "webp" }.Contains(fileContentContext.Type?.ToLower()))
-                            {
-                                <MudTooltip>
-                                    <div class="flex flex-row items-center justify-start gap-1">
-                                        <MudIcon Icon="@Icons.Material.Filled.TaskAlt" Color="Color.Success" Size="Size.Small" Class="p-0"/>
-                                        <p class="text-xs text-adlergrey">nutzbar</p>
-                                    </div>
-                                </MudTooltip>
-                            }
-                        </div>
+                        @if (fileContentContext.Type == "h5p")
+                        {
+                            <H5PStateIcon FileContentVm="@FileContentFormModelToViewModel(fileContent!)"/>
+                        }
+                        else 
+                        {
+                            <MudTooltip>
+                                <div class="flex flex-row items-center justify-start gap-1">
+                                    <MudIcon Icon="@Icons.Material.Filled.TaskAlt" Color="Color.Success" Size="Size.Small" Class="p-0"/>
+                                    <p class="text-xs text-adlergrey">nutzbar</p>
+                                </div>
+                            </MudTooltip>
+                        }
                     }
                     else
                     {
                         <div class="flex flex-row items-center justify-start">
-                        <p class="text-sm w-14">video</p>
                             <MudTooltip>
                                 <div class="flex flex-row items-center justify-start gap-1">
                                     <MudIcon Icon="@Icons.Material.Filled.TaskAlt" Color="Color.Success" Size="Size.Small" Class="p-0"/>
@@ -194,5 +208,16 @@
         fileContentVm.IsH5P = true;
 
         return fileContentVm;
+    }
+    
+    private object SortByH5pState(ILearningContentFormModel context)
+    {
+        
+        if (context is FileContentFormModel fileContentVm && fileContentVm.Type == "h5p")
+        {
+            return fileContentVm.H5PState;
+        }
+     
+        return H5PContentState.Completable; // oder was auch immer als Standard
     }
 }
