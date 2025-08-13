@@ -63,6 +63,12 @@
                         {
                             <li class="text-xs">@leName</li>
                         }
+                        @if (SpaceToEdit.NumberOfRequiredElements == 0)
+                        {
+                            <p class="text-xs italic text-adlergrey-600">
+                                Noch keine Elemente vorhanden.
+                            </p>
+                        }
                     </ul>
                 </div>
             </Collapsable>
