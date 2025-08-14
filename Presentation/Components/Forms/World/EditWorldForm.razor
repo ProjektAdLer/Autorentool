@@ -107,7 +107,7 @@
                 <p class="text-xs px-6 pt-3">@Localizer["EditWorldForm.Theme.Field.Theme.Text"]</p>
                 
                 <div class="w-full px-6 py-2">
-                    <ThemeModelGridSelect @bind-Value="FormDataContainer.FormModel.WorldTheme"
+                    <ThemeModelGridSelect UsingBinding="true" @bind-Value="FormDataContainer.FormModel.WorldTheme"
                                           DisableCompany="true"></ThemeModelGridSelect>
                 </div>
             </Collapsable>
@@ -202,8 +202,7 @@
     public ILearningWorldViewModel WorldToEdit { get; set; }
 
     [Parameter] public int DebounceInterval { get; set; } = 300;
-
-
+    
     //this indirection is necessary for the `For` attribute on the form fields to work properly when validating the form
     //please DO NOT REFACTOR THIS - n.stich
     private LearningWorldFormModel FormModel => FormDataContainer.FormModel;

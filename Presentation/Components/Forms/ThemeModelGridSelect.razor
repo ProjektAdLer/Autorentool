@@ -1,12 +1,11 @@
-@using Microsoft.Extensions.Localization
-@using System.Diagnostics.CodeAnalysis
+@using System
 @using System.Linq.Expressions
-@using MudBlazor.Utilities
+@using Microsoft.AspNetCore.Components
+@using Microsoft.AspNetCore.Components.Forms
 @using Shared.Theme
+@using Presentation.PresentationLogic.WorldThemeSelect
 @using BusinessLogic.Entities
 @using Presentation.Components.Forms.Models
-@using Microsoft.AspNetCore.Components.Forms
-
 @inject IFormDataContainer<LearningWorldFormModel, LearningWorld> FormDataContainer
 
     <div class="p-2 bg-adlergrey-100 border-adlergrey-200 border rounded">
@@ -51,78 +50,59 @@
         </div>
     </div>
 
-
 @code {
+    [CascadingParameter] private EditContext? EditContext { get; set; }
 
-    [Parameter] public bool DisableCompany { get; set; } = true;
-
-    private readonly WorldTheme[] _themes = (WorldTheme[])Enum.GetValues(typeof(WorldTheme));
-
-    private LearningWorldFormModel FormModel => FormDataContainer.FormModel;
-    
+    [Parameter] public bool UsingBinding { get; set; }
     [Parameter] public WorldTheme Value { get; set; }
-    
     [Parameter] public EventCallback<WorldTheme> ValueChanged { get; set; }
-    
     [Parameter] public Expression<Func<WorldTheme>>? ValueExpression { get; set; }
-    
-    private bool UsingBinding => ValueChanged.HasDelegate || ValueExpression is not null;
-    
-    private WorldTheme Selected => UsingBinding ? Value : FormModel.WorldTheme;
-    
-    [CascadingParameter] 
-    public EditContext? EditContext { get; set; }
+    [Parameter] public bool DisableCompany { get; set; } = false;
 
-    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types
-    internal IStringLocalizer<ElementModelGridSelect> Localizer { get; set; }
+    [Parameter] public IWorldThemeForm? FormModel { get; set; } // nur für den Fallback ohne Binding
 
-    private string GetThemeImagePath(WorldTheme theme, bool large = false)
+    private ILearningWorldThemeViewModel Vm { get; set; } = new LearningWorldThemeViewModel();
+
+    private static readonly WorldTheme[] _themes = new[]
     {
-        var suffix = large ? "_lg.png" : "_sm.png";
-        return theme switch
+        WorldTheme.CampusAschaffenburg,
+        WorldTheme.CampusKempten,
+        WorldTheme.Suburb,
+        WorldTheme.Company
+    };
+
+    private WorldTheme? Selected => Vm.Selected;
+
+    protected override void OnParametersSet()
+    {
+        // ViewModel wiring
+        Vm.UsingBinding    = UsingBinding;
+        Vm.ValueChanged    = t => ValueChanged.InvokeAsync(t);
+        Vm.EditContext     = EditContext;
+        Vm.ValueExpression = ValueExpression;
+        Vm.FormModel       = FormModel;
+
+        // ⬅︎ NEU/ÄNDERN: Kein pauschales Überschreiben mehr.
+        if (UsingBinding)
         {
-            WorldTheme.Suburb => $"/CustomIcons/World/WorldTheme/Suburb/theme-bg-narrativeframework-suburb{suffix}",
-            WorldTheme.CampusKempten => $"/CustomIcons/World/WorldTheme/CampusKE/theme-bg-narrativeframework-campuske{suffix}",
-            WorldTheme.CampusAschaffenburg => $"/CustomIcons/World/WorldTheme/CampusAB/theme-bg-narrativeframework-campusab{suffix}",
-            WorldTheme.Company => $"/CustomIcons/World/WorldTheme/Company/theme-bg-narrativeframework-company{suffix}",
-            _ => ""
-        };
+            Vm.Selected = Value; // ⬅︎ NEU/ÄNDERN: Anzeige folgt dem gebundenen Wert vom Parent
+        }
+        else
+        {
+            Vm.Selected ??= FormModel?.WorldTheme    // ⬅︎ NEU/ÄNDERN: nur initial belegen
+                         ?? WorldTheme.CampusAschaffenburg;
+        }
     }
 
     private async Task OnPick(WorldTheme theme, bool disabled)
     {
         if (disabled) return;
 
-        if (UsingBinding)
-        {
-            Value = theme;
-            await ValueChanged.InvokeAsync(theme);
-
-            if (EditContext is not null && ValueExpression is not null)
-            {
-                var field = FieldIdentifier.Create(ValueExpression);
-                EditContext.NotifyFieldChanged(field);
-            }
-        }
-        else
-        {
-            // Fallback: direkt ins FormModel schreiben (wenn nicht gebunden aufgerufen)
-            FormModel.WorldTheme = theme;
-        }
+        // ⬅︎ NEU/ÄNDERN: NICHT Value = theme; setzen (Parameter sind input-only)!
+        await Vm.PickAsync(theme, disabled); // VM setzt Selected und informiert Parent (Binding)
         StateHasChanged();
     }
 
-
-    private string BuildItemCss(WorldTheme theme, bool disabled)
-    {
-        var isSelected = Selected == theme && !disabled;
-
-        return new CssBuilder("rounded-2xl transition-all")
-            .AddClass("cursor-pointer", !disabled)
-            .AddClass("opacity-50 cursor-not-allowed", disabled)
-            .AddClass("bg-adlerblue-600 shadow-lg", isSelected)
-            .AddClass("bg-white hover:bg-adlergrey-100", !isSelected && !disabled)
-            .AddClass("border-default", !isSelected || disabled)
-            .Build();
-    }
+    private string GetThemeImagePath(WorldTheme t, bool large = false) => Vm.GetThemeImagePath(t, large);
+    private string BuildItemCss(WorldTheme t, bool disabled)           => Vm.BuildItemCss(t, disabled);
 }

@@ -115,7 +115,7 @@
             <Collapsable Title=@Localizer["CreateWorldForm.Theme.Text"] InitiallyCollapsed="true">
                 <p class="text-xs pl-4">@Localizer["CreateWorldForm.Theme.Field.Theme.Text"]</p>
                 <div class="w-full px-6 py-2">
-                    <ThemeModelGridSelect @bind-Value="FormDataContainer.FormModel.WorldTheme"
+                    <ThemeModelGridSelect UsingBinding="true" @bind-Value="FormDataContainer.FormModel.WorldTheme"
                                           DisableCompany="true"></ThemeModelGridSelect>
                 </div>
             </Collapsable>
@@ -186,8 +186,6 @@
 </BaseForm>
 
 @code {
-
-
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal IStringLocalizer<CreateWorldForm> Localizer { get; set; }
 
@@ -206,7 +204,7 @@
     [Parameter] public EventCallback OnSubmitted { get; set; }
 
     [Parameter] public int DebounceInterval { get; set; } = 300;
-
+    
     //this indirection is necessary for the `For` attribute on the form fields to work properly when validating the form
     //please DO NOT REFACTOR THIS - n.stich
     private LearningWorldFormModel FormModel => FormDataContainer.FormModel;
