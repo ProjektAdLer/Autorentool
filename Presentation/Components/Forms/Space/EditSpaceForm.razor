@@ -10,7 +10,7 @@
 @using Presentation.PresentationLogic.LearningWorld
 @using Shared
 @using Shared.Theme
-<div class="absolute w-full z-30">
+<div class="absolute w-full z-30 cursor-default">
     <header class="py-2 2xl:py-3 bg-adlerbgbright border-b-2 border-adlergrey-100 overflow-hidden flex justify-center">
         <h2 class="text-base 2xl:text-lg text-center font-bold text-adlertitledarkblue mx-2">@Localizer["EditSpaceForm.Header.Title"]</h2>
     </header>
@@ -48,17 +48,17 @@
             <Collapsable Title=@Localizer["EditSpaceForm.Fields.Collapsable.CompletionConditions.Title"]
                          InitiallyCollapsed="true">
                 <div class="px-6">
-                    <p class="text-xs pt-3">
+                    <p class="text-xs pt-3 cursor-default">
                         <span class="text-adlergrey-800">
                             @Localizer["EditSpaceForm.Fields.Collapsable.CompletionConditions.Description.Text"]
                         </span>
                     </p>
-                    <p class="text-xs text-adlerblue-600">
+                    <p class="text-xs text-adlerblue-600 cursor-default">
                         @SpaceToEdit.NumberOfRequiredElements
                         <span class="text-adlergrey-800"> / </span> @SpaceToEdit.NumberOfElements
                         <span class="text-adlergrey-800"> @Localizer["EditSpaceForm.Fields.Collapsable.CompletionConditions.Description.Appendix"] </span>
                     </p>
-                    <ul class="pl-2 py-2 mt-0 border border-adlergrey-300 rounded w-full list-disc list-inside">
+                    <ul class="pl-2 py-2 mt-0 border border-adlergrey-300 rounded w-full list-disc list-inside cursor-default">
                         @foreach (var leName in SpaceToEdit.ContainedLearningElements.Where(x => x.IsRequired).Select(x => x.Name).ToList())
                         {
                             <li class="text-xs">@leName</li>
@@ -75,12 +75,11 @@
 
             <Collapsable Title=@Localizer["EditSpaceForm.Fields.Collapsable.FloorPlan.Title"]
                          InitiallyCollapsed="false">
-                <p class="text-xs px-6 pt-3">@Localizer["EditSpaceForm.Fields.Collapsable.FloorPlan.Subtitle"]
+                <p class="text-xs px-6 pt-3 cursor-default">@Localizer["EditSpaceForm.Fields.Collapsable.FloorPlan.Subtitle"]
                     <MudTooltip Placement="Placement.Right"
                                 Class="w-96 p-4 shadow-xl text-start leading-relaxed bg-adlerdarkblue-200">
                         <TooltipContent>
-                            <MudText
-                                Class="text-xs">
+                            <MudText Class="text-xs">
                                 @((MarkupString)Localizer["EditSpaceForm.Fields.Collapsable.FloorPlan.Text"].ToString())
                             </MudText>
                         </TooltipContent>
@@ -98,7 +97,7 @@
             </Collapsable>
 
             <Collapsable Title=@Localizer["EditSpaceForm.Fields.Collapsable.Theme.Title"] InitiallyCollapsed="true">
-                <p class="text-xs px-6 pt-3">@Localizer["EditSpaceForm.Fields.Collapsable.Theme.Field.Theme.Text"]</p>
+                <p class="text-xs px-6 pt-3 cursor-default">@Localizer["EditSpaceForm.Fields.Collapsable.Theme.Field.Theme.Text"]</p>
                 <div class="px-6 py-2">
                     <MudSelect @bind-Value="FormDataContainer.FormModel.SpaceTheme"
                                Text="@FormDataContainer.FormModel.SpaceTheme.ToString()"
@@ -114,7 +113,7 @@
 
             <Collapsable Title=@Localizer["EditSpaceForm.Fields.Collapsable.Goals.Title"] InitiallyCollapsed="true">
                 <div class="w-4/4 px-6">
-                    <p class="text-xs pt-3">@Localizer["EditSpaceForm.Fields.Collapsable.Goals.Field.Goals.Text"]</p>
+                    <p class="text-xs pt-3 cursor-default">@Localizer["EditSpaceForm.Fields.Collapsable.Goals.Field.Goals.Text"]</p>
                     <div class="flex justify-center">
                         <MudButton Class="btn-standard w-72"
                                    OnClick="OpenLearningOutcomesOverview">@Localizer["EditSpaceForm.Goals.Button"]</MudButton>
@@ -125,7 +124,7 @@
             <Collapsable Title=@Localizer["EditSpaceForm.Fields.Collapsable.Description.Title"]
                          InitiallyCollapsed="true">
                 <div class="rounded-lg w-4/4 px-6">
-                    <p class="text-xs pt-3">@Localizer["EditSpaceForm.Fields.Collapsable.Goals.Field.Description.Text"]</p>
+                    <p class="text-xs pt-3 cursor-default">@Localizer["EditSpaceForm.Fields.Collapsable.Goals.Field.Description.Text"]</p>
                     <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
                                   For="@(() => FormModel.Description)"
                                   Lines="3"
@@ -138,8 +137,7 @@
 
     </Fields>
     <FooterButtons>
-        <div
-            class="flex flex-row justify-end absolute left-0 bottom-0 border-t-2 border-adlergrey-100 bg-adlerbgbright w-full">
+        <div class="flex flex-row justify-end absolute left-0 bottom-0 border-t-2 border-adlergrey-100 bg-adlerbgbright w-full">
             <SubmitThenRemapButton RemapAction="MapIntoContainer"/>
             <MudIconButton Icon="@Icons.Material.Filled.Autorenew"
                            OnClick="@OnResetAsync"

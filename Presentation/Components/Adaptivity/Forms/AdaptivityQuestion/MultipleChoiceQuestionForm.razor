@@ -27,7 +27,7 @@
           CustomValidatorFunc="ValidateModel">
 
     <Fields>
-        <div class="border-4 border-adlergrey-200 rounded w-[500px] p-2 bg-adlerbgbright">
+        <div class="border-4 border-adlergrey-200 rounded w-[480px] p-2 bg-adlerbgbright">
             <div class="flex flex-col gap-1">
                 <MudText Class="cursor-default font-bold text-sm pl-2">@Localizer["MultipleChoiceQuestionForm.Field.QuestionText.Text"]</MudText>
                 <div class="border-4 border-adlergrey-100 rounded-md mx-1.5 bg-white">
@@ -43,8 +43,7 @@
                 @if (FormDataContainer.FormModel.IsSingleResponse)
                 {
                     <div class="flex flex-row gap-2 items-center justify-center py-2">
-                        <MudText
-                            Class="text-adlergrey-200">@Localizer["MultipleChoiceQuestionForm.Switch.MultipleChoice"]</MudText>
+                        <MudText Class="text-adlergrey-200 cursor-default">@Localizer["MultipleChoiceQuestionForm.Switch.MultipleChoice"]</MudText>
                         <MudSwitch T="bool"
                                    Style="margin-right: 0; margin-left: 2px"
                                    Value="FormDataContainer.FormModel.IsSingleResponse"
@@ -53,15 +52,13 @@
                                    UnCheckedColor="Color.Info"
                                    For="@(() => FormModel.IsSingleResponse)">
                         </MudSwitch>
-                        <MudText
-                            Class="text-adlerblue">@Localizer["MultipleChoiceQuestionForm.Switch.SingleChoice"]</MudText>
+                        <MudText Class="text-adlerblue cursor-default">@Localizer["MultipleChoiceQuestionForm.Switch.SingleChoice"]</MudText>
                     </div>
                 }
                 else
                 {
                     <div class="flex flex-row gap-2 items-center justify-center py-2">
-                        <MudText
-                            Class="text-adlerblue">@Localizer["MultipleChoiceQuestionForm.Switch.MultipleChoice"]</MudText>
+                        <MudText Class="text-adlerblue cursor-default">@Localizer["MultipleChoiceQuestionForm.Switch.MultipleChoice"]</MudText>
                         <MudSwitch T="bool"
                                    Style="margin-right: 0; margin-left: 2px"
                                    Value="FormDataContainer.FormModel.IsSingleResponse"
@@ -70,22 +67,17 @@
                                    UnCheckedColor="Color.Info"
                                    For="@(() => FormModel.IsSingleResponse)">
                         </MudSwitch>
-                        <MudText
-                            Class="text-adlergrey-200">@Localizer["MultipleChoiceQuestionForm.Switch.SingleChoice"]</MudText>
+                        <MudText Class="text-adlergrey-200 cursor-default">@Localizer["MultipleChoiceQuestionForm.Switch.SingleChoice"]</MudText>
                     </div>
                 }
             </div>
-            
-            <MudText Class="cursor-default font-bold text-sm pl-2.5">@Localizer["MultipleChoiceQuestionForm.Text.Choices"]
-                <MudTooltip Placement="Placement.Right" Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed">
-                    <TooltipContent>
-                        <MudText Class="cursor-default text-xs">@Localizer["MultipleChoiceQuestionForm.Info.Infotext"]</MudText>
-                    </TooltipContent>
-                    <ChildContent>
+            <div class="flex flex-row justify-start items-center py-2">
+                <MudText Class="cursor-default font-bold text-sm pl-2.5">@Localizer["MultipleChoiceQuestionForm.Text.Choices"]
+                    <MudTooltip Placement="Placement.Right" Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed cursor-default" Text="@Localizer["MultipleChoiceQuestionForm.Info.Infotext"]">
                         <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info" Class="text-adlergrey-200 hover:text-adlerdarkblue"></MudIcon>
-                    </ChildContent>
-                </MudTooltip>
-            </MudText>
+                    </MudTooltip>
+                </MudText>
+            </div>
             
             <MudCollectionValidation T="ICollection<ChoiceFormModel>" Value="FormModel.CorrectChoices" For="@(() => FormModel.CorrectChoices)"/>
 

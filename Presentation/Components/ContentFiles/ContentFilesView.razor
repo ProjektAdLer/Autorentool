@@ -14,7 +14,7 @@
 @using Presentation.PresentationLogic.SelectedViewModels
 @inject ISnackbar Snackbar
 
-<div class="flex flex-col gap-3">
+<div class="flex flex-col gap-3 cursor-default">
     <header class="py-2 bg-adlerbgbright border-y-2 border-adlergrey-100 overflow-hidden flex justify-center">
         <h2 class="text-base 2xl:text-lg text-center font-bold text-adlertitledarkblue mx-2">@Localizer["Header"]</h2>
     </header>
@@ -160,7 +160,7 @@
                 }
             </RowTemplate>
             <PagerContent>
-                <MudTablePager HideRowsPerPage="true" HorizontalAlignment="HorizontalAlignment.Center" Class="h-8" />
+                <MudTablePager HideRowsPerPage="true" HorizontalAlignment="HorizontalAlignment.Center" Class="h-8 cursor-default" />
                 <div class="w-full max-h-40% min-h-fit shrink grow flex flex-row items-center justify-between pb-2">
                     <div class="flex justify-center items-center">
                         <MudSwitch Class="pl-2 w-2xs" @bind-Value="_showFilepath" Color="Color.Info"></MudSwitch>

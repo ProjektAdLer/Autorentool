@@ -5,7 +5,7 @@
 @using Presentation.Components.Forms.Buttons
 @using System.Diagnostics.CodeAnalysis
 @using Shared.Theme
-<div class="absolute w-full z-30">
+<div class="absolute w-full z-30 cursor-default">
     <header class="py-2 2xl:py-3 bg-adlerbgbright border-b-2 border-adlergrey-100 overflow-hidden flex justify-center">
         <h2 class="text-base 2xl:text-lg text-center font-bold text-adlertitledarkblue mx-2">@Localizer["CreateWorldForm.Title.Text"]</h2>
     </header>
@@ -63,7 +63,7 @@
             <Collapsable Title="@Localizer["CreateWorldForm.EnrolmentKey.Title"]" InitiallyCollapsed="true">
                 <div class="rounded-lg w-4/4 px-6">
                     <div class="flex flex-row items-center gap-1">
-                        <p class="text-xs pt-3">@Localizer["CreateWorldForm.General.Field.EnrolmentKey.Text"]</p>
+                        <p class="text-xs pt-3 cursor-default">@Localizer["CreateWorldForm.General.Field.EnrolmentKey.Text"]</p>
                         <MudTooltip Placement="Placement.Right" Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed">
                             <TooltipContent>
                                 <MudText Class="text-xs">@((MarkupString)Localizer["CreateWorldForm.EnrolmentKey.Tooltip"].ToString())</MudText>
@@ -82,7 +82,7 @@
             </Collapsable>
 
             <Collapsable Title=@Localizer["CreateWorldForm.Theme.Text"] InitiallyCollapsed="true">
-                <p class="text-xs pl-4">@Localizer["CreateWorldForm.Theme.Field.Theme.Text"]</p>
+                <p class="text-xs pl-4 cursor-default">@Localizer["CreateWorldForm.Theme.Field.Theme.Text"]</p>
                 <div class="px-4 pb-2">
                     <MudSelect @bind-Value="FormDataContainer.FormModel.WorldTheme"
                                Text="@FormDataContainer.FormModel.WorldTheme.ToString()"
@@ -100,7 +100,7 @@
             
             <Collapsable Title=@Localizer["CreateWorldForm.Goals.Text"] InitiallyCollapsed="true">
                 <div class="rounded-lg w-4/4 px-6">
-                    <p class="text-xs pt-3">@Localizer["CreateWorldForm.Goals.Field.Goals.Text"]</p>
+                    <p class="text-xs pt-3 cursor-default">@Localizer["CreateWorldForm.Goals.Field.Goals.Text"]</p>
                     <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
                                   For="@(() => FormModel.Goals)"
                                   Lines="3"
@@ -111,7 +111,7 @@
 
             <Collapsable Title=@Localizer["CreateWorldForm.Fields.Collapsable.Description.Title"] InitiallyCollapsed="true">
                 <div class="rounded-lg w-4/4 px-6">
-                    <p class="text-xs pt-3">@Localizer["CreateWorldForm.Goals.Field.Description.Text"]</p>
+                    <p class="text-xs pt-3 cursor-default">@Localizer["CreateWorldForm.Goals.Field.Description.Text"]</p>
                     <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
                                   For="@(() => FormModel.Description)"
                                   Lines="3"
@@ -122,7 +122,7 @@
 
             <Collapsable Title=@Localizer["CreateWorldForm.Fields.Collapsable.Story.Title"] InitiallyCollapsed="true">
                 <div class="rounded-lg w-4/4 px-6">
-                    <p class="text-xs pt-3">@Localizer["CreateWorldForm.Fields.Collapsable.Story.Field.Description.Text"]</p>
+                    <p class="text-xs pt-3 cursor-default">@Localizer["CreateWorldForm.Fields.Collapsable.Story.Field.Description.Text"]</p>
                     <MudTextField @bind-Value="FormDataContainer.FormModel.StoryStart"
                                   For="@(() => FormModel.StoryStart)"
                                   Lines="3"

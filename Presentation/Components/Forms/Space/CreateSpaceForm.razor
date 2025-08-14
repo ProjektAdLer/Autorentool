@@ -7,7 +7,7 @@
 @using Presentation.Components.Forms.Buttons
 @using System.Diagnostics.CodeAnalysis
 @using Shared.Theme
-<div class="absolute w-full z-30">
+<div class="absolute w-full z-30 cursor-default">
     <header class="py-2 2xl:py-3 bg-adlerbgbright border-b-2 border-adlergrey-100 overflow-hidden flex justify-center">
         <h2 class="text-base 2xl:text-lg text-center font-bold text-adlertitledarkblue mx-2">@Localizer["CreateSpaceForm.Header.Title"]</h2>
     </header>
@@ -39,16 +39,16 @@
             <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.CompletionConditions.Title"]
                          InitiallyCollapsed="true">
                 <div class="px-6">
-                    <p class="text-xs pt-3">
+                    <p class="text-xs pt-3 cursor-default">
                         <span class="text-adlergrey-800">
                             @Localizer["CreateSpaceForm.Fields.Collapsable.CompletionConditions.Description.Text"]
                         </span>
                     </p>
-                    <p class="text-xs text-adlerblue-600">0
+                    <p class="text-xs text-adlerblue-600 cursor-default">0
                         <span class="text-adlergrey-800"> / </span> 0
                         <span class="text-adlergrey-800"> @Localizer["CreateSpaceForm.Fields.Collapsable.CompletionConditions.Description.Appendix"] </span>
                     </p>
-                    <ul class="py-2 pl-2 mt-0 border border-adlergrey-300 rounded w-full list-disc list-inside">
+                    <ul class="py-2 pl-2 mt-0 border border-adlergrey-300 rounded w-full list-disc list-inside cursor-default">
                         <p class="text-xs italic text-adlergrey-600">
                             @Localizer["CreateSpaceForm.Fields.Collapsable.NoElements"]
                         </p>
@@ -57,7 +57,7 @@
             </Collapsable>
 
             <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.Theme.Title"] InitiallyCollapsed="true">
-                <p class="text-xs px-6 pt-3">@Localizer["CreateSpaceForm.Fields.Collapsable.Theme.Field.Theme.Text"]</p>
+                <p class="text-xs px-6 pt-3 cursor-default">@Localizer["CreateSpaceForm.Fields.Collapsable.Theme.Field.Theme.Text"]</p>
                   <div class="px-6 py-2">
                       <MudSelect @bind-Value="FormDataContainer.FormModel.SpaceTheme"
                                  OnKeyUp="HandleKeyEvent"
@@ -74,7 +74,7 @@
 
             <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.Goals.Title"] InitiallyCollapsed="true">
                 <div class="w-4/4 px-6 flex flex-col">
-                    <p class="text-xs pt-3">@Localizer["CreateSpaceForm.Fields.Collapsable.Goals.Field.Goals.Text"]</p>
+                    <p class="text-xs pt-3 cursor-default">@Localizer["CreateSpaceForm.Fields.Collapsable.Goals.Field.Goals.Text"]</p>
                     <div class="flex justify-center">
                         <MudButton Class="w-72 btn-standard"
                                    OnClick="OpenLearningOutcomesOverview">@Localizer["CreateSpaceForm.Goals.Button"]</MudButton>
@@ -85,7 +85,7 @@
             <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.Description.Title"]
                          InitiallyCollapsed="true">
                 <div class="rounded-lg w-4/4 px-6">
-                    <p class="text-xs pt-3">
+                    <p class="text-xs pt-3 cursor-default">
                         @Localizer["CreateSpaceForm.Fields.Collapsable.Goals.Field.Description.Text"]
                     </p>
                     <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
@@ -100,8 +100,7 @@
 
     </Fields>
     <FooterButtons>
-        <div
-            class="flex flex-row justify-end absolute left-0 bottom-0 border-t-2 border-adlergrey-100 bg-adlerbgbright w-full">
+        <div class="flex flex-row justify-end absolute left-0 bottom-0 border-t-2 border-adlergrey-100 bg-adlerbgbright w-full">
             <DefaultSubmitButton/>
             <DefaultResetButton/>
         </div>
