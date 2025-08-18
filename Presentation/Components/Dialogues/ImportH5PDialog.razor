@@ -3,21 +3,18 @@
 
 <MudDialog>
     <DialogContent>
-        <MudText Typo="Typo.h6">@Localizer["Dialog.Heading"]</MudText>
-
         <MudText Class="mt-2 mb-2" Typo="Typo.body2">
-            @Localizer["Dialog.Description"]
+            @((MarkupString)Localizer["Dialog.Description"].ToString())
         </MudText>
 
         <MudText Class="mb-2" Typo="Typo.body2">
             @Localizer["Dialog.Instruction"]
         </MudText>
-
     </DialogContent>
 
     <DialogActions>
-        <MudButton OnClick="CancelDialog" Color="Color.Secondary">@Localizer["Dialog.ValidateLaterButton"]</MudButton>
-        <MudButton OnClick="CloseDialog" Color="Color.Primary">
+        <MudButton OnClick="CancelDialog" Class="btn-standard uppercase shadow-lg text-adlergrey rounded-lg bg-adlerdeactivated hover:bg-adlerdarkblue hover:text-buttonbgblue">@Localizer["Dialog.ValidateLaterButton"]</MudButton>
+        <MudButton OnClick="CloseDialog" Class="btn-standard">
             @Localizer["Dialog.BeginValidationButton"]
         </MudButton>
     </DialogActions>

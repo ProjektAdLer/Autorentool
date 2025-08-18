@@ -3,10 +3,8 @@
     <data name="Dialog.Heading" xml:space="preserve">
     <value>Hinzugefügtes Lernmaterial</value>
   </data>
-    <data name="Dialog.Description" xml:space="preserve">
-    <value>
-Sie haben H5Ps als externes Lernmaterial hinzugefügt. H5Ps müssen zunächst auf ihre Funktion hin überprüft werden, bevor sie in einer Lernwelt erfolgreich verwendet werden können. Dabei wird überprüft, ob innerhalb des H5Ps Punkte durch das Beantworten von Fragen erzielt werden können (z.B. H5P „Interactive Video“) und das H5P somit abschließbar ist (Anzeige als abschließbares H5P = 🟢) oder ob es sich um ein nicht abschließbares H5P handelt, bei dem lediglich durch das Öffnen des H5Ps (z.B. H5P „Image Slider“) Punkte vergeben werden (Anzeige als nicht abschließbares H5P = 🟡). Auch ist es möglich, dass ein H5P nicht angezeigt wird oder fehlerhaft ist (Anzeige als defektes H5P = 🔴). Mehr dazu erfahren Sie hier.
-    </value>
+  <data name="Dialog.Description" xml:space="preserve">
+    <value>Sie haben ein oder mehrere H5Ps als externes Lernmaterial hinzugefügt. H5Ps müssen zunächst auf ihre Funktion hin überprüft werden, bevor sie in einer Lernwelt erfolgreich verwendet werden können. Dabei wird überprüft, ob innerhalb des H5Ps Punkte durch das Beantworten von Fragen erzielt werden können (z.B. H5P - Interactive Video) und das H5P somit abschließbar ist oder ob es sich um ein nicht abschließbares H5P handelt, bei dem lediglich das Durchklicken der einzelnen Folien zum Tragen kommt und entscheidend ist (z.B. H5P - Image Slider). Auch ist es möglich, dass ein H5P fehlerhaft ist oder gar nicht erst angezeigt wird. Mehr dazu erfahren Sie &lt;a href="https://projektadler.github.io/Documentation/manualauthoringfeatures-auf-einen-blick.html" target="_blank" class="text-adlerblue-700"&gt;hier&lt;/a&gt;.</value>
   </data>
     <data name="Dialog.Instruction" xml:space="preserve">
     <value>

@@ -33,7 +33,7 @@
         <value>Create Copy of learning world</value>
     </data>
     <data name="ReplaceCopyLmsWorldDialog.DialogContent" xml:space="preserve">
-        <value>A learning world with the name &lt;b&gt;{0}&lt;/b&gt;. already exists on the LMS Moodle. Would you like to replace it or create a copy?</value>
+        <value>A learning world with the name &lt;b&gt;{0}&lt;/b&gt;. already exists in Moodle. Would you like to replace it or create a copy?</value>
     </data>
     <data name="ReplaceCopyLmsWorldDialog.ConfirmationDialogText" xml:space="preserve">
         <value>Are you sure you want to replace the existing learning world? All data from the previous learning world, including user progress, will be irrevocably deleted.</value>
