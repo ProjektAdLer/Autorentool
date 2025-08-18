@@ -3,6 +3,7 @@ using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 using Presentation.PresentationLogic.LearningContent.Story;
 using Presentation.PresentationLogic.LearningElement;
+using Presentation.PresentationLogic.LearningOutcome;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.Topic;
@@ -19,7 +20,8 @@ public class LearningWorldViewModel : ILearningWorldViewModel
     private string _storyStart;
     private string _storyEnd;
     private string _evaluationLink;
-    private string _goals;
+    private string _evaluationLinkName;
+    private string _evaluationLinkText;
     private WorldTheme _worldTheme;
     private string _language;
     private ICollection<ILearningPathWayViewModel> _learningPathWays;
@@ -44,9 +46,11 @@ public class LearningWorldViewModel : ILearningWorldViewModel
         _authors = "";
         _language = "";
         _description = "";
-        _goals = "";
+        LearningOutcomeCollection = new LearningOutcomeCollectionViewModel();
         _worldTheme = default;
         _evaluationLink = "";
+        _evaluationLinkName = "";
+        _evaluationLinkText = "";
         _enrolmentKey = "";
         _storyStart = "";
         _storyEnd = "";
@@ -67,8 +71,12 @@ public class LearningWorldViewModel : ILearningWorldViewModel
     /// <param name="authors">The string containing the names of all the authors working on the learning world.</param>
     /// <param name="language">The primary language used in this learning world.</param>
     /// <param name="description">A description of the learning world and its contents.</param>
-    /// <param name="goals">A description of the goals this learning world is supposed to achieve.</param>
+    /// <param name="learningOutcomes">The learning outcomes of the learning world.</param>
+    /// <param name="worldTheme">The theme of the learning world.</param>
+    /// <param name="worldTheme">The theme of the learning world.</param>
     /// <param name="evaluationLink">Link to the evaluation on completion.</param>
+    /// <param name="evaluationLinkName">Name of the evaluation link.</param>
+    /// <param name="evaluationLinkText">Description text of the evaluation link.</param>
     /// <param name="enrolmentKey">Key for users to enrol in the learning world.</param>
     /// <param name="storyStart">The story start of the learning world.</param>
     /// <param name="storyEnd">The story end of the learning world.</param>
@@ -81,8 +89,9 @@ public class LearningWorldViewModel : ILearningWorldViewModel
     /// <param name="unplacedLearningElements">All learning elements in the learning world that are not placed in any learning space</param>
     /// <param name="topics">Optional collection of topics in the learning world.</param>
     public LearningWorldViewModel(string name, string shortname, string authors, string language, string description,
-        string goals, WorldTheme worldTheme,
-        string evaluationLink, string enrolmentKey, string storyStart, string storyEnd, 
+        LearningOutcomeCollectionViewModel learningOutcomes, WorldTheme worldTheme, string evaluationLink,
+        string evaluationLinkName, string evaluationLinkText, string enrolmentKey,
+        string storyStart, string storyEnd,
         string savePath = "", bool unsavedChanges = true,
         List<ILearningSpaceViewModel>? learningSpaces = null,
         List<PathWayConditionViewModel>? pathWayConditions = null,
@@ -96,9 +105,11 @@ public class LearningWorldViewModel : ILearningWorldViewModel
         _authors = authors;
         _language = language;
         _description = description;
-        _goals = goals;
+        LearningOutcomeCollection = learningOutcomes;
         _worldTheme = worldTheme;
         _evaluationLink = evaluationLink;
+        _evaluationLinkName = evaluationLinkName;
+        _evaluationLinkText = evaluationLinkText;
         _enrolmentKey = enrolmentKey;
         _storyStart = storyStart;
         _storyEnd = storyEnd;
@@ -110,6 +121,8 @@ public class LearningWorldViewModel : ILearningWorldViewModel
         _unplacedLearningElements = unplacedLearningElements ?? new List<ILearningElementViewModel>();
         _topics = topics ?? new List<TopicViewModel>();
     }
+
+    public LearningOutcomeCollectionViewModel LearningOutcomeCollection { get; set; }
 
     public IEnumerable<ISelectableObjectInWorldViewModel> SelectableWorldObjects =>
         ObjectsInPathWays.Concat<ISelectableObjectInWorldViewModel>(LearningPathWays);
@@ -171,9 +184,9 @@ public class LearningWorldViewModel : ILearningWorldViewModel
     public int Points =>
         LearningSpaces.Sum(space => space.Points);
 
-    public int NumberOfElements => 
+    public int NumberOfElements =>
         LearningSpaces.Sum(space => space.NumberOfElements);
-    
+
     public int NumberOfRequiredElements =>
         LearningSpaces.Sum(space => space.NumberOfRequiredElements);
 
@@ -207,12 +220,6 @@ public class LearningWorldViewModel : ILearningWorldViewModel
         set => SetField(ref _description, value);
     }
 
-    public string Goals
-    {
-        get => _goals;
-        set => SetField(ref _goals, value);
-    }
-    
     public WorldTheme WorldTheme
     {
         get => _worldTheme;
@@ -225,18 +232,30 @@ public class LearningWorldViewModel : ILearningWorldViewModel
         set => SetField(ref _evaluationLink, value);
     }
 
+    public string EvaluationLinkName
+    {
+        get => _evaluationLinkName;
+        set => SetField(ref _evaluationLinkName, value);
+    }
+
+    public string EvaluationLinkText
+    {
+        get => _evaluationLinkText;
+        set => SetField(ref _evaluationLinkText, value);
+    }
+
     public string EnrolmentKey
     {
         get => _enrolmentKey;
         set => SetField(ref _enrolmentKey, value);
     }
-    
+
     public string StoryStart
     {
         get => _storyStart;
         set => SetField(ref _storyStart, value);
     }
-    
+
     public string StoryEnd
     {
         get => _storyEnd;

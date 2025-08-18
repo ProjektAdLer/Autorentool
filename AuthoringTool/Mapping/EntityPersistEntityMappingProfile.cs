@@ -60,14 +60,12 @@ public class EntityPersistEntityMappingProfile : Profile
         CreateMap<ManualLearningOutcome, ILearningOutcomePe>().As<ManualLearningOutcomePe>();
         CreateMap<StructuredLearningOutcome, ILearningOutcomePe>().As<StructuredLearningOutcomePe>();
 
-        CreateMap<ILearningOutcomePe, ILearningOutcome>()
+        CreateMap<ILearningOutcome, ILearningOutcomePe>()
             .IncludeAllDerived()
             .ReverseMap()
             .IncludeAllDerived();
 
-        CreateMap<LearningOutcomeCollectionPe, LearningOutcomeCollection>()
-            .ForMember(x => x.InternalUnsavedChanges, opt => opt.Ignore())
-            .ForMember(x => x.UnsavedChanges, opt => opt.Ignore())
+        CreateMap<LearningOutcomeCollection, LearningOutcomeCollectionPe>()
             .ReverseMap();
     }
 
@@ -252,6 +250,7 @@ public class EntityPersistEntityMappingProfile : Profile
     {
         CreateMap<LearningWorld, LearningWorldPe>()
             .ForMember(x => x.ObjectsInPathWaysPe, opt => opt.Ignore())
+            .ForMember(x => x.Goals, opt => opt.Ignore())
             .AfterMap((_, d) =>
             {
                 foreach (var pathWay in d.LearningPathways)

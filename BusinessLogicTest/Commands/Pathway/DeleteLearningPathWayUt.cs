@@ -2,7 +2,6 @@ using BusinessLogic.Commands.Pathway;
 using BusinessLogic.Entities;
 using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
-using Shared.Theme;
 using TestHelpers;
 
 namespace BusinessLogicTest.Commands.Pathway;
@@ -14,30 +13,11 @@ public class DeleteLearningPathWayUt
     // ANF-ID: [AHO13]
     public void Execute_DeletesLearningPathWay()
     {
-        var world = new LearningWorld("a", "b", "c", "d", "e", "f", WorldTheme.CampusAschaffenburg)
-        {
-            UnsavedChanges = false
-        };
-        var space1 = new LearningSpace("z", "w", 5, SpaceTheme.LearningArea,
-            EntityProvider.GetLearningOutcomeCollection())
-        {
-            UnsavedChanges = false
-        };
-        var space2 = new LearningSpace("l", "o", 3, SpaceTheme.LearningArea,
-            EntityProvider.GetLearningOutcomeCollection())
-        {
-            UnsavedChanges = false
-        };
-        var space3 = new LearningSpace("l", "o", 3, SpaceTheme.LearningArea,
-            EntityProvider.GetLearningOutcomeCollection())
-        {
-            UnsavedChanges = false
-        };
-        var space4 = new LearningSpace("l", "o", 3, SpaceTheme.LearningArea,
-            EntityProvider.GetLearningOutcomeCollection())
-        {
-            UnsavedChanges = false
-        };
+        var world = EntityProvider.GetLearningWorld(unsavedChanges: false);
+        var space1 = EntityProvider.GetLearningSpace(unsavedChanges: false);
+        var space2 = EntityProvider.GetLearningSpace(unsavedChanges: false);
+        var space3 = EntityProvider.GetLearningSpace(unsavedChanges: false);
+        var space4 = EntityProvider.GetLearningSpace(unsavedChanges: false);
         world.LearningSpaces.Add(space1);
         world.LearningSpaces.Add(space2);
         world.LearningSpaces.Add(space3);
@@ -79,11 +59,9 @@ public class DeleteLearningPathWayUt
     [Test]
     public void Undo_MementoIsNull_ThrowsException()
     {
-        var world = new LearningWorld("a", "b", "c", "d", "e", "f", WorldTheme.CampusAschaffenburg);
-        var space1 = new LearningSpace("z", "w", 5, SpaceTheme.LearningArea,
-            EntityProvider.GetLearningOutcomeCollection());
-        var space2 = new LearningSpace("l", "o", 3, SpaceTheme.LearningArea,
-            EntityProvider.GetLearningOutcomeCollection());
+        var world = EntityProvider.GetLearningWorld();
+        var space1 = EntityProvider.GetLearningSpace();
+        var space2 = EntityProvider.GetLearningSpace();
         var pathWay = new LearningPathway(space1, space2);
         world.LearningSpaces.Add(space1);
         world.LearningSpaces.Add(space2);
@@ -104,20 +82,9 @@ public class DeleteLearningPathWayUt
     [Test]
     public void UndoRedo_UndoesAndRedoesCreateLearningPathWay()
     {
-        var world = new LearningWorld("a", "b", "c", "d", "e", "f",WorldTheme.CampusAschaffenburg)
-        {
-            UnsavedChanges = false
-        };
-        var space1 = new LearningSpace("z", "w", 5, SpaceTheme.LearningArea,
-            EntityProvider.GetLearningOutcomeCollection())
-        {
-            UnsavedChanges = false
-        };
-        var space2 = new LearningSpace("l", "o", 3, SpaceTheme.LearningArea,
-            EntityProvider.GetLearningOutcomeCollection())
-        {
-            UnsavedChanges = false
-        };
+        var world = EntityProvider.GetLearningWorld(unsavedChanges: false);
+        var space1 = EntityProvider.GetLearningSpace(unsavedChanges: false);
+        var space2 = EntityProvider.GetLearningSpace(unsavedChanges: false);
         world.LearningSpaces.Add(space1);
         world.LearningSpaces.Add(space2);
         var actionWasInvoked = false;

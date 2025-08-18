@@ -40,9 +40,9 @@ using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Trigger;
 using Presentation.PresentationLogic.LearningContent.FileContent;
 using Presentation.PresentationLogic.LearningContent.LinkContent;
 using Presentation.PresentationLogic.LearningElement;
+using Presentation.PresentationLogic.LearningOutcome;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
-using Presentation.PresentationLogic.LearningSpace.LearningOutcomeViewModel;
 using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.SelectedViewModels;
 using Presentation.PresentationLogic.Topic;
@@ -176,16 +176,18 @@ public class PresentationLogic : IPresentationLogic
 
     /// <inheritdoc cref="IPresentationLogic.CreateLearningWorld"/>
     public void CreateLearningWorld(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm, string name,
-        string shortname, string authors, string language, string description, string goals, WorldTheme worldTheme,
-        string evaluationLink,
+        string shortname, string authors, string language, string description,
+        LearningOutcomeCollectionViewModel learningOutcomeCollectionVm, WorldTheme worldTheme, string evaluationLink, string evaluationLinkName, string evaluationLinkText,
         string enrolmentKey, string storyStart, string storyEnd)
     {
         var authoringToolWorkspaceEntity =
             Mapper.Map<BusinessLogic.Entities.AuthoringToolWorkspace>(authoringToolWorkspaceVm);
+        var learningOutcomeCollection = Mapper.Map<LearningOutcomeCollection>(learningOutcomeCollectionVm);
 
         var command = WorldCommandFactory.GetCreateCommand(authoringToolWorkspaceEntity, name, shortname, authors,
-            language,
-            description, goals, worldTheme, evaluationLink, enrolmentKey, storyStart, storyEnd,
+            language, description, learningOutcomeCollection, worldTheme, evaluationLink, evaluationLinkName, evaluationLinkText,
+            enrolmentKey,
+            storyStart, storyEnd,
             workspace => CMapper.Map(workspace, authoringToolWorkspaceVm));
         BusinessLogic.ExecuteCommand(command);
 
@@ -194,14 +196,17 @@ public class PresentationLogic : IPresentationLogic
 
     /// <inheritdoc cref="IPresentationLogic.EditLearningWorld"/>
     public void EditLearningWorld(ILearningWorldViewModel learningWorldVm, string name,
-        string shortname, string authors, string language, string description, string goals, WorldTheme worldTheme, string evaluationLink,
+        string shortname, string authors, string language, string description,
+        LearningOutcomeCollectionViewModel learningOutcomeCollectionVm, WorldTheme worldTheme,
+        string evaluationLink,string evaluationLinkName, string evaluationLinkText,
         string enrolmentKey, string storyStart, string storyEnd)
     {
         var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
+        var learningOutcomeCollection = Mapper.Map<LearningOutcomeCollection>(learningOutcomeCollectionVm);
 
-        var command = WorldCommandFactory.GetEditCommand(worldEntity, name, shortname, authors, language, description,
-            goals, worldTheme, evaluationLink, enrolmentKey, storyStart, storyEnd,
-            world => CMapper.Map(world, learningWorldVm));
+        var command = WorldCommandFactory.GetEditCommand(worldEntity, name, shortname, authors, language,
+            description, learningOutcomeCollection, worldTheme, evaluationLink, evaluationLinkName, evaluationLinkText,
+            enrolmentKey, storyStart, storyEnd, world => CMapper.Map(world, learningWorldVm));
         //quit early if there are no changes
         if (!command.AnyChanges())
         {
@@ -1159,7 +1164,7 @@ public class PresentationLogic : IPresentationLogic
             throw;
         }
     }
-    
+
     public async Task ExportLearningWorldToMoodleArchiveAsync(ILearningWorldViewModel world)
     {
         ElectronCheck();
@@ -1366,7 +1371,7 @@ public class PresentationLogic : IPresentationLogic
         var world = Mapper.Map<LmsWorld>(worldVm);
         await BusinessLogic.DeleteLmsWorld(world);
     }
-    
+
     #endregion
 
 #if DEBUG

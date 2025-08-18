@@ -21,6 +21,9 @@ public interface ILearningWorldJson
 
     // for the correct structure the elements are added to the learning World
     List<IElementJson> Elements { get; set; }
+    string EvaluationLink { get; set; }
+    string EvaluationLinkName { get; set; }
+    string EvaluationLinkText { get; set; }
     string EnrolmentKey { get; set; }
     
     string Theme { get; set; }

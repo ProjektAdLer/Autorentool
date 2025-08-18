@@ -14,9 +14,10 @@ public class CreateLearningSpaceUt
     // ANF-ID: [AWA0001]
     public void Execute_CreatesLearningSpace()
     {
-        var world = new LearningWorld("a", "b", "c", "d", "e", "f", WorldTheme.CampusAschaffenburg);
+        var world = EntityProvider.GetLearningWorld();
         var name = "space1";
         var description = "space for learning";
+        var learningOutcomeCollection = EntityProvider.GetLearningOutcomeCollection();
         var requiredPoints = 10;
         var theme = SpaceTheme.LearningArea;
         var positionX = 1;
@@ -26,7 +27,7 @@ public class CreateLearningSpaceUt
         var actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new CreateLearningSpace(world, name, description, EntityProvider.GetLearningOutcomeCollection(),
+        var command = new CreateLearningSpace(world, name, description, learningOutcomeCollection,
             requiredPoints, theme,
             positionX,
             positionY, topic, mappingAction, new NullLogger<CreateLearningSpace>());
@@ -49,7 +50,7 @@ public class CreateLearningSpaceUt
         {
             Assert.That(space.Name, Is.EqualTo("space1"));
             Assert.That(space.Description, Is.EqualTo("space for learning"));
-            Assert.That(space.LearningOutcomeCollection.LearningOutcomes, Is.Not.Empty);
+            Assert.That(space.LearningOutcomeCollection, Is.EqualTo(learningOutcomeCollection));
             Assert.That(space.RequiredPoints, Is.EqualTo(10));
             Assert.That(space.SpaceTheme, Is.EqualTo(SpaceTheme.LearningArea));
             Assert.That(space.PositionX, Is.EqualTo(1));
@@ -62,7 +63,7 @@ public class CreateLearningSpaceUt
     // ANF-ID: [AWA0001]
     public void Execute_AddsLearningSpaceAndSetAsSelectedLearningObject()
     {
-        var world = new LearningWorld("a", "b", "c", "d", "e", "f", WorldTheme.CampusAschaffenburg);
+        var world = EntityProvider.GetLearningWorld();
         var space = new LearningSpace("z", "w", 5, SpaceTheme.LearningArea);
         var actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
@@ -88,7 +89,7 @@ public class CreateLearningSpaceUt
     [Test]
     public void Undo_MementoIsNull_ThrowsException()
     {
-        var world = new LearningWorld("a", "b", "c", "d", "e", "f", WorldTheme.CampusAschaffenburg);
+        var world = EntityProvider.GetLearningWorld();
         var name = "space1";
         var description = "space for learning";
         var topic = new BusinessLogic.Entities.Topic("abc");
@@ -115,7 +116,7 @@ public class CreateLearningSpaceUt
     [Test]
     public void UndoRedo_UndoesAndRedoesCreateLearningSpace()
     {
-        var world = new LearningWorld("a", "b", "c", "d", "e", "f", WorldTheme.CampusAschaffenburg);
+        var world = EntityProvider.GetLearningWorld();
         var space = new LearningSpace("g", "j", 5, SpaceTheme.LearningArea);
         world.LearningSpaces.Add(space);
         var name = "space1";

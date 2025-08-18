@@ -1,5 +1,6 @@
 using BusinessLogic.API;
 using BusinessLogic.Entities;
+using BusinessLogic.Entities.LearningOutcome;
 using Microsoft.Extensions.Logging;
 using Shared.Theme;
 
@@ -17,12 +18,13 @@ public class WorldCommandFactory : IWorldCommandFactory
     public IUnsavedChangesResetHelper UnsavedChangesResetHelper { get; }
 
     public ICreateLearningWorld GetCreateCommand(AuthoringToolWorkspace authoringToolWorkspace, string name,
-        string shortname, string authors, string language, string description, string goals, WorldTheme worldTheme,
-        string evaluationLink, string enrolmentKey, string storyStart, string storyEnd,
+        string shortname, string authors, string language, string description,
+        LearningOutcomeCollection learningOutcomeCollection, WorldTheme worldTheme,
+        string evaluationLink, string evaluationLinkName, string evaluationLinkText, string enrolmentKey,
+        string storyStart, string storyEnd,
         Action<AuthoringToolWorkspace> mappingAction) =>
-        new CreateLearningWorld(authoringToolWorkspace, name, shortname, authors, language, description, goals,
-            worldTheme,
-            evaluationLink, enrolmentKey, storyStart, storyEnd,
+        new CreateLearningWorld(authoringToolWorkspace, name, shortname, authors, language, description,
+            learningOutcomeCollection, worldTheme, evaluationLink, evaluationLinkName, evaluationLinkText, enrolmentKey, storyStart, storyEnd,
             mappingAction, LoggerFactory.CreateLogger<CreateLearningWorld>());
 
     public ICreateLearningWorld GetCreateCommand(AuthoringToolWorkspace authoringToolWorkspace,
@@ -36,11 +38,11 @@ public class WorldCommandFactory : IWorldCommandFactory
             LoggerFactory.CreateLogger<DeleteLearningWorld>());
 
     public IEditLearningWorld GetEditCommand(LearningWorld learningWorld, string name, string shortname, string authors,
-        string language, string description, string goals, WorldTheme worldTheme, string evaluationLink,
-        string enrolmentKey, string storyStart, string storyEnd,
+        string language, string description, LearningOutcomeCollection learningOutcomeCollection,
+        WorldTheme worldTheme, string evaluationLink, string evaluationLinkName, string evaluationLinkText, string enrolmentKey, string storyStart, string storyEnd,
         Action<LearningWorld> mappingAction) =>
-        new EditLearningWorld(learningWorld, name, shortname, authors, language, description, goals, worldTheme,
-            evaluationLink,
+        new EditLearningWorld(learningWorld, name, shortname, authors, language, description, learningOutcomeCollection,
+            worldTheme, evaluationLink,evaluationLinkName, evaluationLinkText,
             enrolmentKey, storyStart, storyEnd,
             mappingAction, LoggerFactory.CreateLogger<EditLearningWorld>());
 

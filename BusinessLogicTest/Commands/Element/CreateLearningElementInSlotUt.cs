@@ -194,7 +194,8 @@ public class TestParameter
         {
             UnsavedChanges = false
         };
-        WorldParent = new LearningWorld("q", "r", "s", "t", "u", "o", WorldTheme.CampusAschaffenburg)
+        WorldParent = new LearningWorld("q", "r", "s", "t", "u", EntityProvider.GetLearningOutcomeCollection(),
+            WorldTheme.CampusAschaffenburg)
         {
             UnsavedChanges = false,
             LearningSpaces = new List<ILearningSpace>

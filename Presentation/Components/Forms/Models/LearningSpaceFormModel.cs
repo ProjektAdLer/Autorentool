@@ -1,5 +1,4 @@
-using Presentation.PresentationLogic.LearningSpace.LearningOutcomeViewModel;
-using Shared;
+using Presentation.PresentationLogic.LearningOutcome;
 using Shared.Theme;
 
 namespace Presentation.Components.Forms.Models;

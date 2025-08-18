@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Bunit;
 using BusinessLogic.Entities;
-using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using MudBlazor;
@@ -14,6 +13,7 @@ using Presentation.Components.Forms;
 using Presentation.Components.Forms.Buttons;
 using Presentation.Components.Forms.Models;
 using Presentation.Components.Forms.World;
+using Presentation.PresentationLogic.LearningOutcome;
 using Presentation.PresentationLogic.LearningWorld;
 using PresentationTest;
 using Shared.Theme;
@@ -109,62 +109,24 @@ public class EditWorldFormIt : MudFormTestFixture<EditWorldForm, LearningWorldFo
         collapsables[3].Find("div.toggler").Click();
         collapsables[4].Find("div.toggler").Click();
         collapsables[5].Find("div.toggler").Click();
+        collapsables[6].Find("div.toggler").Click();
         await systemUnderTest.InvokeAsync(() => systemUnderTest.Render());
 
         ConfigureValidatorAllMembersTest();
 
-        Assert.Multiple(() =>
-        {
-            Assert.That(FormModel.Name, Is.EqualTo(""));
-            Assert.That(FormModel.Shortname, Is.EqualTo(""));
-            Assert.That(FormModel.Authors, Is.EqualTo(""));
-            Assert.That(FormModel.Language, Is.EqualTo(""));
-            Assert.That(FormModel.Description, Is.EqualTo(""));
-            Assert.That(FormModel.Goals, Is.EqualTo(""));
-            Assert.That(FormModel.EvaluationLink, Is.EqualTo(""));
-            Assert.That(FormModel.EnrolmentKey, Is.EqualTo(""));
-            Assert.That(FormModel.StoryStart, Is.EqualTo(""));
-            Assert.That(FormModel.StoryEnd, Is.EqualTo(""));
-        });
+        WorldFormStaticTestMethods.AssertAllFieldsAreSetToValue(FormModel, "");
         await mudForm.InvokeAsync(async () => await mudForm.Instance.Validate());
         Assert.That(mudForm.Instance.IsValid, Is.False);
 
 
         var mudInputs = systemUnderTest.FindComponents<MudTextField<string>>();
-        foreach (var mudInput in mudInputs.Take(6))
-        {
-            var input = mudInput.Find("input");
-            await input.ChangeAsync(new ChangeEventArgs
-            {
-                Value = Expected
-            });
-        }
+        await WorldFormStaticTestMethods.SetAllInputAndTextareaValueToExpected(mudInputs, Expected);
 
-        foreach (var mudInput in mudInputs.Skip(6))
-        {
-            var input = mudInput.Find("textarea");
-            await input.ChangeAsync(new ChangeEventArgs
-            {
-                Value = Expected
-            });
-        }
-
-        Assert.Multiple(() =>
-        {
-            Assert.That(() => FormModel.Name, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
-            Assert.That(() => FormModel.Shortname, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
-            Assert.That(() => FormModel.Authors, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
-            Assert.That(() => FormModel.Language, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
-            Assert.That(() => FormModel.Description, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
-            Assert.That(() => FormModel.Goals, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
-            Assert.That(() => FormModel.EvaluationLink, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
-            Assert.That(() => FormModel.EnrolmentKey, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
-            Assert.That(() => FormModel.StoryStart, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
-            Assert.That(() => FormModel.StoryEnd, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
-        });
+        WorldFormStaticTestMethods.AssertAllFieldsAreSetToValue(FormModel, Expected);
         await mudForm.InvokeAsync(async () => await mudForm.Instance.Validate());
         Assert.That(mudForm.Instance.IsValid, Is.True);
     }
+
 
     [Test]
     // ANF-ID: [ASE3]
@@ -182,46 +144,21 @@ public class EditWorldFormIt : MudFormTestFixture<EditWorldForm, LearningWorldFo
         collapsables[3].Find("div.toggler").Click();
         collapsables[4].Find("div.toggler").Click();
         collapsables[5].Find("div.toggler").Click();
+        collapsables[6].Find("div.toggler").Click();
         await systemUnderTest.InvokeAsync(() => systemUnderTest.Render());
         var mudInputs = systemUnderTest.FindComponents<MudTextField<string>>();
-        foreach (var mudInput in mudInputs.Take(6))
-        {
-            var input = mudInput.Find("input");
-            await input.ChangeAsync(new ChangeEventArgs
-            {
-                Value = Expected
-            });
-        }
+        await WorldFormStaticTestMethods.SetAllInputAndTextareaValueToExpected(mudInputs, Expected);
 
-        foreach (var mudInput in mudInputs.Skip(6))
-        {
-            var input = mudInput.Find("textarea");
-            await input.ChangeAsync(new ChangeEventArgs
-            {
-                Value = Expected
-            });
-        }
-
-        Assert.Multiple(() =>
-        {
-            Assert.That(() => FormModel.Name, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
-            Assert.That(() => FormModel.Shortname, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
-            Assert.That(() => FormModel.Authors, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
-            Assert.That(() => FormModel.Language, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
-            Assert.That(() => FormModel.Description, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
-            Assert.That(() => FormModel.Goals, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
-            Assert.That(() => FormModel.EvaluationLink, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
-            Assert.That(() => FormModel.EnrolmentKey, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
-            Assert.That(() => FormModel.StoryStart, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
-            Assert.That(() => FormModel.StoryEnd, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
-        });
+        WorldFormStaticTestMethods.AssertAllFieldsAreSetToValue(FormModel, Expected);
 
         Mapper.ClearReceivedCalls();
 
         systemUnderTest.FindComponent<SubmitThenRemapButton>().Find("button").Click();
 
         WorldPresenter.Received(2).EditLearningWorld(Expected, Expected, Expected, Expected,
-            Expected, Expected, WorldTheme.CampusAschaffenburg, Expected, Expected, Expected, Expected);
+            Expected, Arg.Any<LearningOutcomeCollectionViewModel>(), WorldTheme.CampusAschaffenburg, Expected, Expected,
+            Expected, Expected, Expected,
+            Expected);
         Mapper.Received(1).Map(worldToMap, FormDataContainer.FormModel);
     }
 

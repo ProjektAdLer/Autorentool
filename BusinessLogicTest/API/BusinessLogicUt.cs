@@ -17,7 +17,6 @@ using NSubstitute.ExceptionExtensions;
 using NUnit.Framework;
 using Shared.Command;
 using Shared.Configuration;
-using Shared.Theme;
 using TestHelpers;
 
 namespace BusinessLogicTest.API;
@@ -128,7 +127,7 @@ public class BusinessLogicUt
     {
         var dataAccess = Substitute.For<IDataAccess>();
         var systemUnderTest = CreateStandardBusinessLogic(fakeDataAccess: dataAccess);
-        var content = new FileContent("foo", "bar", "baz");
+        var content = EntityProvider.GetFileContent();
 
         systemUnderTest.RemoveContent(content);
         dataAccess.Received().RemoveContent(content);
@@ -143,7 +142,7 @@ public class BusinessLogicUt
         dataAccess.When(x => x.RemoveContent(Arg.Any<ILearningContent>()))
             .Do(_ => throw new ArgumentOutOfRangeException());
         var systemUnderTest = CreateStandardBusinessLogic(fakeDataAccess: dataAccess, errorManager: errorManager);
-        var content = new FileContent("foo", "bar", "baz");
+        var content = EntityProvider.GetFileContent();
 
         systemUnderTest.RemoveContent(content);
         errorManager.Received(1).LogAndRethrowError(Arg.Any<ArgumentOutOfRangeException>());
@@ -158,7 +157,7 @@ public class BusinessLogicUt
         dataAccess.When(x => x.RemoveContent(Arg.Any<ILearningContent>()))
             .Do(_ => throw new FileNotFoundException("test"));
         var systemUnderTest = CreateStandardBusinessLogic(fakeDataAccess: dataAccess, errorManager: errorManager);
-        var content = new FileContent("foo", "bar", "baz");
+        var content = EntityProvider.GetFileContent();
 
         systemUnderTest.RemoveContent(content);
         errorManager.Received(1).LogAndRethrowError(Arg.Any<FileNotFoundException>());
@@ -173,7 +172,7 @@ public class BusinessLogicUt
         dataAccess.When(x => x.RemoveContent(Arg.Any<ILearningContent>()))
             .Do(_ => throw new SerializationException("test"));
         var systemUnderTest = CreateStandardBusinessLogic(fakeDataAccess: dataAccess, errorManager: errorManager);
-        var content = new FileContent("foo", "bar", "baz");
+        var content = EntityProvider.GetFileContent();
 
         systemUnderTest.RemoveContent(content);
         errorManager.Received(1).LogAndRethrowError(Arg.Any<SerializationException>());
@@ -260,7 +259,7 @@ public class BusinessLogicUt
     {
         var dataAccess = Substitute.For<IDataAccess>();
         var systemUnderTest = CreateStandardBusinessLogic(fakeDataAccess: dataAccess);
-        var content = new LinkContent("foo", "bar");
+        var content = EntityProvider.GetLinkContent();
 
         systemUnderTest.SaveLink(content);
         dataAccess.Received().SaveLink(content);
@@ -275,7 +274,7 @@ public class BusinessLogicUt
         dataAccess.When(x => x.SaveLink(Arg.Any<LinkContent>()))
             .Do(_ => throw new SerializationException("test"));
         var systemUnderTest = CreateStandardBusinessLogic(fakeDataAccess: dataAccess, errorManager: errorManager);
-        var content = new LinkContent("foo", "bar");
+        var content = EntityProvider.GetLinkContent();
 
         systemUnderTest.SaveLink(content);
         errorManager.Received(1).LogAndRethrowError(Arg.Any<SerializationException>());
@@ -520,7 +519,7 @@ public class BusinessLogicUt
     // ANF-ID: [ASE6]
     public void SaveLearningWorld_CallsDataAccess()
     {
-        var learningWorld = new LearningWorld("fa", "a", "f", "f", "f", "f", WorldTheme.CampusAschaffenburg);
+        var learningWorld = EntityProvider.GetLearningWorld();
         var mockDataAccess = Substitute.For<IDataAccess>();
 
         var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
@@ -534,7 +533,7 @@ public class BusinessLogicUt
     // ANF-ID: [ASE6]
     public void SaveLearningWorld_SerializationException_CallsErrorManager()
     {
-        var learningWorld = new LearningWorld("fa", "a", "f", "f", "f", "f", WorldTheme.CampusAschaffenburg);
+        var learningWorld = EntityProvider.GetLearningWorld();
         var mockDataAccess = Substitute.For<IDataAccess>();
         mockDataAccess.When(x => x.SaveLearningWorldToFile(Arg.Any<LearningWorld>(), Arg.Any<string>()))
             .Do(_ => throw new SerializationException());
@@ -566,7 +565,7 @@ public class BusinessLogicUt
     // ANF-ID: [ASE2]
     public void LoadLearningWorld_ReturnsLearningWorld()
     {
-        var learningWorld = new LearningWorld("fa", "a", "f", "f", "f", "f", WorldTheme.CampusAschaffenburg);
+        var learningWorld = EntityProvider.GetLearningWorld();
         var mockDataAccess = Substitute.For<IDataAccess>();
         mockDataAccess.LoadLearningWorld("foobar").Returns(learningWorld);
 
@@ -595,7 +594,7 @@ public class BusinessLogicUt
 
     [Test]
     // ANF-ID: [AWA0036]
-    public  async Task LoadLearningContent_CallsDataAccess()
+    public async Task LoadLearningContent_CallsDataAccess()
     {
         var mockDataAccess = Substitute.For<IDataAccess>();
 
@@ -610,7 +609,7 @@ public class BusinessLogicUt
     // ANF-ID: [AWA0036]
     public async Task LoadLearningContent_ReturnsLearningElement()
     {
-        var learningContent = new FileContent("fa", "a", "");
+        var learningContent = EntityProvider.GetFileContent();
         var mockDataAccess = Substitute.For<IDataAccess>();
         mockDataAccess.LoadLearningContentAsync("foobar").Returns(learningContent);
 
@@ -651,7 +650,7 @@ public class BusinessLogicUt
     // ANF-ID: [AWA0036]
     public async Task LoadLearningContentFromStream_ReturnsLearningElement()
     {
-        var learningContent = new FileContent("filename", "extension", "");
+        var learningContent = EntityProvider.GetFileContent(name: "filename", type: "extension");
         var stream = Substitute.For<MemoryStream>();
         var mockDataAccess = Substitute.For<IDataAccess>();
         mockDataAccess.LoadLearningContentAsync("filename.extension", stream).Returns(learningContent);
@@ -815,7 +814,7 @@ public class BusinessLogicUt
 
     [Test]
     // ANF-ID: [AHO022]
-    public  async Task UploadLearningWorldToBackend_CallsWorldGenerator()
+    public async Task UploadLearningWorldToBackend_CallsWorldGenerator()
     {
         var worldGenerator = Substitute.For<IWorldGenerator>();
         const string filepath = "filepath";
@@ -828,7 +827,7 @@ public class BusinessLogicUt
 
     [Test]
     // ANF-ID: [AHO022]
-    public  async Task UploadLearningWorldToBackend_CallsBackendAccess()
+    public async Task UploadLearningWorldToBackend_CallsBackendAccess()
     {
         const string filepath = "filepath";
         const string atfPath = "atfPath";
@@ -970,41 +969,43 @@ public class BusinessLogicUt
 
         errorManager.Received().LogAndRethrowBackendAccessError(Arg.Any<HttpRequestException>());
     }
-    
+
     // ANF-ID: [ASN0001]
     [Test]
     public void ValidateLearningWorldStructureForExport_CallsValidator()
     {
         var mockValidator = Substitute.For<ILearningWorldStructureValidator>();
         var mockDataAccess = Substitute.For<IDataAccess>();
-        var systemUnderTest = CreateStandardBusinessLogic(learningWorldStructureValidator: mockValidator, fakeDataAccess: mockDataAccess);
+        var systemUnderTest = CreateStandardBusinessLogic(learningWorldStructureValidator: mockValidator,
+            fakeDataAccess: mockDataAccess);
         var world = EntityProvider.GetLearningWorld();
-        var learningContentList = new List<ILearningContent>(){new FileContent("file", "txt", "content")};
+        var learningContentList = new List<ILearningContent>() { new FileContent("file", "txt", "content") };
         mockDataAccess.GetAllContent().Returns(learningContentList);
-        
+
         systemUnderTest.ValidateLearningWorldForExport(world);
 
         mockValidator.Received().ValidateForExport(world, Arg.Is<List<ILearningContent>>(list =>
             list.Count == learningContentList.Count &&
-            list[0] == learningContentList[0])); 
+            list[0] == learningContentList[0]));
     }
-    
+
     // ANF-ID: [AHO22]
     [Test]
     public void ValidateLearningWorldStructureForGeneration_CallsValidator()
     {
         var mockValidator = Substitute.For<ILearningWorldStructureValidator>();
         var mockDataAccess = Substitute.For<IDataAccess>();
-        var systemUnderTest = CreateStandardBusinessLogic(learningWorldStructureValidator: mockValidator, fakeDataAccess: mockDataAccess);
+        var systemUnderTest = CreateStandardBusinessLogic(learningWorldStructureValidator: mockValidator,
+            fakeDataAccess: mockDataAccess);
         var world = EntityProvider.GetLearningWorld();
-        var learningContentList = new List<ILearningContent>(){new FileContent("file", "txt", "content")};
+        var learningContentList = new List<ILearningContent>() { new FileContent("file", "txt", "content") };
         mockDataAccess.GetAllContent().Returns(learningContentList);
-        
+
         systemUnderTest.ValidateLearningWorldForGeneration(world);
 
         mockValidator.Received().ValidateForGeneration(world, Arg.Is<List<ILearningContent>>(list =>
             list.Count == learningContentList.Count &&
-            list[0] == learningContentList[0])); 
+            list[0] == learningContentList[0]));
     }
 
     private BusinessLogic.API.BusinessLogic CreateStandardBusinessLogic(

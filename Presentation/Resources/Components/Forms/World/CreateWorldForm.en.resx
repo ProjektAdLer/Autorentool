@@ -45,9 +45,6 @@
     <data name="CreateWorldForm.Goals.Text" xml:space="preserve">
         <value>Learning outcomes</value>
     </data>
-    <data name="CreateWorldForm.General.Field.EvaluationLink.Text" xml:space="preserve">
-        <value>Link to evaluation</value>
-    </data>
     <data name="CreateWorldForm.SnackbarMessage" xml:space="preserve">
         <value>Learning world created</value>
     </data>
@@ -89,5 +86,26 @@
     </data>
     <data name="CreateWorldForm.Theme.Field.Theme.Text" xml:space="preserve">
         <value>Selection of themes with different theme worlds for the learning world</value>
+    </data>
+    <data name="CreateWorldForm.Finalization.Text" xml:space="preserve">
+        <value>Link to the learning world finalisation</value>
+    </data>
+    <data name="CreateWorldForm.Finalization.Collapsable.Description.Text" xml:space="preserve">
+        <value>In this section, you can enter a link to a specially created online survey, to your university moodle or similar and also formulate a reference text.</value>
+    </data>
+    <data name="CreateWorldForm.Finalization.Tooltip" xml:space="preserve">
+        <value>If you do not specify a link and hint text, the placeholder text is displayed in the 3D learning environment by default.</value>
+    </data>
+    <data name="CreateWorldForm.Finalization.Field.EvaluationLinkText.Placeholder.Text" xml:space="preserve">
+        <value>You have successfully completed all the learning rooms and thus passed the learning world, congratulations!</value>
+    </data>
+    <data name="CreateWorldForm.Finalization.Field.EvaluationLinkName.Placeholder.Text" xml:space="preserve">
+        <value>e.g. online survey</value>
+    </data>
+    <data name="CreateWorldForm.Finalization.Field.EvaluationLink.Placeholder.Text" xml:space="preserve">
+        <value>--- Link to evaluation</value>
+    </data>
+    <data name="CreateWorldForm.Goals.Button" xml:space="preserve">
+        <value>Learning outcome formulation</value>
     </data>
 </root>

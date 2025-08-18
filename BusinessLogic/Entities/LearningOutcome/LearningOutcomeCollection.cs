@@ -2,7 +2,7 @@ using JetBrains.Annotations;
 
 namespace BusinessLogic.Entities.LearningOutcome;
 
-public class LearningOutcomeCollection
+public class LearningOutcomeCollection : ILearningOutcomeCollection, IOriginator
 {
     public LearningOutcomeCollection(List<ILearningOutcome>? learningOutcomes = null)
     {

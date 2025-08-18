@@ -1,6 +1,7 @@
 @using Presentation.PresentationLogic.LearningWorld
 @using Microsoft.Extensions.Localization
 @using System.Diagnostics.CodeAnalysis
+@using BusinessLogic.Entities
 @using Presentation.Components.Forms
 
 <div class="px-4 pb-6">
@@ -18,20 +19,55 @@
     else
     {
         <p class="pl-1 pb-2 cursor-default">
-            @Localizer["LearningOutcomesWorldOverview.Text.Part1"] <span class="font-bold text-adlertextgrey cursor-default">@LearningWorld.Name</span>
+            @Localizer["LearningOutcomesWorldOverview.Text.Part1"] <span
+                class="font-bold text-adlertextgrey cursor-default">@LearningWorld.Name</span>
         </p>
         <div class="max-h-[500px] overflow-y-scroll py-2 bg-adlerbgbright rounded border border-adlergrey-200">
+
+            <Collapsable InitiallyCollapsed="true">
+                <TogglerContent>
+                    @if (context)
+                    {
+                        <MudIcon Icon="@Icons.Material.Filled.KeyboardArrowRight"/>
+                    }
+                    else
+                    {
+                        <MudIcon Icon="@Icons.Material.Filled.KeyboardArrowDown"/>
+                    }
+                </TogglerContent>
+                <ChildContent>
+                    <div class="pl-16">
+                        @foreach (var outcome in LearningWorld.LearningOutcomeCollection.LearningOutcomes)
+                        {
+                            <LearningOutcomeItem
+                                LearningOutcomeCollection="LearningWorld.LearningOutcomeCollection"
+                                LearningOutcome="outcome" DisplayButtons="false" EntityType="typeof(LearningWorld)"/>
+                        }
+                    </div>
+                </ChildContent>
+                <TitleContent>
+                    <div class="flex flex-row gap-2 items-center">
+                        <MudIcon Class="w-6 h-6 2xl:w-8 2xl:h-8" Icon="@SpaceIcon"></MudIcon>
+                        <p class="cursor-default break-words font-bold text-adlertextgrey">@LearningWorld.Name</p>
+                        <p class="cursor-default text-sm text-adlertextgrey opacity-80">
+                            (@LearningWorld.LearningOutcomeCollection.LearningOutcomes.Count)
+                        </p>
+                    </div>
+                </TitleContent>
+            </Collapsable>
+
+
             @foreach (var learningSpace in LearningWorld.LearningSpaces)
             {
                 <Collapsable InitiallyCollapsed="true">
                     <TogglerContent>
                         @if (context)
                         {
-                        <MudIcon Icon="@Icons.Material.Filled.KeyboardArrowRight"/>
+                            <MudIcon Icon="@Icons.Material.Filled.KeyboardArrowRight"/>
                         }
                         else
                         {
-                        <MudIcon Icon="@Icons.Material.Filled.KeyboardArrowDown"/>
+                            <MudIcon Icon="@Icons.Material.Filled.KeyboardArrowDown"/>
                         }
                     </TogglerContent>
                     <ChildContent>
@@ -40,7 +76,8 @@
                             {
                                 <LearningOutcomeItem
                                     LearningOutcomeCollection="learningSpace.LearningOutcomeCollection"
-                                    LearningOutcome="outcome" DisplayButtons="false"/>
+                                    LearningOutcome="outcome" DisplayButtons="false"
+                                    EntityType="typeof(LearningSpace)"/>
                             }
                         </div>
                     </ChildContent>
@@ -48,6 +85,9 @@
                         <div class="flex flex-row gap-2 items-center">
                             <MudIcon Class="w-6 h-6 2xl:w-8 2xl:h-8" Icon="@SpaceIcon"></MudIcon>
                             <p class="cursor-default break-words font-bold text-adlertextgrey">@learningSpace.Name</p>
+                            <p class="cursor-default text-sm text-adlertextgrey opacity-80">
+                                (@learningSpace.LearningOutcomeCollection.LearningOutcomes.Count)
+                            </p>
                         </div>
                     </TitleContent>
                 </Collapsable>
@@ -74,7 +114,7 @@
 
     private bool IsAnyOutcomeInWorld()
     {
-        return LearningWorld.LearningSpaces.Any(x => x.LearningOutcomeCollection.LearningOutcomes.Count() > 0);
+        return LearningWorld.LearningOutcomeCollection.LearningOutcomes.Any() || LearningWorld.LearningSpaces.Any(x => x.LearningOutcomeCollection.LearningOutcomes.Any());
     }
 
 }

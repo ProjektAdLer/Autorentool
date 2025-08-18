@@ -11,7 +11,8 @@ public class LearningWorldPropertyValidator : AbstractValidator<LearningWorld>
 {
     private readonly ILearningWorldNamesProvider _learningWorldNamesProvider;
 
-    public LearningWorldPropertyValidator(ILearningWorldNamesProvider learningWorldNamesProvider, IStringLocalizer<LearningWorldPropertyValidator> localizer)
+    public LearningWorldPropertyValidator(ILearningWorldNamesProvider learningWorldNamesProvider,
+        IStringLocalizer<LearningWorldPropertyValidator> localizer)
     {
         _learningWorldNamesProvider = learningWorldNamesProvider;
         RuleFor(x => x.Name)
@@ -29,10 +30,23 @@ public class LearningWorldPropertyValidator : AbstractValidator<LearningWorld>
             .Length(0, 1200);
         RuleFor(x => x.StoryEnd)
             .Length(0, 1200);
+        RuleFor(x => x.EvaluationLink)
+            .NotEmpty()
+            .When(x => !string.IsNullOrEmpty(x.EvaluationLinkName))
+            .WithMessage(localizer["LearningWorldValidator.EvaluationLink.Required"])
+            .IsHttpOrHttpsUrl(localizer["LearningWorldValidator.EvaluationLink.Valid"]);
+        RuleFor(x => x.EvaluationLinkName)
+            .NotEmpty()
+            .When(x => !string.IsNullOrEmpty(x.EvaluationLink))
+            .WithMessage(localizer["LearningWorldValidator.EvaluationLinkName.Required"])
+            .Length(0, 50);
+        RuleFor(x => x.EvaluationLinkText)
+            .Length(0, 200);
     }
 
     private bool IsUniqueName(Guid id, string name) =>
         UniqueNameHelper.IsUnique(_learningWorldNamesProvider.WorldNames, name, id);
 
-    private bool IsUniqueShortname(Guid id, string name) => name == "" || UniqueNameHelper.IsUnique(_learningWorldNamesProvider.WorldShortnames, name, id);
+    private bool IsUniqueShortname(Guid id, string name) =>
+        name == "" || UniqueNameHelper.IsUnique(_learningWorldNamesProvider.WorldShortnames, name, id);
 }

@@ -8,7 +8,8 @@ public class LearningWorldJson : ILearningWorldJson
     [JsonConstructor]
     public LearningWorldJson(string worldName, string worldUuid, List<ITopicJson> topics,
         List<ILearningSpaceJson> spaces, List<IElementJson> elements, string? worldDescription = null,
-        string[]? worldGoals = null, string? evaluationLink = null, string? enrolmentKey = null,
+        string[]? worldGoals = null, string? evaluationLink = null, string? evaluationLinkName = null,
+        string? evaluationLinkText = null, string? enrolmentKey = null,
         IFrameStoryJson? frameStory = null, string? theme = null)
     {
         WorldName = worldName;
@@ -16,6 +17,8 @@ public class LearningWorldJson : ILearningWorldJson
         WorldDescription = worldDescription ?? "";
         WorldGoals = worldGoals ?? new[] { "" };
         EvaluationLink = evaluationLink ?? "";
+        EvaluationLinkName = evaluationLinkName ?? "";
+        EvaluationLinkText = evaluationLinkText ?? "";
         EnrolmentKey = enrolmentKey ?? "";
         Topics = topics;
         Spaces = spaces;
@@ -25,6 +28,10 @@ public class LearningWorldJson : ILearningWorldJson
     }
 
     public string EvaluationLink { get; set; }
+
+    public string EvaluationLinkName { get; set; }
+
+    public string EvaluationLinkText { get; set; }
 
     public string Theme { get; set; }
 
