@@ -24,7 +24,7 @@
         <value>Login</value>
     </data>
     <data name="DialogContent.LoggedIn.Message" xml:space="preserve">
-        <value>Logged in as</value>
+        <value>Logged in as:</value>
     </data>
     <data name="DialogContent.Field.Password" xml:space="preserve">
         <value>Password</value>

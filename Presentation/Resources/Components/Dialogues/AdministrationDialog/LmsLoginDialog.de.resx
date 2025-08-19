@@ -30,7 +30,7 @@
         <value>Anmelden</value>
     </data>
     <data name="DialogContent.LoggedIn.Message" xml:space="preserve">
-        <value>Erfolgreich angemeldet als</value>
+        <value>Angemeldet als:</value>
     </data>
     <data name="DialogContent.Button.Logout" xml:space="preserve">
         <value>Abmelden</value>
