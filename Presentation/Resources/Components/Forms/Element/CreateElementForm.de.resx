@@ -225,4 +225,7 @@ Die dazugehörigen Slots sind in jedem Grundriss an der Position der Eingangs- u
     <data name="CreateAdaptivityElementForm.Fields.Collapsable.Tasks.Button.Task.More" xml:space="preserve">
         <value>Aufgaben</value>
     </data>
+    <data name="CreateAdaptivityElementForm.Fields.Collapsable.Tasks.Button.Task.Mandatory" xml:space="preserve">
+        <value>verpflichtend</value>
+    </data>
 </root>

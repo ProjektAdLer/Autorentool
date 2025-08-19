@@ -37,7 +37,7 @@
 
     <Fields>
         <div
-            class="pl-4 2xl:pl-4 2xl:pr-4 overflow-y-scroll top-28 h-[75%] 2xl:h-[85%] absolute flex flex-col w-[100%] mt-2 border-t border-dotted">
+            class="pl-4 2xl:pl-4 2xl:pr-4 overflow-y-scroll top-28 h-[75%] 2xl:h-[90%] absolute flex flex-col w-[100%] mt-2 border-t border-dotted">
             <Collapsable Title=@Localizer["EditElementForm.Fields.Collapsable.General.Title"]
                          InitiallyCollapsed="false">
                 <div class="rounded-lg w-4/4 px-6">
@@ -226,6 +226,8 @@
                                 var content = (AdaptivityContentFormModel?)FormDataContainer.FormModel.LearningContent;
                                 var tasks = content?.Tasks ?? new List<IAdaptivityTaskViewModel>();
                                 var count = tasks.Count;
+                                var mandatoryCount = tasks.Count(x => x.MinimumRequiredDifficulty != null);
+                                
                                 string aufgabenLabel = count == 1
                                     ? Localizer["EditAdaptivityElementForm.Fields.Collapsable.Tasks.Button.Task.One"]
                                     : Localizer["EditAdaptivityElementForm.Fields.Collapsable.Tasks.Button.Task.More"];
@@ -234,16 +236,25 @@
                             <p class="text-xs text-adlerblue-600 cursor-default">
                                 @count 
                                 <span class="text-adlergrey-800">
-                                    @aufgabenLabel:
+                                    @aufgabenLabel
+                                </span>
+                                <span class="text-adlergrey-800">
+                                    (@Localizer["EditAdaptivityElementForm.Fields.Collapsable.Tasks.Button.Task.Mandatory"]: @mandatoryCount) 
                                 </span>
                             </p>
 
                             @if (count > 0)
                             {
-                                <ul class="pl-2 py-2 mt-0 border border-adlergrey-300 rounded w-full list-disc list-inside cursor-default">
+                                <ul class="pl-2 py-2 mt-0 border border-adlergrey-300 rounded w-full list-disc list-inside cursor-default max-h-40 overflow-y-auto">
                                     @foreach (var task in tasks)
                                     {
-                                        <li class="text-xs">@task.Name</li>
+                                        var isMandatory = task.MinimumRequiredDifficulty != null;
+                                        <li class="text-xs">
+                                            @task.Name
+                                            <span class="ml-1 @(isMandatory ? "text-adlergrey-800" : "italic text-adlergrey-300")">
+                                                (@(isMandatory ? @Localizer["EditAdaptivityElementForm.Fields.Collapsable.Tasks.Button.Task.Mandatory"] : "optional"))
+                                            </span>
+                                        </li>
                                     }
                                 </ul>
                             }

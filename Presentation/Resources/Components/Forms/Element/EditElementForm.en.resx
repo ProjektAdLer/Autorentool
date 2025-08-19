@@ -210,4 +210,10 @@ The corresponding slots can be found in each floor plan at the position of the e
     <data name="EditAdaptivityElementForm.Fields.Collapsable.Tasks.Button.NoTask" xml:space="preserve">
         <value>No tasks added yet.</value>
     </data>
+    <data name="EditAdaptivityElementForm.Fields.Collapsable.Tasks.Button.Task.Mandatory" xml:space="preserve">
+        <value>mandatory</value>
+    </data>
+    <data name="EditAdaptivityElementForm.Fields.Collapsable.Tasks.Button.Task.Optional" xml:space="preserve">
+        <value />
+    </data>
 </root>

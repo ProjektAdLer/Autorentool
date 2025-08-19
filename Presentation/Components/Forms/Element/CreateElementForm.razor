@@ -29,7 +29,7 @@
           SnackbarMessage="@GetSnackbarMessage()"
           FormDataContainer="FormDataContainer">
     <Fields>
-        <div class="pl-4 2xl:pl-4 2xl:pr-4 overflow-y-scroll top-28 h-[75%] 2xl:h-[85%] absolute flex flex-col w-[100%] mt-2 border-t border-dotted">
+        <div class="pl-4 2xl:pl-4 2xl:pr-4 overflow-y-scroll top-28 h-[75%] 2xl:h-[90%] absolute flex flex-col w-[100%] mt-2 border-t border-dotted">
             <Collapsable Title=@Localizer["CreateElementForm.Fields.Collapsable.General.Title"]
                          InitiallyCollapsed="false">
                 <div class="rounded-lg w-4/4 px-6">
@@ -217,6 +217,8 @@
                                 var content = (AdaptivityContentFormModel?)FormDataContainer.FormModel.LearningContent;
                                 var tasks = content?.Tasks ?? new List<IAdaptivityTaskViewModel>();
                                 var count = tasks.Count;
+                                var mandatoryCount = tasks.Count(x => x.MinimumRequiredDifficulty != null);
+                                
                                 string aufgabenLabel = count == 1 
                                     ? Localizer["CreateAdaptivityElementForm.Fields.Collapsable.Tasks.Button.Task.One"] 
                                     : Localizer["CreateAdaptivityElementForm.Fields.Collapsable.Tasks.Button.Task.More"];
@@ -225,27 +227,20 @@
                             <p class="text-xs text-adlerblue-600 cursor-default">
                                 @count 
                                 <span class="text-adlergrey-800">
-                                    @aufgabenLabel:
+                                    @aufgabenLabel
+                                </span>
+                                <span class="text-adlergrey-800">
+                                    (@Localizer["CreateAdaptivityElementForm.Fields.Collapsable.Tasks.Button.Task.Mandatory"]: @mandatoryCount) 
                                 </span>
                             </p>
 
-                            @if (count > 0)
-                            {
-                                <ul class="pl-2 py-2 mt-0 border border-adlergrey-300 rounded w-full list-disc list-inside">
-                                    @foreach (var task in tasks)
-                                    {
-                                        <li class="text-xs">@task.Name</li>
-                                    }
-                                </ul>
-                            }
-                            else
-                            {
-                                <div class="pl-2 py-2 mt-0 border border-adlergrey-300 rounded w-full cursor-default">
-                                    <p class="text-xs italic text-adlergrey-600">
-                                        @Localizer["CreateAdaptivityElementForm.Fields.Collapsable.Tasks.Button.NoTask"]
-                                    </p>
-                                </div>
-                            }
+                            
+                            <div class="pl-2 py-2 mt-0 border border-adlergrey-300 rounded w-full cursor-default">
+                                <p class="text-xs italic text-adlergrey-600">
+                                    @Localizer["CreateAdaptivityElementForm.Fields.Collapsable.Tasks.Button.NoTask"]
+                                </p>
+                            </div>
+                            
                         </div>
                     </Collapsable>
 
