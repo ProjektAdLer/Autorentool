@@ -30,6 +30,28 @@
     <ItemGroup>
         <EditorConfigFiles Remove=".editorconfig" />
     </ItemGroup>
+    <ItemGroup>
+      <EmbeddedResource Update="Resources\H5pPlayerText.de.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>H5pPlayerText.de.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\H5pPlayerText.en.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>H5pPlayerText.en.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+    </ItemGroup>
+    <ItemGroup>
+      <Compile Update="Resources\H5pPlayerText.de.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>H5pPlayerText.de.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\H5pPlayerText.en.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>H5pPlayerText.en.resx</DependentUpon>
+      </Compile>
+    </ItemGroup>
  
 
 </Project>
