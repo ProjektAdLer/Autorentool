@@ -141,7 +141,7 @@
         <value>Delete text block</value>
     </data>
     <data name="EditStoryElementForm.Fields.Collapsable.Story.AddStory" xml:space="preserve">
-        <value>Add new text block</value>
+        <value>Add text block</value>
     </data>
     <data name="EditElementForm.Story.Tooltip" xml:space="preserve">
         <value>The text that you formulate within a text block for your story is displayed to the students on a slide in the subsequent 3D learning environment. &lt;br&gt; &lt;br&gt; If you add another text block with new content to your story, this text block will be displayed in a subsequent slide in the 3D learning environment. &lt;br&gt; &lt;br&gt; For example, if you use three text blocks within a story element, the text contained therein will be displayed to the students in the 3D learning environment in three consecutive slides.</value>

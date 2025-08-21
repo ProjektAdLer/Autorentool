@@ -147,13 +147,13 @@
         <value>Den Text, den Sie innerhalb eines Textblocks für Ihre Story formulieren, wird den Studierenden in der späteren 3D-Lernumgebung auf einer Slide dargestellt. &lt;br&gt; &lt;br&gt; Fügen Sie einen weiteren Textblock mit neuem Inhalt zu Ihrer Story hinzu, wird dieser Textblock in der 3D-Lernumgebung in einer nachfolgenden Slide angezeigt. &lt;br&gt; &lt;br&gt; Verwenden Sie also z.B. drei Textblöcke innerhalb eines Storyelements, wird der darin enthaltene Text den Studierenden in der 3D-Lernumgebung in drei aufeinanderfolgenden Slides angezeigt.</value>
     </data>
     <data name="CreateElementForm.AddStoryText" xml:space="preserve">
-        <value>Neuen Textblock hinzufügen</value>
+        <value>Textblock hinzufügen</value>
     </data>
     <data name="CreateStoryElementForm.Fields.Collapsable.Story.DeleteStory" xml:space="preserve">
         <value>Textblock löschen</value>
     </data>
     <data name="CreateStoryElementForm.Fields.Collapsable.Story.AddStory" xml:space="preserve">
-        <value>Neuen Textblock hinzufügen</value>
+        <value>Textblock hinzufügen</value>
     </data>
     <data name="CreateStoryElementForm.Fields.Collapsable.StoryText.Slide" xml:space="preserve">
         <value>Textblock </value>

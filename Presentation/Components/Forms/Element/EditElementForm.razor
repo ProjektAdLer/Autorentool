@@ -241,32 +241,34 @@
                             {
                                 @for (var i = 0; i < StoryContentModel.StoryText.Count; i++)
                                 {
-                                    <p class="text-xs px-6 pt-2 font-bold cursor-default">@Localizer["EditStoryElementForm.Fields.Collapsable.StoryText.Slide"]@(i + 1)</p>
                                     var x = i;
+                                    <div class="flex flex-row px-6 items-center justify-between">
+                                        <p class="text-xs pt-2 font-bold cursor-default">@Localizer["EditStoryElementForm.Fields.Collapsable.StoryText.Slide"]@(i + 1)</p>
+                                        <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                                                       OnClick="@(() => StoryContentModel.StoryText.RemoveAt(x))"
+                                                       title=@Localizer["EditStoryElementForm.Fields.Collapsable.Story.DeleteStory"]
+                                                       Size="Size.Small">
+                                        </MudIconButton>
+                                    </div>
                                     <div class="flex flex-col">
-                                        <div class="flex flex-row items-center px-6">
-                                            <MudTextField T="string"
-                                                          Variant="Variant.Outlined" Lines="5"
-                                                          @bind-Value="@(StoryContentModel.StoryText[x])"
-                                                          DebounceInterval="DebounceInterval"/>
-                                            <MudIconButton Icon="@Icons.Material.Filled.Delete"
-                                                           OnClick="@(() => StoryContentModel.StoryText.RemoveAt(x))"
-                                                           title=@Localizer["EditStoryElementForm.Fields.Collapsable.Story.DeleteStory"]
-                                                           Size="Size.Small">
-                                            </MudIconButton>
+                                        <MudTextField T="string"
+                                                      Class="px-6"
+                                                      Variant="Variant.Outlined"
+                                                      Lines="5"
+                                                      @bind-Value="@(StoryContentModel.StoryText[x])"
+                                                      DebounceInterval="DebounceInterval"/>
+                                        <div class="flex flex-row items-center justify-between px-6">
+                                            <p class="text-xs text-adlergrey-500 cursor-default">@($"{StoryContentModel.StoryText[x].Length}/400") @Localizer["EditStoryElementForm.Collapsable.Story.Length"]</p>
+                                            <MudButton StartIcon="@Icons.Material.Filled.Add"
+                                                       OnClick="@(() => StoryContentModel.StoryText.Add(""))"
+                                                       IconSize="Size.Small"
+                                                       Class=" normal-case text-adlergrey-500 text-xs"
+                                                       title=@Localizer["EditStoryElementForm.Fields.Collapsable.Story.AddStory"]>
+                                                @Localizer["EditStoryElementForm.Fields.Collapsable.Story.AddStory"]
+                                            </MudButton>
                                         </div>
-                                        <p class="px-6 text-adlergrey-500 cursor-default">@($"{StoryContentModel.StoryText[x].Length}/400") @Localizer["EditStoryElementForm.Collapsable.Story.Length"]</p>
                                     </div>
                                 }
-
-                                <div class="flex justify-center items-center">
-                                    <MudIconButton Icon="@Icons.Material.Filled.Add"
-                                                   OnClick="@(() => StoryContentModel.StoryText.Add(""))"
-                                                   Size="Size.Small"
-                                                   Class="p-2"
-                                                   title=@Localizer["EditStoryElementForm.Fields.Collapsable.Story.AddStory"]>
-                                    </MudIconButton>
-                                </div>
                             }
                         </PseudoFormFieldGrouping>
                     </Collapsable>
@@ -276,7 +278,7 @@
             }
 
             <Collapsable Title=@Localizer["EditElementForm.Fields.Collapsable.3DRepresentation.Title"]
-                         InitiallyCollapsed="true">
+                         InitiallyCollapsed="false">
                 <div class="rounded-lg w-4/4 px-6 pt-3">
                     <div
                         class="@(ElementMode != ElementMode.Adaptivity ? "overflow-y-scroll h-52 border-adlergrey-200 border rounded" : "")">
