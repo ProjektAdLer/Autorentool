@@ -35,7 +35,7 @@
 
     <Fields>
         <div
-            class="pl-4 2xl:pl-4 2xl:pr-4 overflow-y-scroll top-28 h-[75%] 2xl:h-[85%] absolute flex flex-col w-[100%] mt-2 border-t border-dotted">
+            class="pl-4 2xl:pl-4 2xl:pr-4 overflow-y-scroll top-28 h-[75%] 2xl:h-[75%] absolute flex flex-col w-[100%] mt-2 border-t border-dotted">
             <Collapsable Title=@Localizer["EditElementForm.Fields.Collapsable.General.Title"]
                          InitiallyCollapsed="false">
                 <div class="rounded-lg w-4/4 px-6">
@@ -290,16 +290,6 @@
                     @if (ElementMode == ElementMode.Story && StoryContentModel != null)
                     {
                         <p class="text-xs font-bold pt-3 cursor-default">
-                            @Localizer["EditElementForm.Fields.Collapsable.3DRepresentation.Field.ExitAfterStorySequence.Title"]
-                        </p>
-                        <LabelledSwitch @bind-IsRightSelected="@(StoryContentModel.ExitAfterStorySequence)"
-                                        IsLeftSelected="null"
-                                        LeftLabel="@Localizer["EditElementForm.Fields.Collapsable.3DRepresentation.Field.ExitAfterStorySequence.Stay"]"
-                                        LeftLabelIconSvg="@CustomIcons.SpaceStay"
-                                        RightLabel="@Localizer["EditElementForm.Fields.Collapsable.3DRepresentation.Field.ExitAfterStorySequence.Leave"]"
-                                        RightLabelIconSvg="@CustomIcons.SpaceLeave"/>
-
-                        <p class="text-xs font-bold pt-3 cursor-default">
                             @Localizer["EditElementForm.Fields.Collapsable.3DRepresentation.Field.NpcName.Title"]
                         </p>
                         <MudTextField @bind-Value="StoryContentModel.NpcName"
@@ -312,6 +302,17 @@
                                        ElementModel="FormDataContainer.FormModel.ElementModel"
                                        Label="@Localizer["EditElementForm.Fields.Collapsable.3DRepresentation.Field.NpcMood.Text"]">
                         </NpcMoodSelect>
+                        <p class="text-xs font-bold pt-3 cursor-default">
+                            @Localizer["EditElementForm.Fields.Collapsable.3DRepresentation.Field.ExitAfterStorySequence.Title"]
+                        </p>
+                        <div class="bg-adlerbggradientto rounded my-1 p-1">
+                            <LabelledSwitch @bind-IsRightSelected="@(StoryContentModel.ExitAfterStorySequence)"
+                                            IsLeftSelected="null"
+                                            LeftLabel="@Localizer["EditElementForm.Fields.Collapsable.3DRepresentation.Field.ExitAfterStorySequence.Stay"]"
+                                            LeftLabelIconSvg="@CustomIcons.SpaceStay"
+                                            RightLabel="@Localizer["EditElementForm.Fields.Collapsable.3DRepresentation.Field.ExitAfterStorySequence.Leave"]"
+                                            RightLabelIconSvg="@CustomIcons.SpaceLeave"/>
+                        </div>
                     }
                 </div>
             </Collapsable>

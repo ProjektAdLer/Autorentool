@@ -1,19 +1,19 @@
 <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
-    <MudText Color="@((bool)IsLeftSelected! ? Color.Info : Color.Dark)">@LeftLabel</MudText>
-    @if (IconIsSvg(LeftLabelIconSvg))
-    {
-        <MudIcon Class="w-5 h-5 drop-shadow opacity-60" Icon="@LeftLabelIconSvg"/>
-    }
-    <MudSwitch Value="@((bool)IsRightSelected!)"
-               ValueChanged="@(async (bool v) => await OnValueChanged(v))"
-               Color="Color.Info"
-               UnCheckedColor="Color.Dark"
-               Style="margin-right: 0; margin-left: 2px"/>
-    @if (IconIsSvg(RightLabelIconSvg))
-    {
-        <MudIcon Class="w-5 h-5 drop-shadow opacity-60" Icon="@RightLabelIconSvg"/>
-    }
-    <MudText Color="@((bool)IsRightSelected! ? Color.Info : Color.Dark)">@RightLabel</MudText>
+        <MudText Class="flex text-center text-xs 2xl:text-sm" Color="@((bool)IsLeftSelected! ? Color.Info : Color.Dark)">@LeftLabel</MudText>
+        @if (IconIsSvg(LeftLabelIconSvg))
+        {
+            <MudIcon Class="w-5 h-5 drop-shadow opacity-60" Icon="@LeftLabelIconSvg"/>
+        }
+        <MudSwitch Value="@((bool)IsRightSelected!)"
+                   ValueChanged="@(async (bool v) => await OnValueChanged(v))"
+                   Color="Color.Info"
+                   UnCheckedColor="Color.Info"
+                   Style="margin-right: 0; margin-left: 2px"/>
+        @if (IconIsSvg(RightLabelIconSvg))
+        {
+            <MudIcon Class="w-5 h-5 drop-shadow opacity-60" Icon="@RightLabelIconSvg"/>
+        }
+        <MudText Class="flex items-center text-center text-xs 2xl:text-sm" Color="@((bool)IsRightSelected! ? Color.Info : Color.Dark)">@RightLabel</MudText>
 </MudStack>
 
 
