@@ -466,11 +466,10 @@
         var parameters = new DialogParameters
         {
             {
-                nameof(LearningOutcomesOverview.LearningOutcomeCollection), SelectedViewModelsProvider.LearningWorld!.LearningOutcomeCollection
-            },
-            { nameof(LearningOutcomesOverview.EntityType), nameof(BusinessLogic.Entities.LearningWorld) }
+                nameof(LearningOutcomesWorldOverview.LearningWorld), SelectedViewModelsProvider.LearningWorld
+            }
         };
-        DialogService.ShowAsync<LearningOutcomesOverview>("", parameters, options);
+        DialogService.ShowAsync<LearningOutcomesWorldOverview>("", parameters, options);
     }
 
     private void OpenAdministrationDialog()
