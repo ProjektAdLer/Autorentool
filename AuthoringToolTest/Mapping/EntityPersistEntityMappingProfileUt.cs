@@ -39,6 +39,7 @@ public class EntityPersistEntityMappingProfileUt
     private const string Filepath = "bar/baz/buz.txt";
     private const string NameNpc = "npcName";
     private const NpcMood MoodNpc = NpcMood.Welcome;
+    private const bool ExitAfterStorySequence = true;
     private static readonly List<string> ConfigureStoryText = new() { "storyText1", "storyText2", "storyText3" };
     private const LearningElementDifficultyEnum Difficulty = LearningElementDifficultyEnum.Easy;
     private const ElementModel SelectedElementModel = ElementModel.l_h5p_slotmachine_1;
@@ -70,6 +71,7 @@ public class EntityPersistEntityMappingProfileUt
     private const string NewFilepath = "/foo/bar/baz.txt";
     private const string NewNameNpc = "newNpcName";
     private const NpcMood NewMoodNpc = NpcMood.Shocked;
+    private const bool NewExitAfterStorySequence = false;
 
     private static readonly List<string> ConfigureNewStoryText =
         new() { "NewStoryText1", "NewStoryText2", "NewStoryText3" };
@@ -404,7 +406,9 @@ public class EntityPersistEntityMappingProfileUt
                 ElementModel.l_h5p_slotmachine_1, null, workload: Workload, points: Points, positionX: PositionX,
                 positionY: PositionY);
         var storyElement1 =
-            new LearningElement(Name, new StoryContent(Name, false, ConfigureStoryText, NameNpc, MoodNpc), Description,
+            new LearningElement(Name,
+                new StoryContent(Name, false, ConfigureStoryText, NameNpc, MoodNpc, ExitAfterStorySequence),
+                Description,
                 Goals, Difficulty,
                 ElementModel.l_h5p_slotmachine_1, null, workload: Workload, points: Points, positionX: PositionX,
                 positionY: PositionY);
@@ -478,7 +482,8 @@ public class EntityPersistEntityMappingProfileUt
                         {
                             0,
                             new LearningElementPe(NewName,
-                                new StoryContentPe(NewName, false, ConfigureNewStoryText, NewNameNpc, NewMoodNpc),
+                                new StoryContentPe(NewName, false, ConfigureNewStoryText, NewNameNpc, NewMoodNpc,
+                                    NewExitAfterStorySequence),
                                 NewDescription, NewGoals,
                                 NewDifficulty, NewSelectedElementModel, NewWorkload, NewPoints)
                         }
@@ -701,7 +706,7 @@ public class EntityPersistEntityMappingProfileUt
 
     private static StoryContent GetTestableStoryContent()
     {
-        return new StoryContent(Name, false, ConfigureStoryText, NameNpc, MoodNpc);
+        return new StoryContent(Name, false, ConfigureStoryText, NameNpc, MoodNpc, ExitAfterStorySequence);
     }
 
     private static FileContentPe GetTestableNewContentPersistEntity()
@@ -711,7 +716,8 @@ public class EntityPersistEntityMappingProfileUt
 
     private static StoryContentPe GetTestableNewStoryContentPersistEntity()
     {
-        return new StoryContentPe(NewName, false, ConfigureNewStoryText, NewNameNpc, NewMoodNpc);
+        return new StoryContentPe(NewName, false, ConfigureNewStoryText, NewNameNpc, NewMoodNpc,
+            NewExitAfterStorySequence);
     }
 
     private static LearningElement GetTestableElementWithParent(LearningSpace parent)
@@ -1003,6 +1009,8 @@ public class EntityPersistEntityMappingProfileUt
                         Is.EqualTo(useNewFields ? ConfigureNewStoryText : ConfigureStoryText));
                     Assert.That(content.NpcName, Is.EqualTo(useNewFields ? NewNameNpc : NameNpc));
                     Assert.That(content.NpcMood, Is.EqualTo(useNewFields ? NewMoodNpc : MoodNpc));
+                    Assert.That(content.ExitAfterStorySequence,
+                        Is.EqualTo(useNewFields ? NewExitAfterStorySequence : ExitAfterStorySequence));
                 });
                 break;
             case StoryContentPe content:
@@ -1013,6 +1021,8 @@ public class EntityPersistEntityMappingProfileUt
                         Is.EqualTo(useNewFields ? ConfigureNewStoryText : ConfigureStoryText));
                     Assert.That(content.NpcName, Is.EqualTo(useNewFields ? NewNameNpc : NameNpc));
                     Assert.That(content.NpcMood, Is.EqualTo(useNewFields ? NewMoodNpc : MoodNpc));
+                    Assert.That(content.ExitAfterStorySequence,
+                        Is.EqualTo(useNewFields ? NewExitAfterStorySequence : ExitAfterStorySequence));
                 });
                 break;
             default:

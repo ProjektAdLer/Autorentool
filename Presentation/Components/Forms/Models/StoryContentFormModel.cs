@@ -13,16 +13,14 @@ public class StoryContentFormModel : ILearningContentFormModel
         StoryText = new List<string>();
         NpcName = "";
         NpcMood = NpcMood.Welcome;
+        ExitAfterStorySequence = false;
     }
 
     public List<string> StoryText { get; set; }
 
     public string NpcName { get; set; }
-    public NpcMood NpcMood
-    {
-        get;
-        set;
-    }
+    public NpcMood NpcMood { get; set; }
 
     public string Name { get; set; }
+    public bool ExitAfterStorySequence { get; set; }
 }
