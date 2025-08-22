@@ -1,3 +1,4 @@
+using Presentation.PresentationLogic.LearningOutcome;
 using Shared.Theme;
 
 namespace Presentation.Components.Forms.Models;
@@ -11,9 +12,11 @@ public class LearningWorldFormModel
         Authors = "";
         Language = "";
         Description = "";
-        Goals = "";
+        LearningOutcomeCollection = new LearningOutcomeCollectionViewModel();
         WorldTheme = default;
         EvaluationLink = "";
+        EvaluationLinkName = "";
+        EvaluationLinkText = "";
         EnrolmentKey = "";
         StoryStart = "";
         StoryEnd = "";
@@ -25,9 +28,11 @@ public class LearningWorldFormModel
     public string Authors { get; set; }
     public string Language { get; set; }
     public string Description { get; set; }
-    public string Goals { get; set; }
+    public LearningOutcomeCollectionViewModel LearningOutcomeCollection { get; set; }
     public WorldTheme WorldTheme { get; set; }
     public string EvaluationLink { get; set; }
+    public string EvaluationLinkName { get; set; }
+    public string EvaluationLinkText { get; set; }
     public string EnrolmentKey { get; set; }
     public string StoryStart { get; set; }
     public string StoryEnd { get; set; }

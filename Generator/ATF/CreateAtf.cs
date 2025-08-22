@@ -10,6 +10,7 @@ using PersistEntities.LearningContent;
 using PersistEntities.LearningContent.Action;
 using PersistEntities.LearningContent.Question;
 using PersistEntities.LearningContent.Story;
+using PersistEntities.LearningOutcome;
 using Shared;
 using Shared.Adaptivity;
 using Shared.Configuration;
@@ -208,8 +209,10 @@ public class CreateAtf : ICreateAtf
         LearningWorldJson.WorldName = learningWorld.Name;
         LearningWorldJson.WorldUUID = learningWorld.Id.ToString();
         LearningWorldJson.WorldDescription = learningWorld.Description;
-        LearningWorldJson.WorldGoals = learningWorld.Goals.Split("\n");
+        LearningWorldJson.WorldGoals = learningWorld.LearningOutcomeCollection.OutcomesToStringArray();
         LearningWorldJson.EvaluationLink = learningWorld.EvaluationLink;
+        LearningWorldJson.EvaluationLinkName = learningWorld.EvaluationLinkName;
+        LearningWorldJson.EvaluationLinkText = learningWorld.EvaluationLinkText;
         LearningWorldJson.EnrolmentKey = learningWorld.EnrolmentKey;
         LearningWorldJson.Theme = learningWorld.WorldTheme.ToString();
     }
@@ -256,16 +259,7 @@ public class CreateAtf : ICreateAtf
 
             AssignTopicToSpace(space, learningSpaceId);
 
-            string[] spaceGoals;
-
-            spaceGoals = new string[space.LearningOutcomeCollection.LearningOutcomes.Count];
-            var index = 0;
-
-            foreach (var learningOutcome in space.LearningOutcomeCollection.LearningOutcomes)
-            {
-                spaceGoals[index] = learningOutcome.GetOutcome();
-                index++;
-            }
+            var spaceGoals = space.LearningOutcomeCollection.OutcomesToStringArray();
 
             var spaceStoryJson = GetSpaceStoryJson(space);
 
@@ -304,7 +298,8 @@ public class CreateAtf : ICreateAtf
             introStoryJson = new StoryElementJson(((StoryContentPe)introStory.LearningContent).StoryText.ToArray(),
                 ElementModelHelper.GetAtfString(introStory.ElementModel),
                 ((StoryContentPe)introStory.LearningContent).NpcMood.ToString().ToLower(),
-                ((StoryContentPe)introStory.LearningContent).NpcName);
+                ((StoryContentPe)introStory.LearningContent).NpcName,
+                ((StoryContentPe)introStory.LearningContent).ExitAfterStorySequence);
         }
 
         if (storyElements.TryGetValue(1, out var outroStory))
@@ -312,7 +307,8 @@ public class CreateAtf : ICreateAtf
             outroStoryJson = new StoryElementJson(((StoryContentPe)outroStory.LearningContent).StoryText.ToArray(),
                 ElementModelHelper.GetAtfString(outroStory.ElementModel),
                 ((StoryContentPe)outroStory.LearningContent).NpcMood.ToString().ToLower(),
-                ((StoryContentPe)outroStory.LearningContent).NpcName);
+                ((StoryContentPe)outroStory.LearningContent).NpcName,
+                ((StoryContentPe)outroStory.LearningContent).ExitAfterStorySequence);
         }
 
         return new SpaceStoryJson(introStoryJson, outroStoryJson);

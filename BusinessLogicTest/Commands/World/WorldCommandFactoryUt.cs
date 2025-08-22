@@ -32,8 +32,10 @@ public class WorldCommandFactoryUt
         var language = "WorldLanguage";
         var description = "WorldDescription";
         var evaluationLink = "WorldEvaluationLink";
+        var evaluationLinkName = "WorldEvaluationLinkName";
+        var evaluationLinkText = "WorldEvaluationLinkText";
         var enrolmentKey = "WorldEnrolmentKey";
-        var goals = "WorldGoals";
+        var learningOutcomeCollection = EntityProvider.GetLearningOutcomeCollection();
         var theme = WorldTheme.CampusAschaffenburg;
         var storyStart = "WorldStoryStart";
         var storyEnd = "WorldStoryEnd";
@@ -41,7 +43,9 @@ public class WorldCommandFactoryUt
 
         // Act
         var result = _factory.GetCreateCommand(authoringToolWorkspace, name, shortname, authors, language,
-            description, goals,theme, evaluationLink, enrolmentKey, storyStart, storyEnd, mappingAction);
+            description, learningOutcomeCollection, theme, evaluationLink, evaluationLinkName, evaluationLinkText, enrolmentKey, storyStart,
+            storyEnd,
+            mappingAction);
 
         // Assert
         Assert.That(result, Is.InstanceOf<CreateLearningWorld>());
@@ -54,8 +58,11 @@ public class WorldCommandFactoryUt
             Assert.That(resultCasted.LearningWorld.Authors, Is.EqualTo(authors));
             Assert.That(resultCasted.LearningWorld.Language, Is.EqualTo(language));
             Assert.That(resultCasted.LearningWorld.Description, Is.EqualTo(description));
-            Assert.That(resultCasted.LearningWorld.Goals, Is.EqualTo(goals));
+            Assert.That(resultCasted.LearningWorld.LearningOutcomeCollection, Is.EqualTo(learningOutcomeCollection));
+            Assert.That(resultCasted.LearningWorld.WorldTheme, Is.EqualTo(theme));
             Assert.That(resultCasted.LearningWorld.EvaluationLink, Is.EqualTo(evaluationLink));
+            Assert.That(resultCasted.LearningWorld.EvaluationLinkName, Is.EqualTo(evaluationLinkName));
+            Assert.That(resultCasted.LearningWorld.EvaluationLinkText, Is.EqualTo(evaluationLinkText));
             Assert.That(resultCasted.LearningWorld.EnrolmentKey, Is.EqualTo(enrolmentKey));
             Assert.That(resultCasted.LearningWorld.StoryStart, Is.EqualTo(storyStart));
             Assert.That(resultCasted.LearningWorld.StoryEnd, Is.EqualTo(storyEnd));
@@ -120,8 +127,10 @@ public class WorldCommandFactoryUt
         var language = "NewLanguage";
         var description = "NewDescription";
         var evaluationLink = "NewEvaluationLink";
+        var evaluationLinkName = "NewEvaluationLinkName";
+        var evaluationLinkText = "NewEvaluationLinkText";
         var enrolmentKey = "NewEnrolmentKey";
-        var goals = "NewGoals";
+        var learningOutcomeCollection = EntityProvider.GetLearningOutcomeCollection();
         var theme = WorldTheme.CampusAschaffenburg;
         var storyStart = "NewStoryStart";
         var storyEnd = "NewStoryEnd";
@@ -129,7 +138,9 @@ public class WorldCommandFactoryUt
 
         // Act
         var result = _factory.GetEditCommand(learningWorld, name, shortname, authors, language,
-            description, goals,theme, evaluationLink, enrolmentKey, storyStart, storyEnd, mappingAction);
+            description, learningOutcomeCollection, theme, evaluationLink, evaluationLinkName, evaluationLinkText, enrolmentKey, storyStart,
+            storyEnd,
+            mappingAction);
 
         // Assert
         Assert.That(result, Is.InstanceOf<EditLearningWorld>());
@@ -142,8 +153,11 @@ public class WorldCommandFactoryUt
             Assert.That(resultCasted.Authors, Is.EqualTo(authors));
             Assert.That(resultCasted.Language, Is.EqualTo(language));
             Assert.That(resultCasted.Description, Is.EqualTo(description));
-            Assert.That(resultCasted.Goals, Is.EqualTo(goals));
+            Assert.That(resultCasted.LearningOutcomeCollection, Is.EqualTo(learningOutcomeCollection));
+            Assert.That(resultCasted.WorldTheme, Is.EqualTo(theme));
             Assert.That(resultCasted.EvaluationLink, Is.EqualTo(evaluationLink));
+            Assert.That(resultCasted.EvaluationLinkName, Is.EqualTo(evaluationLinkName));
+            Assert.That(resultCasted.EvaluationLinkText, Is.EqualTo(evaluationLinkText));
             Assert.That(resultCasted.EnrolmentKey, Is.EqualTo(enrolmentKey));
             Assert.That(resultCasted.StoryStart, Is.EqualTo(storyStart));
             Assert.That(resultCasted.StoryEnd, Is.EqualTo(storyEnd));

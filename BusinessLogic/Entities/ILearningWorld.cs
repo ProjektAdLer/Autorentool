@@ -1,4 +1,5 @@
-﻿using Shared.Theme;
+﻿using BusinessLogic.Entities.LearningOutcome;
+using Shared.Theme;
 
 namespace BusinessLogic.Entities;
 
@@ -13,7 +14,7 @@ public interface ILearningWorld
     string Shortname { get; set; }
     string Authors { get; set; }
     string Language { get; set; }
-    string Goals { get; set; }
+    LearningOutcomeCollection LearningOutcomeCollection { get; set; }
     WorldTheme WorldTheme { get; set; }
     string SavePath { get; set; }
     ICollection<ILearningElement> UnplacedLearningElements { get; set; }
@@ -22,6 +23,8 @@ public interface ILearningWorld
     string Name { get; set; }
     bool InternalUnsavedChanges { get; }
     string EvaluationLink { get; set; }
+    string EvaluationLinkName { get; set; }
+    string EvaluationLinkText { get; set; }
     string EnrolmentKey { get; set; }
     string StoryStart { get; set; }
     string StoryEnd { get; set; }

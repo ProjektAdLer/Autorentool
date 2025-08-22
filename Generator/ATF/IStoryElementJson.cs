@@ -7,6 +7,7 @@ public interface IStoryElementJson
 {
     string[] StoryTexts { get; set; }
     string ElementModel { get; set; }
-    string ModalFacialExpression { get; set; }
+    string ModelFacialExpression { get; set; }
     string StoryNpcName { get; set; }
+    bool ExitAfterStorySequence { get; set; }
 }

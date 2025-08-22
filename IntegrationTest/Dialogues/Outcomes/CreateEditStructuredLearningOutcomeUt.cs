@@ -9,7 +9,7 @@ using NSubstitute;
 using NUnit.Framework;
 using Presentation.Components.LearningOutcomes;
 using Presentation.PresentationLogic.API;
-using Presentation.PresentationLogic.LearningSpace.LearningOutcomeViewModel;
+using Presentation.PresentationLogic.LearningOutcome;
 using PresentationTest;
 using Shared.LearningOutcomes;
 

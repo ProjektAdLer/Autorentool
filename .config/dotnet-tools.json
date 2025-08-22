@@ -10,7 +10,7 @@
       "rollForward": false
     },
     "electronsharp.cli": {
-      "version": "34.0.1.55684",
+      "version": "35.0.2.56759",
       "commands": [
         "electron-sharp"
       ],

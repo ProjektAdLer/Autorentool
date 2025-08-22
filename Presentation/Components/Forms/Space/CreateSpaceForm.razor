@@ -1,11 +1,9 @@
-@using Presentation.PresentationLogic.LearningWorld
-@using Shared
-@using Presentation.Components.Forms.Models
-@using Presentation.Components.LearningOutcomes
+@using System.Diagnostics.CodeAnalysis
 @using BusinessLogic.Entities
 @using Microsoft.Extensions.Localization
 @using Presentation.Components.Forms.Buttons
-@using System.Diagnostics.CodeAnalysis
+@using Presentation.Components.Forms.Models
+@using Presentation.PresentationLogic.LearningWorld
 @using Shared.Theme
 <div class="absolute w-full z-30 cursor-default">
     <header class="py-2 2xl:py-3 bg-adlerbgbright border-b-2 border-adlergrey-100 overflow-hidden flex justify-center">
@@ -46,7 +44,8 @@
                     </p>
                     <p class="text-xs text-adlerblue-600 cursor-default">0
                         <span class="text-adlergrey-800"> / </span> 0
-                        <span class="text-adlergrey-800"> @Localizer["CreateSpaceForm.Fields.Collapsable.CompletionConditions.Description.Appendix"] </span>
+                        <span
+                            class="text-adlergrey-800"> @Localizer["CreateSpaceForm.Fields.Collapsable.CompletionConditions.Description.Appendix"] </span>
                     </p>
                     <ul class="py-2 pl-2 mt-0 border border-adlergrey-300 rounded w-full list-disc list-inside cursor-default">
                         <p class="text-xs italic text-adlergrey-600">
@@ -58,18 +57,18 @@
 
             <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.Theme.Title"] InitiallyCollapsed="true">
                 <p class="text-xs px-6 pt-3 cursor-default">@Localizer["CreateSpaceForm.Fields.Collapsable.Theme.Field.Theme.Text"]</p>
-                  <div class="px-6 py-2">
-                      <MudSelect @bind-Value="FormDataContainer.FormModel.SpaceTheme"
-                                 OnKeyUp="HandleKeyEvent"
-                                 Text="@FormDataContainer.FormModel.SpaceTheme.ToString()"
-                                 For="@(() => FormModel.SpaceTheme)">
-                          @foreach (var theme in _themes)
-                          {
-                              <MudSelectItem
+                <div class="px-6 py-2">
+                    <MudSelect @bind-Value="FormDataContainer.FormModel.SpaceTheme"
+                               OnKeyUp="HandleKeyEvent"
+                               Text="@FormDataContainer.FormModel.SpaceTheme.ToString()"
+                               For="@(() => FormModel.SpaceTheme)">
+                        @foreach (var theme in _themes)
+                        {
+                            <MudSelectItem
                                 Value="@(theme)">@(ThemeHelper<SpaceTheme>.Localize(theme, LearningWorldPresenter.LearningWorldVm?.WorldTheme.ToString()))</MudSelectItem>
-                          }
-                      </MudSelect>
-                  </div>
+                        }
+                    </MudSelect>
+                </div>
             </Collapsable>
 
             <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.Goals.Title"] InitiallyCollapsed="true">
@@ -100,7 +99,8 @@
 
     </Fields>
     <FooterButtons>
-        <div class="flex flex-row justify-end absolute left-0 bottom-0 border-t-2 border-adlergrey-100 bg-adlerbgbright w-full">
+        <div
+            class="flex flex-row justify-end absolute left-0 bottom-0 border-t-2 border-adlergrey-100 bg-adlerbgbright w-full">
             <DefaultSubmitButton/>
             <DefaultResetButton/>
         </div>
@@ -164,19 +164,7 @@
 
     private async void OpenLearningOutcomesOverview()
     {
-        var options = new DialogOptions
-        {
-            BackdropClick = true,
-            MaxWidth = MaxWidth.Small,
-            FullWidth = true,
-            CloseButton = true,
-        };
-        var parameters = new DialogParameters
-        {
-            { nameof(LearningOutcomesSpaceOverview.LearningOutcomeCollection), FormDataContainer.FormModel.LearningOutcomeCollection }
-        };
-        var dialog = await DialogService.ShowAsync<LearningOutcomesSpaceOverview>("", parameters, options);
-        _ = await dialog.Result;
+        await LearningOutcomesOverviewHelper.ShowOverviewAsync(DialogService, FormDataContainer.FormModel.LearningOutcomeCollection, typeof(LearningSpace));
         StateHasChanged();
     }
 

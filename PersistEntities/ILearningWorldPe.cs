@@ -1,4 +1,5 @@
-﻿using Shared.Theme;
+﻿using PersistEntities.LearningOutcome;
+using Shared.Theme;
 
 namespace PersistEntities;
 
@@ -10,11 +11,13 @@ public interface ILearningWorldPe
     string Shortname { get; set; }
     string Authors { get; set; }
     string Language { get; set; }
-    string Goals { get; set; }
+    LearningOutcomeCollectionPe LearningOutcomeCollection { get; set; }
     WorldTheme WorldTheme { get; set; }
     string SavePath { get; set; }
     ICollection<ILearningElementPe> UnplacedLearningElements { get; set; }
     string EvaluationLink { get; set; }
+    string EvaluationLinkName { get; set; }
+    string EvaluationLinkText { get; set; }
     string EnrolmentKey { get; set; }
     string StoryStart { get; set; }
     string StoryEnd { get; set; }

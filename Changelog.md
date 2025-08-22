@@ -19,6 +19,39 @@
 
 </details>
 
+## [2.3.2] - 2025-07-08
+
+### Added
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+- Fixed a typo in the ATF file.
+
+### Security
+
+## [2.3.1] - 2025-06-30
+
+### Added
+
+### Changed
+
+- Compressed images to reduce app size.
+- Updated dependencies.
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
 ## [2.3.0] - 2025-06-27
 
 ### Added
@@ -60,6 +93,7 @@
 ## [2.2.3-rc.2] - 2025-06-06
 
 ### Added
+
 - New button for export learning world as a mbz file.
 
 ### Changed

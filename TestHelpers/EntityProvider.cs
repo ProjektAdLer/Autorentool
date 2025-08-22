@@ -23,11 +23,11 @@ public static class EntityProvider
         return new AuthoringToolWorkspace(worlds ?? new List<ILearningWorld>());
     }
 
-    public static LearningWorld GetLearningWorld(bool unsavedChanges = false, string append = "")
+    public static LearningWorld GetLearningWorld(string name = "a", bool unsavedChanges = false, string append = "")
     {
-        return new LearningWorld("a" + append, "b" + append, "c" + append, "d" + append, "e" + append, "f" + append,
-                WorldTheme.CampusAschaffenburg,
-                "g" + append)
+        return new LearningWorld(name + append, "b" + append, "c" + append, "d" + append, "e" + append,
+                GetLearningOutcomeCollection(unsavedChanges: unsavedChanges), WorldTheme.CampusAschaffenburg, "g" + append, "h" + append, "i" + append, "j" + append, "k" + append,
+                "l" + append)
             { UnsavedChanges = unsavedChanges };
     }
 
@@ -96,9 +96,9 @@ public static class EntityProvider
             positionY: positionY) { UnsavedChanges = unsavedChanges };
     }
 
-    public static PathWayCondition GetPathWayCondition()
+    public static PathWayCondition GetPathWayCondition(bool unsavedChanges = false)
     {
-        return new PathWayCondition(ConditionEnum.And);
+        return new PathWayCondition(ConditionEnum.And) { UnsavedChanges = unsavedChanges };
     }
 
     public static LearningPathway GetLearningPathway(IObjectInPathWay? source = null, IObjectInPathWay? target = null)
@@ -114,22 +114,24 @@ public static class EntityProvider
         };
     }
 
-    public static FileContent GetFileContent(string append = "", bool unsavedChanges = false)
+    public static FileContent GetFileContent(string name = "a name", string type = "a type", string append = "",
+        bool unsavedChanges = false)
     {
-        return new FileContent("a name" + append, "a type" + append, "a filepath" + append)
+        return new FileContent(name + append, type + append, "a filepath" + append)
             { UnsavedChanges = unsavedChanges };
     }
 
     public static StoryContent GetStoryContent(string name = "a name", List<string>? storyText = null,
-        bool unsavedChanges = false, string npcName = "a npc name", NpcMood npcMood = NpcMood.Welcome)
+        bool unsavedChanges = false, string npcName = "a npc name", NpcMood npcMood = NpcMood.Welcome,
+        bool exitAfterStorySequence = false)
     {
         storyText ??= new List<string> { "a story" };
-        return new StoryContent(name, unsavedChanges, storyText, npcName, npcMood);
+        return new StoryContent(name, unsavedChanges, storyText, npcName, npcMood, exitAfterStorySequence);
     }
 
-    public static Topic GetTopic(string append = "")
+    public static Topic GetTopic(string append = "", bool unsavedChanges = false)
     {
-        return new Topic("a topic" + append);
+        return new Topic("a topic" + append) { UnsavedChanges = unsavedChanges };
     }
 
     public static LearningWorld GetLearningWorldWithSpace()

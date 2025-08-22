@@ -1,4 +1,4 @@
-namespace Presentation.PresentationLogic.LearningSpace.LearningOutcomeViewModel;
+namespace Presentation.PresentationLogic.LearningOutcome;
 
 public interface ILearningOutcomeViewModel
 {

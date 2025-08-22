@@ -14,9 +14,9 @@ using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Question;
 using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Trigger;
 using Presentation.PresentationLogic.LearningContent.LinkContent;
 using Presentation.PresentationLogic.LearningElement;
+using Presentation.PresentationLogic.LearningOutcome;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
-using Presentation.PresentationLogic.LearningSpace.LearningOutcomeViewModel;
 using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.Topic;
 using Shared;
@@ -80,16 +80,18 @@ public interface IPresentationLogic
     /// <param name="authors"></param>
     /// <param name="language"></param>
     /// <param name="description"></param>
-    /// <param name="goals"></param>
+    /// <param name="learningOutcomeCollectionVm"></param>
     /// <param name="worldTheme"></param>
     /// <param name="evaluationLink">Link to the evaluation displayed on completion.</param>
+    /// <param name="evaluationLinkName">Name of the evaluation link.</param>
+    /// <param name="evaluationLinkText">Description text of the evaluation link.</param>
     /// <param name="enrolmentKey">Key for users to enrol in the learning world.</param>
     /// <param name="storyStart">The story start of the learning world.</param>
     /// <param name="storyEnd">The story end of the learning world.</param>
     void CreateLearningWorld(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm, string name, string shortname,
-        string authors, string language, string description, string goals, WorldTheme worldTheme, string evaluationLink,
-        string enrolmentKey,
-        string storyStart, string storyEnd);
+        string authors, string language, string description,
+        LearningOutcomeCollectionViewModel learningOutcomeCollectionVm, WorldTheme worldTheme, string evaluationLink,
+        string evaluationLinkName, string evaluationLinkText, string enrolmentKey, string storyStart, string storyEnd);
 
     /// <summary>
     /// Edits a given learning world in the authoring tool workspace with the corresponding command.
@@ -100,16 +102,18 @@ public interface IPresentationLogic
     /// <param name="authors"></param>
     /// <param name="language"></param>
     /// <param name="description"></param>
-    /// <param name="goals"></param>
+    /// <param name="learningOutcomeCollectionVm"></param>
     /// <param name="worldTheme"></param>
     /// <param name="evaluationLink">Link to the evaluation displayed on completion.</param>
+    /// <param name="evaluationLinkName">Name of the evaluation link.</param>
+    /// <param name="evaluationLinkText">Description text of the evaluation link.</param>
     /// <param name="enrolmentKey">Key for users to enrol in the learning world.</param>
     /// <param name="storyStart">The story start of the learning world.</param>
     /// <param name="storyEnd">The story end of the learning world.</param>
     void EditLearningWorld(ILearningWorldViewModel learningWorldVm, string name, string shortname, string authors,
-        string language, string description, string goals, WorldTheme worldTheme, string evaluationLink,
-        string enrolmentKey,
-        string storyStart, string storyEnd);
+        string language, string description, LearningOutcomeCollectionViewModel learningOutcomeCollectionVm,
+        WorldTheme worldTheme, string evaluationLink, string evaluationLinkName,
+        string evaluationLinkText, string enrolmentKey, string storyStart, string storyEnd);
 
     /// <summary>
     /// Deletes the given learning world in the authoring tool workspace.

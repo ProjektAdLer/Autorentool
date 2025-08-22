@@ -4,9 +4,9 @@ using Presentation.Components;
 using Presentation.Components.Forms.Models;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
+using Presentation.PresentationLogic.LearningOutcome;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
-using Presentation.PresentationLogic.LearningSpace.LearningOutcomeViewModel;
 using Presentation.PresentationLogic.Topic;
 using Shared;
 using Shared.Command;
@@ -48,14 +48,18 @@ public interface ILearningWorldPresenter : INotifyPropertyChanged, INotifyProper
     /// <param name="authors">The authors of the learning world.</param>
     /// <param name="language">The language of the learning world.</param>
     /// <param name="description">The description of the learning world.</param>
-    /// <param name="goals">The goals of the learning world.</param>
+    /// <param name="learningOutcomeCollectionVm">The learning outcomes of the learning world.</param>
     /// <param name="worldTheme">The theme of the learning world.</param>
     /// <param name="evaluationLink">Link to the evaluation displayed on completion.</param>
+    /// <param name="evaluationLinkName">Name of the evaluation link.</param>
+    /// <param name="evaluationLinkText">Description text of the evaluation link.</param>
     /// <param name="enrolmentKey">Key for users to enrol in the learning world.</param>
     /// <param name="storyStart">The story start of the learning world.</param>
     /// <param name="storyEnd">The story end of the learning world.</param>
     void EditLearningWorld(string name, string shortname, string authors, string language, string description,
-        string goals, WorldTheme worldTheme, string evaluationLink, string enrolmentKey, string storyStart, string storyEnd);
+        LearningOutcomeCollectionViewModel learningOutcomeCollectionVm, WorldTheme worldTheme, string evaluationLink,
+        string evaluationLinkName,
+        string evaluationLinkText, string enrolmentKey, string storyStart, string storyEnd);
 
     /// <summary>
     /// Calls the respective Save methode for Learning Space or Learning Element depending on which learning object is selected
