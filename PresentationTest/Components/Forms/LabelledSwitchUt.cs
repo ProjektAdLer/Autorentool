@@ -4,7 +4,7 @@ using MudBlazor;
 using MudBlazor.Services;
 using NSubstitute;
 using NUnit.Framework;
-using Presentation.Components.Forms;
+using Presentation.Components.LabelledSwitch;
 using TestContext = Bunit.TestContext;
 
 namespace PresentationTest.Components.Forms;
@@ -27,10 +27,10 @@ public class LabelledSwitchUt
     }
 
     private TestContext _testContext;
-    private bool _boundValue;
+    private LabelledSwitchState _boundValue;
 
     [Test]
-    public void Constructor_InjectsDependencies([Values] bool initialValue)
+    public void Constructor_InjectsDependencies([Values] LabelledSwitchState initialValue)
     {
         _boundValue = initialValue;
 
@@ -38,8 +38,7 @@ public class LabelledSwitchUt
 
         Assert.Multiple(() =>
         {
-            Assert.That(systemUnderTest.Instance.IsRightSelected, Is.EqualTo(initialValue));
-            Assert.That(systemUnderTest.Instance.IsLeftSelected, Is.EqualTo(!initialValue));
+            Assert.That(systemUnderTest.Instance.State, Is.EqualTo(initialValue));
             Assert.That(systemUnderTest.Instance.LeftLabel, Is.EqualTo("left"));
             Assert.That(systemUnderTest.Instance.RightLabel, Is.EqualTo("right"));
         });
@@ -48,7 +47,7 @@ public class LabelledSwitchUt
     [Test]
     public void Select_ChangesValue()
     {
-        _boundValue = false;
+        _boundValue = LabelledSwitchState.Left;
 
         var systemUnderTest = GetRenderedComponent();
 
@@ -56,16 +55,14 @@ public class LabelledSwitchUt
         mudSwitch.InvokeAsync(() => mudSwitch.Instance.ValueChanged.InvokeAsync(true));
         mudSwitch.Render();
 
-        Assert.That(_boundValue, Is.True);
-        Assert.That(systemUnderTest.Instance.IsRightSelected, Is.True);
-        Assert.That(systemUnderTest.Instance.IsLeftSelected, Is.False);
+        Assert.That(_boundValue, Is.EqualTo(LabelledSwitchState.Right));
+        Assert.That(systemUnderTest.Instance.State, Is.EqualTo(LabelledSwitchState.Right));
 
         mudSwitch.InvokeAsync(() => mudSwitch.Instance.ValueChanged.InvokeAsync(false));
         mudSwitch.Render();
 
-        Assert.That(_boundValue, Is.False);
-        Assert.That(systemUnderTest.Instance.IsRightSelected, Is.False);
-        Assert.That(systemUnderTest.Instance.IsLeftSelected, Is.True);
+        Assert.That(_boundValue, Is.EqualTo(LabelledSwitchState.Left));
+        Assert.That(systemUnderTest.Instance.State, Is.EqualTo(LabelledSwitchState.Left));
     }
 
     private IRenderedComponent<LabelledSwitch> GetRenderedComponent(
@@ -75,8 +72,8 @@ public class LabelledSwitchUt
         {
             builder.Add(p => p.LeftLabel, leftLabel);
             builder.Add(p => p.RightLabel, rightLabel);
-            builder.Add(p => p.IsRightSelected, _boundValue);
-            builder.Add<bool>(p => p.IsRightSelectedChanged, v => { _boundValue = v; });
+            builder.Add(p => p.State, _boundValue);
+            builder.Add(p => p.StateChanged, v => { _boundValue = v; });
         });
     }
 }

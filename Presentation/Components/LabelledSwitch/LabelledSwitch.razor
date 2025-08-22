@@ -1,0 +1,50 @@
+<MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+    <MudText Class="flex text-center text-xs 2xl:text-sm"
+             Color="@(State == LabelledSwitchState.Left ? Color.Info : Color.Dark)">@LeftLabel</MudText>
+    @if (IconIsSvg(LeftLabelIconSvg))
+    {
+        <MudIcon Class="w-5 h-5 drop-shadow opacity-60" Icon="@LeftLabelIconSvg"/>
+    }
+    <MudSwitch Value="@(State == LabelledSwitchState.Right)"
+               ValueChanged="@(async (bool v) => await OnValueChanged(v))"
+               Color="Color.Info"
+               UnCheckedColor="Color.Info"
+               Style="margin-right: 0; margin-left: 2px"/>
+    @if (IconIsSvg(RightLabelIconSvg))
+    {
+        <MudIcon Class="w-5 h-5 drop-shadow opacity-60" Icon="@RightLabelIconSvg"/>
+    }
+    <MudText Class="flex items-center text-center text-xs 2xl:text-sm"
+             Color="@(State == LabelledSwitchState.Right ? Color.Info : Color.Dark)">@RightLabel</MudText>
+</MudStack>
+
+
+@code {
+    [Parameter, EditorRequired] public LabelledSwitchState State { get; set; }
+    [Parameter] public EventCallback<LabelledSwitchState> StateChanged { get; set; }
+    [Parameter] public string LeftLabel { get; set; } = string.Empty;
+    [Parameter] public string LeftLabelIconSvg { get; set; } = string.Empty;
+    [Parameter] public string RightLabel { get; set; } = string.Empty;
+    [Parameter] public string RightLabelIconSvg { get; set; } = string.Empty;
+
+
+    protected override void OnParametersSet()
+    {
+    }
+
+    private async Task OnValueChanged(bool newValue)
+    {
+        var newState = newValue ? LabelledSwitchState.Right : LabelledSwitchState.Left;
+        if (State != newState)
+        {
+            State = newState;
+            await StateChanged.InvokeAsync(newState);
+        }
+    }
+
+    private bool IconIsSvg(string iconSvg)
+    {
+        return iconSvg != string.Empty && iconSvg.StartsWith("<svg", StringComparison.OrdinalIgnoreCase) && iconSvg.EndsWith("</svg>", StringComparison.OrdinalIgnoreCase);
+    }
+
+}

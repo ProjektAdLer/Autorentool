@@ -7,6 +7,7 @@
 @using Presentation.Components.Forms.Buttons
 @using Presentation.Components.Forms.Content
 @using Presentation.Components.Forms.Models
+@using Presentation.Components.LabelledSwitch
 @using Presentation.PresentationLogic.API
 @using Presentation.PresentationLogic.LearningContent
 @using Presentation.PresentationLogic.LearningElement
@@ -49,8 +50,7 @@
                     @if (ElementMode == ElementMode.Normal)
                     {
                         <div class="flex items-center justify-center gap-2 bg-adlerbggradientto rounded my-1 py-1">
-                            <LabelledSwitch @bind-IsLeftSelected="IsRequired"
-                                            IsRightSelected="null"
+                            <LabelledSwitch @bind-State="IsRequired"
                                             LeftLabel="@Localizer["EditElementForm.Fields.Collapsable.Element.Mandatory"]"
                                             RightLabel="@Localizer["EditElementForm.Fields.Collapsable.Element.Optional"]"/>
                         </div>
@@ -308,8 +308,7 @@
                             @Localizer["EditElementForm.Fields.Collapsable.3DRepresentation.Field.ExitAfterStorySequence.Title"]
                         </p>
                         <div class="bg-adlerbggradientto rounded my-1 p-1">
-                            <LabelledSwitch @bind-IsRightSelected="@(StoryContentModel.ExitAfterStorySequence)"
-                                            IsLeftSelected="null"
+                            <LabelledSwitch @bind-State="ExitAfterStorySequenceState"
                                             LeftLabel="@Localizer["EditElementForm.Fields.Collapsable.3DRepresentation.Field.ExitAfterStorySequence.Stay"]"
                                             LeftLabelIconSvg="@CustomIcons.SpaceStay"
                                             RightLabel="@Localizer["EditElementForm.Fields.Collapsable.3DRepresentation.Field.ExitAfterStorySequence.Leave"]"
@@ -417,10 +416,16 @@
     private MudTextField<string> _nameField = null!;
     private bool _focusCalled = false;
 
-    public bool IsRequired
+    private LabelledSwitchState IsRequired
     {
-        get => FormModel.Points == 1;
-        set => FormModel.Points = value ? 1 : 0;
+        get => FormModel.Points == 1 ? LabelledSwitchState.Left : LabelledSwitchState.Right;
+        set => FormModel.Points = value == LabelledSwitchState.Left ? 1 : 0;
+    }
+
+    private LabelledSwitchState ExitAfterStorySequenceState
+    {
+        get => StoryContentModel!.ExitAfterStorySequence ? LabelledSwitchState.Right : LabelledSwitchState.Left;
+        set => StoryContentModel!.ExitAfterStorySequence = value == LabelledSwitchState.Right;
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
