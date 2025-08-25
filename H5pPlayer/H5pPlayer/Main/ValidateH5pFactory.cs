@@ -3,7 +3,6 @@ using H5pPlayer.BusinessLogic.UseCases.TerminateH5pPlayer;
 using H5pPlayer.BusinessLogic.UseCases.ValidateH5p;
 using H5pPlayer.Presentation.PresentationLogic.ValidateH5p;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
 
 namespace H5pPlayer.Main;
 
