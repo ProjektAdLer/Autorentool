@@ -1,13 +1,14 @@
 @using System.Diagnostics.CodeAnalysis
 @using Microsoft.Extensions.Localization
+@using Presentation.H5P
 
-<MudDialog>
+<MudDialog Class="p-0">
     <DialogContent>
-        <MudText Class="mt-2 mb-2" Typo="Typo.body2">
-            @((MarkupString)Localizer["Dialog.Description"].ToString())
+        <MudText Class="mb-2" Typo="Typo.body2">
+            @((MarkupString) BuildDescriptionHtml())
         </MudText>
 
-        <MudText Class="mb-2" Typo="Typo.body2">
+        <MudText Typo="Typo.body2">
             @Localizer["Dialog.Instruction"]
         </MudText>
     </DialogContent>
@@ -27,9 +28,32 @@
     
     [CascadingParameter] public IMudDialogInstance MudDialog { get; set; } = default!;
     
-   
     [Parameter] public EventCallback<string> OnValidateClicked { get; set; }
 
+    private string BuildDescriptionHtml()
+    {
+        var html = Localizer["Dialog.Description"].ToString();
+
+        var listHtml =
+            "<ul class='m-2 space-y-1'>" +
+            IconLi(H5PStateIcon.Svg.Lockable,     Localizer["Dialog.H5P.StateUsable"]) +
+            IconLi(H5PStateIcon.Svg.NotLockable,  Localizer["Dialog.H5P.StateNotUsable"]) +
+            IconLi(H5PStateIcon.Svg.Unchecked,    Localizer["Dialog.H5P.StateUnchecked"]) +
+            "</ul>";
+        html = html.Replace("[[ICON_LIST]]", listHtml);
+        
+        return html;
+    }
+
+    private static string IconLi(string svg, string label)
+    {
+        var icon = H5PStateIcon.InlineSvg(svg, "w-4 h-4");
+        return $"<li class='flex items-center gap-2'>" +
+               $"  <span aria-hidden='true'>{icon}</span>" +
+               $"  <span>{label}</span>" +
+               $"</li>";
+    }
+    
     private  void CloseDialog()
     {
         MudDialog.Close(DialogResult.Ok(true));
