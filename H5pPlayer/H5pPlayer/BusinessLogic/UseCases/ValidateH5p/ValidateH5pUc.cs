@@ -34,6 +34,7 @@ public class ValidateH5pUc : IValidateH5pUc
         H5pEntity = h5pEntity;
         var javaScriptAdapterTO = new CallJavaScriptAdapterTO(h5pEntity.UnzippedH5psPath, h5pEntity.H5pZipSourcePath);
         await ICallJavaScriptAdapter.ValidateH5p(javaScriptAdapterTO);
+        Logger.LogTrace("start ValidateH5pUCc");
     }
     
     /// <summary>
@@ -43,30 +44,37 @@ public class ValidateH5pUc : IValidateH5pUc
     /// </summary>
     public void ValidateH5p(ValidateH5pTO validateH5pTo)
     {
-        if(validateH5pTo.IsValidationCompleted)
+        if (validateH5pTo.IsValidationCompleted)
+        {
             ValidateH5pUcOutputPort.SetH5pIsCompletable();
+            Logger.LogTrace("Validation is completed");
+        }
     }
 
     public void TerminateValidateH5p()
     {
         TerminateH5pPlayerUc.TerminateH5pPlayer(H5pEntity!.ActiveH5pState);
+        Logger.LogTrace("terminate ValidateH5pUc");
     }
 
     public void SetActiveH5pStateToNotUsable()
     {
         H5pEntity!.ActiveH5pState = H5pState.NotUsable;
         ValidateH5pUcOutputPort.SetH5pActiveStateToNotUsable();
+        Logger.LogTrace("Set active h5p state to not usable");
     }
 
     public void SetActiveH5pStateToPrimitive()
     {
         H5pEntity!.ActiveH5pState = H5pState.Primitive;
         ValidateH5pUcOutputPort.SetH5pActiveStateToPrimitive();
+        Logger.LogTrace("Set active h5p state to primitive");
     }
     public void SetActiveH5pStateToCompletable()
     {
         H5pEntity!.ActiveH5pState = H5pState.Completable;
         ValidateH5pUcOutputPort.SetH5pActiveStateToCompletable();
+        Logger.LogTrace("Set active h5p state to completable");
     }
 
     private IValidateH5pUcOutputPort ValidateH5pUcOutputPort { get; }
