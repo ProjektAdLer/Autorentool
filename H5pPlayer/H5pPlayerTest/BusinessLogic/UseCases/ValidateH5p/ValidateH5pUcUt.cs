@@ -3,6 +3,7 @@ using H5pPlayer.BusinessLogic.Entities;
 using H5pPlayer.BusinessLogic.UseCases.DisplayH5p;
 using H5pPlayer.BusinessLogic.UseCases.TerminateH5pPlayer;
 using H5pPlayer.BusinessLogic.UseCases.ValidateH5p;
+using Microsoft.Extensions.Logging;
 using NSubstitute;
 
 namespace H5pPlayerTest.BusinessLogic.UseCases.ValidateH5p;
@@ -150,15 +151,18 @@ public class ValidateH5pUcUt
     private static ValidateH5pUc CreateValidateH5PUc(
         IValidateH5pUcOutputPort? fakeValidateH5PUcOutputPort = null,
         ICallJavaScriptAdapter? fakeJavaScriptAdapter = null,
-        ITerminateH5pPlayerUcPort? fakeTerminateH5pPlayerUc = null)
+        ITerminateH5pPlayerUcPort? fakeTerminateH5pPlayerUc = null,
+        ILogger<ValidateH5pUc>? fakeLogger= null)
     {
         fakeValidateH5PUcOutputPort ??= Substitute.For<IValidateH5pUcOutputPort>();
         fakeJavaScriptAdapter ??= Substitute.For<ICallJavaScriptAdapter>();
         fakeTerminateH5pPlayerUc ??= Substitute.For<ITerminateH5pPlayerUcPort>();
+        fakeLogger ??= Substitute.For<ILogger<ValidateH5pUc>>();
         return new ValidateH5pUc(
             fakeValidateH5PUcOutputPort, 
             fakeJavaScriptAdapter,
-            fakeTerminateH5pPlayerUc);
+            fakeTerminateH5pPlayerUc,
+            fakeLogger);
     }
 
 

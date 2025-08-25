@@ -2,6 +2,7 @@
 using H5pPlayer.BusinessLogic.Entities;
 using H5pPlayer.BusinessLogic.UseCases.DisplayH5p;
 using H5pPlayer.BusinessLogic.UseCases.TerminateH5pPlayer;
+using Microsoft.Extensions.Logging;
 
 namespace H5pPlayer.BusinessLogic.UseCases.ValidateH5p;
 
@@ -11,11 +12,13 @@ public class ValidateH5pUc : IValidateH5pUc
     internal ValidateH5pUc(
         IValidateH5pUcOutputPort validateH5PUcOutputPort,
         ICallJavaScriptAdapter callJavaScriptAdapter,
-        ITerminateH5pPlayerUcPort terminateH5pPlayerUc)
+        ITerminateH5pPlayerUcPort terminateH5pPlayerUc,
+        ILogger<ValidateH5pUc> logger)
     {
         ValidateH5pUcOutputPort = validateH5PUcOutputPort;
         ICallJavaScriptAdapter = callJavaScriptAdapter;
         TerminateH5pPlayerUc = terminateH5pPlayerUc;
+        Logger = logger;
         EnsureBackCallOpportunityOfJsAdapterToCorrectInstanceOfValidateUc();
         H5pEntity = null;
         
@@ -69,6 +72,7 @@ public class ValidateH5pUc : IValidateH5pUc
     private IValidateH5pUcOutputPort ValidateH5pUcOutputPort { get; }
     private ICallJavaScriptAdapter ICallJavaScriptAdapter { get; }
     private ITerminateH5pPlayerUcPort TerminateH5pPlayerUc { get; }
+    public ILogger<ValidateH5pUc> Logger { get; }
     public H5pEntity? H5pEntity { get; set; }
 
 

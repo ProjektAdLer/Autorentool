@@ -4,17 +4,19 @@ using H5pPlayer.BusinessLogic.Api.JavaScript;
 using H5pPlayer.BusinessLogic.UseCases.StartH5pPlayer;
 using H5pPlayer.BusinessLogic.UseCases.TerminateH5pPlayer;
 using H5pPlayer.Presentation.PresentationLogic;
+using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
 
 namespace H5pPlayer.Main;
 
 public class StartH5pPlayerFactory : IStartH5pPlayerFactory
 {
-
     public StartH5pPlayerFactory(
         IDisplayH5pFactory displayH5pFactory,
         IValidateH5pFactory validateH5pFactory,
-        IFileSystemDataAccess fileSystemDataAccess)
+        IFileSystemDataAccess fileSystemDataAccess,
+        ILoggerFactory loggerFactory,
+        ICallJavaScriptAdapter? callJavaScriptAdapter = null)
     {
         OnH5pPlayerFinished = null;
         H5pPlayerVm = null;
@@ -22,6 +24,8 @@ public class StartH5pPlayerFactory : IStartH5pPlayerFactory
         DisplayH5PFactory = displayH5pFactory;
         ValidateH5PFactory = validateH5pFactory;
         FileSystemDataAccess = fileSystemDataAccess;
+        LoggerFactory = loggerFactory;
+        CallJavaScriptAdapter = callJavaScriptAdapter;
     }
     
     public void CreateStartH5pPlayerPresentationAndUseCaseStructure(
@@ -36,13 +40,14 @@ public class StartH5pPlayerFactory : IStartH5pPlayerFactory
         H5pPlayerController = new H5pPlayerController(startH5PPlayerUc, h5pPlayerPresenter);
     }
 
-
     private StartH5pPlayerUC CreateStartH5pPlayerUc(H5pPlayerPresenter h5pPlayerPresenter, IJSRuntime jsRuntime)
     {
-        ICallJavaScriptAdapter callJavaScriptAdapter = new CallJavaScriptAdapter(jsRuntime);
+        // Use injected adapter if available, otherwise create new one
+        ICallJavaScriptAdapter callJavaScriptAdapter = CallJavaScriptAdapter ?? new CallJavaScriptAdapter(jsRuntime);
+        
         var terminateH5pPlayerUc = new TerminateH5pPlayerUc(callJavaScriptAdapter, FileSystemDataAccess, OnH5pPlayerFinished!);
-        DisplayH5PFactory.CreateDisplayH5pStructure(callJavaScriptAdapter,terminateH5pPlayerUc);
-        ValidateH5PFactory.CreateValidateH5pStructure(callJavaScriptAdapter, terminateH5pPlayerUc);
+        DisplayH5PFactory.CreateDisplayH5pStructure(callJavaScriptAdapter, terminateH5pPlayerUc, LoggerFactory);
+        ValidateH5PFactory.CreateValidateH5pStructure(callJavaScriptAdapter, terminateH5pPlayerUc, LoggerFactory);
         
         var startH5PPlayerUc = new StartH5pPlayerUC(
             ValidateH5PFactory.ValidateH5pUc!,
@@ -53,10 +58,12 @@ public class StartH5pPlayerFactory : IStartH5pPlayerFactory
     }
 
     private Action<H5pPlayerResultTO>? OnH5pPlayerFinished { get; set; }
+    private ICallJavaScriptAdapter? CallJavaScriptAdapter { get; }
 
     public H5pPlayerViewModel? H5pPlayerVm { get; private set; }
     public H5pPlayerController? H5pPlayerController { get; private set; }
     public IDisplayH5pFactory DisplayH5PFactory { get; private set; }
     public IValidateH5pFactory ValidateH5PFactory { get; private set; }
     public IFileSystemDataAccess FileSystemDataAccess { get; private set; }
+    public ILoggerFactory LoggerFactory { get; }
 }

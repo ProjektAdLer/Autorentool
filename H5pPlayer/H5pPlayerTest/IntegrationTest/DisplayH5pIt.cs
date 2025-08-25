@@ -5,6 +5,7 @@ using H5pPlayer.BusinessLogic.UseCases.DisplayH5p;
 using H5pPlayer.BusinessLogic.UseCases.TerminateH5pPlayer;
 using H5pPlayer.Main;
 using H5pPlayer.Presentation.PresentationLogic.DisplayH5p;
+using Microsoft.Extensions.Logging;
 using NSubstitute;
 using TestContext = Bunit.TestContext;
 
@@ -34,6 +35,7 @@ public class DisplayH5pIt
     private IDisplayH5pUc? _displayH5pUc;
     private IDisplayH5pController? _displayH5pController;
     private IDisplayH5pPresenter? _displayH5pPresenter;
+    private ILoggerFactory? _loggerFactory;
     private IDisplayH5pFactory? _displayH5pFactory;
     private bool _wasOnH5pPlayerFinishedCalled;
     private H5pPlayerResultTO? _receivedResult;
@@ -52,7 +54,8 @@ public class DisplayH5pIt
             InitializeOnPlayerFinished()
         );
         _displayH5pFactory = new DisplayH5pFactory();
-        _displayH5pFactory.CreateDisplayH5pStructure(fakeJavaScriptAdapter,fakeTerminateH5pPlayerUc);
+        _loggerFactory = Substitute.For<ILoggerFactory>();
+        _displayH5pFactory.CreateDisplayH5pStructure(fakeJavaScriptAdapter,fakeTerminateH5pPlayerUc, _loggerFactory);
         _displayH5pUc = _displayH5pFactory.DisplayH5pUc;
         var h5pEntity = CreateH5pEntity();
         _displayH5pUc!.H5pEntity = h5pEntity;
@@ -101,5 +104,6 @@ public class DisplayH5pIt
         _testContext.Dispose();
         _wasOnH5pPlayerFinishedCalled = false;
         _receivedResult = null;
+        _loggerFactory?.Dispose();
     } 
 }

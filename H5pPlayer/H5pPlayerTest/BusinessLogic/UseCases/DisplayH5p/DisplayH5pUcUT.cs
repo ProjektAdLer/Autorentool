@@ -2,6 +2,7 @@
 using H5pPlayer.BusinessLogic.Entities;
 using H5pPlayer.BusinessLogic.UseCases.DisplayH5p;
 using H5pPlayer.BusinessLogic.UseCases.TerminateH5pPlayer;
+using Microsoft.Extensions.Logging;
 using NSubstitute;
 
 namespace H5pPlayerTest.BusinessLogic.UseCases.DisplayH5p;
@@ -42,11 +43,13 @@ public class DisplayH5pUcUT
 
     private static DisplayH5pUc CreateSystemUnderTest(
         ICallJavaScriptAdapter? callJavaScriptAdapter = null,
-        ITerminateH5pPlayerUcPort? terminateH5pPlayerUc = null)
+        ITerminateH5pPlayerUcPort? terminateH5pPlayerUc = null,
+        ILogger<DisplayH5pUc>? logger= null)
     {
         callJavaScriptAdapter ??= Substitute.For<ICallJavaScriptAdapter>();
         terminateH5pPlayerUc ??= Substitute.For<ITerminateH5pPlayerUcPort>();
-        return new DisplayH5pUc(callJavaScriptAdapter, terminateH5pPlayerUc);
+        logger ??= Substitute.For<ILogger<DisplayH5pUc>>();
+        return new DisplayH5pUc(callJavaScriptAdapter, terminateH5pPlayerUc,logger);
     }
 
     private static H5pEntity CreateH5pEntity(

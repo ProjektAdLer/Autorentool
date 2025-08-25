@@ -1,6 +1,7 @@
 ﻿using H5pPlayer.BusinessLogic.Api.JavaScript;
 using H5pPlayer.BusinessLogic.Entities;
 using H5pPlayer.BusinessLogic.UseCases.TerminateH5pPlayer;
+using Microsoft.Extensions.Logging;
 
 namespace H5pPlayer.BusinessLogic.UseCases.DisplayH5p;
 
@@ -8,7 +9,8 @@ public class DisplayH5pUc : IDisplayH5pUc
 {
     internal DisplayH5pUc(
         ICallJavaScriptAdapter iCallJavaScriptAdapter,
-        ITerminateH5pPlayerUcPort terminateH5pPlayerUc)
+        ITerminateH5pPlayerUcPort terminateH5pPlayerUc,
+        ILogger<DisplayH5pUc> logger)
     {
         ICallJavaScriptAdapter = iCallJavaScriptAdapter;
         TerminateH5pPlayerUc = terminateH5pPlayerUc;

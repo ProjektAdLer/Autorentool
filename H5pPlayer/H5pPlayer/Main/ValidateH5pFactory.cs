@@ -2,6 +2,8 @@
 using H5pPlayer.BusinessLogic.UseCases.TerminateH5pPlayer;
 using H5pPlayer.BusinessLogic.UseCases.ValidateH5p;
 using H5pPlayer.Presentation.PresentationLogic.ValidateH5p;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace H5pPlayer.Main;
 
@@ -18,17 +20,22 @@ public class ValidateH5pFactory : IValidateH5pFactory
      
     public void CreateValidateH5pStructure(
         ICallJavaScriptAdapter callJavaScriptAdapter,
-        ITerminateH5pPlayerUcPort terminateH5pPlayerUc)
+        ITerminateH5pPlayerUcPort terminateH5pPlayerUc,
+        ILoggerFactory loggerFactory)
     {
         ValidateH5pVm = new ValidateH5pViewModel();
         ValidateH5pPresenter = new ValidateH5pPresenter(ValidateH5pVm);
         TerminateH5pPlayerUc = terminateH5pPlayerUc;
+        var logger = loggerFactory.CreateLogger<ValidateH5pUc>();
         ValidateH5pUc = new ValidateH5pUc(
             (ValidateH5pPresenter as IValidateH5pUcOutputPort)!,
             callJavaScriptAdapter,
-            TerminateH5pPlayerUc);
+            TerminateH5pPlayerUc,
+            logger);
         ValidateH5pController = new ValidateH5pController(ValidateH5pUc, ValidateH5pPresenter);
     }
+
+
 
     public IValidateH5pViewModel? ValidateH5pVm { get; private set; }
     public IValidateH5pPresenter? ValidateH5pPresenter { get; private set; }
