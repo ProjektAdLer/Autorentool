@@ -15,21 +15,25 @@ public class DisplayH5pUc : IDisplayH5pUc
         ICallJavaScriptAdapter = iCallJavaScriptAdapter;
         TerminateH5pPlayerUc = terminateH5pPlayerUc;
         H5pEntity = null;
+        Logger = logger;
     }
 
     public async Task StartToDisplayH5p(H5pEntity h5pEntity)
     {
         var javaScriptAdapterTO = new CallJavaScriptAdapterTO(h5pEntity.UnzippedH5psPath, h5pEntity.H5pZipSourcePath);
         await ICallJavaScriptAdapter.DisplayH5p(javaScriptAdapterTO);
+        Logger.LogTrace("start DisplayH5pUc");
     }
     
     public void TerminateDisplayH5p()
     {
         TerminateH5pPlayerUc.TerminateH5pPlayer(H5pEntity!.ActiveH5pState);
+        Logger.LogTrace("terminate DisplayH5pUc");
     }
     private ICallJavaScriptAdapter ICallJavaScriptAdapter { get; }
     
     private ITerminateH5pPlayerUcPort TerminateH5pPlayerUc { get; }
     public H5pEntity? H5pEntity { get; set; }
+    private ILogger<DisplayH5pUc> Logger { get; }
 
 }

@@ -80,7 +80,7 @@ public class ValidateH5pUc : IValidateH5pUc
     private IValidateH5pUcOutputPort ValidateH5pUcOutputPort { get; }
     private ICallJavaScriptAdapter ICallJavaScriptAdapter { get; }
     private ITerminateH5pPlayerUcPort TerminateH5pPlayerUc { get; }
-    public ILogger<ValidateH5pUc> Logger { get; }
+    private ILogger<ValidateH5pUc> Logger { get; }
     public H5pEntity? H5pEntity { get; set; }
 
 
