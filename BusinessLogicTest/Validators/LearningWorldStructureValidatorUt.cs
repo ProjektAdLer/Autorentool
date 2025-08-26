@@ -299,6 +299,24 @@ public class LearningWorldStructureValidatorUt
 
         Assert.That(result.IsValid, Is.False);
     }
+    
+    // ANF-ID: [AHO22]
+    [TestCase(H5PContentState.Completable)]
+    [TestCase(H5PContentState.Primitive)]
+    public void ValidateForGeneration_H5PFileContentWithValidH5P_ReturnsNoError(H5PContentState h5pState)
+    {
+        var world = EntityProvider.GetLearningWorld();
+        var h5pContent = CreateH5PContent(h5pState);
+        var learningElement = CreateLearningElementWith(h5pContent);
+        var space = CreateValideLearningSpaceWith(learningElement);
+        world.LearningSpaces.Add(space);
+        var contentFilesFromDataAccess = CreateContentFilesFromDataAccess(h5pContent);
+
+        var result = _validator.ValidateForGeneration(world, contentFilesFromDataAccess);
+
+        Assert.That(result.IsValid, Is.True);
+    }
+
 
     private static ILearningSpace CreateValideLearningSpaceWith(LearningElement learningElement)
     {

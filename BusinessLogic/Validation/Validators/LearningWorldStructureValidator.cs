@@ -142,7 +142,7 @@ public class LearningWorldStructureValidator : ILearningWorldStructureValidator
             {
                 if (fileContent.H5PState is H5PContentState.NotUsable or H5PContentState.NotValidated)
                 {
-                    result.Errors.Add($"<li>{"All H5P-File-Contents must be usable!"}</li>");
+                    result.Errors.Add("<li>All H5P-File-Contents must be usable!</li>");
                 }
             }
         }
