@@ -78,9 +78,11 @@ public class H5PPlayerPluginManager : IH5PPlayerPluginManager
                 case "NotUsable":
                     FileContentVm.H5PState = H5PContentState.NotUsable;
                     break;
-                case "NotValidated":
-                    FileContentVm.H5PState = H5PContentState.NotValidated;
-                    break;
+                //case "NotValidated":
+                // Skip setNotValidated, because we only set to notValidated if the user cancels the H5P player.
+                // But if the user cancels, we need the previous state!
+                //  FileContentVm.H5PState = H5PContentState.NotValidated;
+                // break;
             }
 
             PresentationLogic.EditH5PFileContent(FileContentVm);
