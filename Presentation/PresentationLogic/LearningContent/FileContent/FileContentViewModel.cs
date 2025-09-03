@@ -14,7 +14,7 @@ public class FileContentViewModel : IFileContentViewModel
         IsH5P = false;
         H5PState = H5PContentState.NotValidated;
     }
-    
+
     /// <summary>
     /// Private Constructor for AutoMapper
     /// </summary>
@@ -28,7 +28,7 @@ public class FileContentViewModel : IFileContentViewModel
         IsH5P = false;
         H5PState = H5PContentState.NotValidated;
     }
-    
+
     public string Name { get; init; }
     public bool UnsavedChanges { get; set; }
     public string Type { get; init; }
@@ -36,7 +36,11 @@ public class FileContentViewModel : IFileContentViewModel
     public bool IsH5P { get; set; }
     public H5PContentState H5PState { get; set; }
 
-    protected bool Equals(FileContentViewModel other) => Name == other.Name && Type == other.Type && Filepath == other.Filepath;
+    protected bool Equals(FileContentViewModel other) => Name == other.Name &&
+                                                         Type == other.Type &&
+                                                         Filepath == other.Filepath &&
+                                                         IsH5P == other.IsH5P &&
+                                                         H5PState == other.H5PState;
 
     public override bool Equals(object? obj)
     {

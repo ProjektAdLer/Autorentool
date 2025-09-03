@@ -61,6 +61,7 @@ using HttpClientFactory = Shared.Networking.HttpClientFactory;
 using IHttpClientFactory = Shared.Networking.IHttpClientFactory;
 
 namespace AuthoringTool;
+
 // ReSharper disable InconsistentNaming
 public class Startup
 {
@@ -193,6 +194,7 @@ public class Startup
     {
         services.AddScoped<IAuthoringToolWorkspacePresenter, AuthoringToolWorkspacePresenter>();
         services.AddScoped<IPresentationLogic, PresentationLogic>();
+        services.AddScoped<Func<IPresentationLogic>>(sp => sp.GetRequiredService<IPresentationLogic>);
         services.AddScoped<ILearningWorldPresenter, LearningWorldPresenter>();
         services.AddScoped(p =>
             (ILearningWorldPresenterOverviewInterface)p.GetService(typeof(ILearningWorldPresenter))!);

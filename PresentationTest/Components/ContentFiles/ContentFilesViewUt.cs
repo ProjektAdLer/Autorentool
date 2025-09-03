@@ -13,7 +13,6 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using MudBlazor;
-using MudBlazor.Services;
 using NSubstitute;
 using NUnit.Framework;
 using Presentation.Components.ContentFiles;
@@ -131,7 +130,7 @@ public class ContentFilesViewUt
                 var typeTd = tableRows[i].Children
                     .FirstOrDefault(child => child.Attributes["data-label"]?.Value == "Type");
                 var type = typeTd.GetInnerText();
-                Assert.That(type, Is.EqualTo(item is FileContentViewModel fc ? fc.Type : "Link"));
+                Assert.That(type, Is.EqualTo(item is FileContentViewModel fc ? fc.Type : "video"));
 
                 var pathTd = tableRows[i].Children
                     .FirstOrDefault(child => child.Attributes["data-label"]?.Value == "Filepath/Link");
@@ -154,7 +153,7 @@ public class ContentFilesViewUt
         var systemUnderTest = GetRenderedComponent();
 
         var mudPopovers = systemUnderTest.FindComponentsOrFail<Stub<MudPopover>>();
-        var hoverMenu = mudPopovers.First(x => x.Instance.Parameters["AnchorOrigin"].ToString() == "CenterRight");
+        var hoverMenu = mudPopovers.First(x => x.Instance.Parameters["AnchorOrigin"].ToString() == "CenterCenter");
         var hoverMenuContent = _testContext.Render((RenderFragment)hoverMenu.Instance.Parameters["ChildContent"]);
         var deleteButton = hoverMenuContent.FindAll("button").FirstOrDefault(x =>
             x.Attributes["title"] != null && x.Attributes["title"]!.Value.Contains("Delete"));
@@ -184,7 +183,7 @@ public class ContentFilesViewUt
         var systemUnderTest = GetRenderedComponent();
 
         var mudPopovers = systemUnderTest.FindComponentsOrFail<Stub<MudPopover>>();
-        var hoverMenu = mudPopovers.First(x => x.Instance.Parameters["AnchorOrigin"].ToString() == "CenterRight");
+        var hoverMenu = mudPopovers.First(x => x.Instance.Parameters["AnchorOrigin"].ToString() == "CenterCenter");
         var hoverMenuContent = _testContext.Render((RenderFragment)hoverMenu.Instance.Parameters["ChildContent"]);
         var deleteButton = hoverMenuContent.FindAll("button").FirstOrDefault(x =>
             x.Attributes["title"] != null && x.Attributes["title"]!.Value.Contains("Delete"));
@@ -210,7 +209,7 @@ public class ContentFilesViewUt
         var systemUnderTest = GetRenderedComponent();
 
         var mudPopovers = systemUnderTest.FindComponentsOrFail<Stub<MudPopover>>();
-        var hoverMenu = mudPopovers.First(x => x.Instance.Parameters["AnchorOrigin"].ToString() == "CenterRight");
+        var hoverMenu = mudPopovers.First(x => x.Instance.Parameters["AnchorOrigin"].ToString() == "CenterCenter");
         var hoverMenuContent = _testContext.Render((RenderFragment)hoverMenu.Instance.Parameters["ChildContent"]);
         var deleteButton = hoverMenuContent.FindAll("button").FirstOrDefault(x =>
             x.Attributes["title"] != null && x.Attributes["title"]!.Value.Contains("Delete"));
@@ -236,7 +235,7 @@ public class ContentFilesViewUt
         var systemUnderTest = GetRenderedComponent();
 
         var mudPopovers = systemUnderTest.FindComponentsOrFail<Stub<MudPopover>>();
-        var hoverMenu = mudPopovers.First(x => x.Instance.Parameters["AnchorOrigin"].ToString() == "CenterRight");
+        var hoverMenu = mudPopovers.First(x => x.Instance.Parameters["AnchorOrigin"].ToString() == "CenterCenter");
         var hoverMenuContent = _testContext.Render((RenderFragment)hoverMenu.Instance.Parameters["ChildContent"]);
         var deleteButton = hoverMenuContent.FindAll("button").FirstOrDefault(x =>
             x.Attributes["title"] != null && x.Attributes["title"]!.Value.Contains("Delete"));
@@ -268,7 +267,7 @@ public class ContentFilesViewUt
         var systemUnderTest = GetRenderedComponent();
 
         var mudPopovers = systemUnderTest.FindComponentsOrFail<Stub<MudPopover>>();
-        var hoverMenu = mudPopovers.First(x => x.Instance.Parameters["AnchorOrigin"].ToString() == "CenterRight");
+        var hoverMenu = mudPopovers.First(x => x.Instance.Parameters["AnchorOrigin"].ToString() == "CenterCenter");
         var hoverMenuContent = _testContext.Render((RenderFragment)hoverMenu.Instance.Parameters["ChildContent"]);
         var deleteButton = hoverMenuContent.FindAll("button").FirstOrDefault(x =>
             x.Attributes["title"] != null && x.Attributes["title"]!.Value.Contains("Delete"));
@@ -311,7 +310,7 @@ public class ContentFilesViewUt
         var systemUnderTest = GetRenderedComponent();
 
         var mudPopovers = systemUnderTest.FindComponentsOrFail<Stub<MudPopover>>();
-        var hoverMenu = mudPopovers.First(x => x.Instance.Parameters["AnchorOrigin"].ToString() == "CenterRight");
+        var hoverMenu = mudPopovers.First(x => x.Instance.Parameters["AnchorOrigin"].ToString() == "CenterCenter");
         var hoverMenuContent = _testContext.Render((RenderFragment)hoverMenu.Instance.Parameters["ChildContent"]);
         var deleteButton = hoverMenuContent.FindAll("button").FirstOrDefault(x =>
             x.Attributes["title"] != null && x.Attributes["title"]!.Value.Contains("Delete"));
@@ -797,7 +796,7 @@ public class ContentFilesViewUt
             {
                 var pathTd = tableRows[i].Children
                     .FirstOrDefault(child => child.Attributes["data-label"]?.Value == "Filepath/Link");
-                var path = pathTd.GetInnerText();
+                var path = pathTd.GetInnerText().Trim();
                 Assert.That(path,
                     Is.EqualTo(item is FileContentViewModel fc ? fc.Filepath : ((LinkContentViewModel)item).Link));
             }
@@ -813,7 +812,7 @@ public class ContentFilesViewUt
         var systemUnderTest = GetRenderedComponent();
 
         var mudPopovers = systemUnderTest.FindComponentsOrFail<Stub<MudPopover>>();
-        var hoverMenu = mudPopovers.First(x => x.Instance.Parameters["AnchorOrigin"].ToString() == "CenterRight");
+        var hoverMenu = mudPopovers.First(x => x.Instance.Parameters["AnchorOrigin"].ToString() == "CenterCenter");
         var hoverMenuContent = _testContext.Render((RenderFragment)hoverMenu.Instance.Parameters["ChildContent"]);
         var newElementButton = hoverMenuContent.FindAll("button").FirstOrDefault(x =>
             x.Attributes["title"] != null && x.Attributes["title"]!.Value.Contains("NewElement"));
@@ -835,7 +834,7 @@ public class ContentFilesViewUt
         var systemUnderTest = GetRenderedComponent();
 
         var mudPopovers = systemUnderTest.FindComponentsOrFail<Stub<MudPopover>>();
-        var hoverMenu = mudPopovers.First(x => x.Instance.Parameters["AnchorOrigin"].ToString() == "CenterRight");
+        var hoverMenu = mudPopovers.First(x => x.Instance.Parameters["AnchorOrigin"].ToString() == "CenterCenter");
         var hoverMenuContent = _testContext.Render((RenderFragment)hoverMenu.Instance.Parameters["ChildContent"]);
         var previewButton = hoverMenuContent.FindAll("button").FirstOrDefault(x =>
             x.Attributes["title"] != null && x.Attributes["title"]!.Value.Contains("Preview"));

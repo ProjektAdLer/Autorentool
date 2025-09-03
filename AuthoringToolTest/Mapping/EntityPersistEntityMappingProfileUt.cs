@@ -130,7 +130,6 @@ public class EntityPersistEntityMappingProfileUt
     }
 
 
-
     [Test]
     public void MapLearningElementAndLearningElementPersistEntity_TestMappingIsValid()
     {
@@ -314,7 +313,7 @@ public class EntityPersistEntityMappingProfileUt
         var source = new LearningWorld(Name, Shortname, Authors, Language, Description,
             GetTestableLearningOutcomeCollection(),
             WorldThemeVar, EvaluationLink, EvaluationLinkName, EvaluationLinkText, EnrolmentKey, savePath: SavePath);
-        source.UnplacedLearningElements.Add(new LearningElement(Name, GetTestableContent(), Description, Goals,
+        source.UnplacedLearningElements.Add(new LearningElement(Name, CreateFileContent(), Description, Goals,
             Difficulty, SelectedElementModel, null, Workload, Points, PositionX, PositionY));
         var destination = PersistEntityProvider.GetBlankLearningWorld();
 

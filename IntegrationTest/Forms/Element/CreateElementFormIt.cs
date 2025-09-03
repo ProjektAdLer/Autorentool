@@ -5,7 +5,6 @@ using Bunit;
 using Bunit.TestDoubles;
 using BusinessLogic.Entities;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Localization;
 using MudBlazor;
 using NSubstitute;
 using NUnit.Framework;
@@ -43,20 +42,21 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
         SelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
         SelectedViewModelsProvider.LearningContent.Returns((ILearningContentViewModel?)null);
         ElementModelHandler = Substitute.For<IElementModelHandler>();
-        ElementModelHandler.GetElementModels(Arg.Any<ElementModelContentType>(), Arg.Any<string>(), Arg.Any<WorldTheme?>())
+        ElementModelHandler
+            .GetElementModels(Arg.Any<ElementModelContentType>(), Arg.Any<string>(), Arg.Any<WorldTheme?>())
             .Returns(new[]
             {
                 ElementModel.l_random
             });
         PresentationLogic = Substitute.For<IPresentationLogic>();
-        var localizer = Substitute.For<IStringLocalizer<ElementModelGridSelect>>();
         Context.Services.AddSingleton(WorldPresenter);
         Context.Services.AddSingleton(SpacePresenter);
         Context.Services.AddSingleton(SelectedViewModelsProvider);
         Context.Services.AddSingleton(ElementModelHandler);
         Context.Services.AddSingleton(PresentationLogic);
-        Context.Services.AddSingleton(localizer);
         Context.ComponentFactories.AddStub<NoContentWarning>();
+        Context.ComponentFactories.AddStub<NpcMoodSelect>();
+        Context.ComponentFactories.AddStub<ElementModelGridSelect>();
 
         LearningContentFormModels = new[]
         {
