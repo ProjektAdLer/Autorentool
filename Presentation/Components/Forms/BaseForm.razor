@@ -13,8 +13,21 @@
         </MudButtonGroup>
     </MudCardActions>
 
-    <MudForm Model="@FormDataContainer.FormModel" @ref="@_form" Validation="@ValidateModel" FieldChanged="@FieldChanged">
+    <MudForm Model="@FormDataContainer.FormModel" @ref="@_form" Validation="@ValidateModel" FieldChanged="@FieldChanged" Class="pl-4 2xl:pl-4 2xl:pr-4 overflow-y-scroll top-28 h-[75%] 2xl:h-[83%] absolute flex flex-col w-[100%] mt-2 border-t border-dotted">
         <MudCardContent Class="p-0">
+            @if (FieldErrors?.Any() == true)
+            {
+                <div class="mt-2 form-error-message">
+                    <MudAlert Severity="Severity.Error" Variant="Variant.Outlined">
+                        <ul>
+                            @foreach (var error in FieldErrors)
+                            {
+                                <li>@error</li>
+                            }
+                        </ul>
+                    </MudAlert>
+                </div>
+            }
             @Fields
             @if (SubmitErrorMessage != null)
             {
@@ -28,7 +41,7 @@
     <MudCardActions Class="flex items-end justify-end py-1">
         <MudButtonGroup OverrideStyles="false">
             <CascadingValue Value="this">
-                    @FooterButtons
+                @FooterButtons
             </CascadingValue>
         </MudButtonGroup>
     </MudCardActions>
@@ -67,6 +80,8 @@
     internal string? SubmitErrorMessage { get; set; }
 
     private MudForm? _form; 
+    
+    private List<string>? FieldErrors { get; set; }
     public async Task FocusField(MudTextField<string> focusField)
     {
         // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
@@ -98,7 +113,13 @@
     {
         if (_form is null) throw new InvalidOperationException("_form is null by @ref");
         await _form.Validate();
-        if (!_form.IsValid) return false;
+        if (!_form.IsValid)
+        {
+            FieldErrors = _form.Errors.ToList();
+            StateHasChanged();
+            return false;
+        }
+        FieldErrors = null;
         try
         {
             await OnValidSubmit.InvokeAsync(FormDataContainer.FormModel);
