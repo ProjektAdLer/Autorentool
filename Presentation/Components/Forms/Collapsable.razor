@@ -30,12 +30,11 @@
         </div>
     </div>
 
-    @if (!_collapsed)
-    {
-        <div class="mt-0 inner">
-            @ChildContent
-        </div>
-    }
+
+    <div class="mt-0 inner" style="@(_collapsed ? "display: none;" : "")">
+        @ChildContent
+    </div>
+
 </div>
 
 @code {
