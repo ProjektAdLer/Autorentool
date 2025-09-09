@@ -1,57 +1,52 @@
 ﻿@using H5pPlayer.Presentation.PresentationLogic.ValidateH5p
+@inject Microsoft.Extensions.Localization.IStringLocalizer<ValidateH5pView> L
 
 <div class="flex justify-between items-center text-2xl text-adlergrey-800 adler">
-    <div>H5P-Validierung</div>
+    <div>@L["Validation.HeaderTitle"]</div>
     <p class="text-sm text-red-500 whitespace-nowrap">
-        Dieses Fenster muss offen bleiben bis die Validierung abgeschlossen ist!
+        @L["Validation.WarningKeepOpen"]
     </p>
 </div>
 
-<ValidationNecessaryView></ValidationNecessaryView>
+<ValidationNecessaryView />
 
-<H5pStateView CurrentState="H5pStateView.H5pState.Unknown"></H5pStateView>
+<H5pStateView CurrentState="H5pStateView.H5pState.Unknown" />
 
-<div style="margin-top: 20px;"></div>
+<div class="mt-5"></div>
 <div id="h5p-container"></div>
-<div style="margin-top: 20px;"></div>
+<div class="mt-5"></div>
 
-
-@if (ValidateH5pVm != null)
+@if (ValidateH5pVm?.IsCompletable == true)
 {
-    @if (ValidateH5pVm.IsCompletable)
-    {
-        <div style="color: green; display: flex; align-items: center;">
-            <span>&#10003;</span> <!-- Grüner Haken -->
-            <span style="margin-left: 5px;">H5P ist abschließbar</span>
-        </div>
-    }
+<div class="text-green-600 flex items-center" role="status" aria-live="polite">
+    <span aria-hidden="true">&#10003;</span>
+    <span class="ml-2">@L["Validation.CompletableLabel"]</span>
+</div>
 }
-<button @onclick="@OpenContentFilesFolder" class="relative btn-standard p-2 justify-end items-center shadow-lg">
-    <p class="pl-1 font-bold uppercase">H5P ist primitiv</p>
+
+<button @onclick="@OpenContentFilesFolder"
+        class="relative btn-standard p-2 justify-end items-center shadow-lg"
+        aria-label='@L["Validation.Button.PrimitiveAria"]'>
+    <p class="pl-1 font-bold uppercase">@L["Validation.Button.Primitive"]</p>
 </button>
 
-<button @onclick="@OpenContentFilesFolder" class="relative btn-standard p-2 justify-end items-center shadow-lg">
-    <p class="pl-1 font-bold uppercase">H5P ist nicht verwendbar</p>
+<button @onclick="@OpenContentFilesFolder"
+        class="relative btn-standard p-2 justify-end items-center shadow-lg"
+        aria-label='@L["Validation.Button.UnusableAria"]'>
+    <p class="pl-1 font-bold uppercase">@L["Validation.Button.Unusable"]</p>
 </button>
-
-
 
 @code {
-    
-    [Parameter]
-    public required IValidateH5pViewModel ValidateH5pVm { get;  set; }
-   
-    [Parameter]
-    public required IValidateH5pController ValidateH5pController { get; set; }
+[Parameter] public required IValidateH5pViewModel ValidateH5pVm { get; set; }
+[Parameter] public required IValidateH5pController ValidateH5pController { get; set; }
 
-    protected override async Task OnInitializedAsync()
-    {
-        ValidateH5pVm.OnChange += StateHasChanged;
-    }
-    
-    
-    private void OpenContentFilesFolder()
-    {
+protected override async Task OnInitializedAsync()
+{
+ValidateH5pVm.OnChange += StateHasChanged;
+}
 
-    }
+private void OpenContentFilesFolder()
+{
+// implement logic
+}
 }
