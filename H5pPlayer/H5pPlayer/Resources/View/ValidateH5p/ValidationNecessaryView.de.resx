@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+            
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="ValidationPurpose.Title" xml:space="preserve">
+        <value>Zweck der Validierung</value>
+    </data>
+    <data name="ValidationPurpose.Description" xml:space="preserve">
+        <value>Sie haben H5Ps als externes Lernmaterial hinzugefügt. 
+            H5Ps müssen zunächst auf ihre Funktion hin überprüft werden,
+            bevor sie in einer Lernwelt erfolgreich verwendet werden können.
+            Dabei wird überprüft, ob innerhalb des H5Ps Punkte durch das Beantworten 
+            von Fragen erzielt werden können (z.B. H5P „Interactive Video“) und das 
+            H5P somit abschließbar ist (Anzeige als abschließbares H5P =   ) oder ob 
+            es sich um ein nicht abschließbares H5P handelt, bei dem lediglich
+            durch das Öffnen des H5Ps (z.B. H5P „Image Slider“) Punkte vergeben
+            werden (Anzeige als nicht abschließbares H5P =   ). Auch ist es 
+            möglich, dass ein H5P nicht angezeigt wird oder fehlerhaft ist
+            (Anzeige als defektes H5P =   ). Mehr dazu erfahren Sie hier.</value>
+    </data>
+</root>
