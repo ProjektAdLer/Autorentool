@@ -36,4 +36,7 @@
     <data name="Validation.Button.Unusable" xml:space="preserve">
         <value>H5P is not usable</value>
     </data>
+    <data name="Validation.Button.UnusableAria" xml:space="preserve">
+        <value>Mark H5P as “not usable”</value>
+    </data>
 </root>
