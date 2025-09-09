@@ -39,6 +39,22 @@
         <Generator>ResXFileCodeGenerator</Generator>
         <LastGenOutput>H5pPlayerText.en.Designer.cs</LastGenOutput>
       </EmbeddedResource>
+        <EmbeddedResource Update="Resources\View\ValidateH5p\ValidationNecessaryView.de.resx">
+            <Generator>ResXFileCodeGenerator</Generator>
+            <LastGenOutput>ValidationNecessary.de.Designer.cs</LastGenOutput>
+        </EmbeddedResource>
+        <EmbeddedResource Update="Resources\View\ValidateH5p\ValidationNecessaryView.en.resx">
+            <Generator>ResXFileCodeGenerator</Generator>
+            <LastGenOutput>ValidationNecessary.de.Designer.cs</LastGenOutput>
+        </EmbeddedResource>
+        <EmbeddedResource Update="Resources\View\ValidateH5p\ValidateH5pView.de.resx">
+            <Generator>ResXFileCodeGenerator</Generator>
+            <LastGenOutput>ValidateH5pView.de.Designer.cs</LastGenOutput>
+        </EmbeddedResource>
+        <EmbeddedResource Update="Resources\View\ValidateH5p\ValidateH5pView.en.resx">
+            <Generator>ResXFileCodeGenerator</Generator>
+            <LastGenOutput>ValidateH5pView.en.Designer.cs</LastGenOutput>
+        </EmbeddedResource>
     </ItemGroup>
     <ItemGroup>
       <Compile Update="Resources\H5pPlayerText.de.Designer.cs">
@@ -51,6 +67,16 @@
         <AutoGen>True</AutoGen>
         <DependentUpon>H5pPlayerText.en.resx</DependentUpon>
       </Compile>
+        <Compile Update="Resources\View\ValidateH5p\ValidateH5pView.de.Designer.cs">
+            <DesignTime>True</DesignTime>
+            <AutoGen>True</AutoGen>
+            <DependentUpon>ValidateH5pView.de.resx</DependentUpon>
+        </Compile>
+        <Compile Update="Resources\View\ValidateH5p\ValidateH5pView.en.Designer.cs">
+            <DesignTime>True</DesignTime>
+            <AutoGen>True</AutoGen>
+            <DependentUpon>ValidateH5pView.en.resx</DependentUpon>
+        </Compile>
     </ItemGroup>
  
 

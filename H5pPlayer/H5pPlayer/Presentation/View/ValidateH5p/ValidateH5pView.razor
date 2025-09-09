@@ -1,46 +1,52 @@
 ﻿@using H5pPlayer.Presentation.PresentationLogic.ValidateH5p
-@using MudBlazor
-@inject IDialogService DialogService
+@inject Microsoft.Extensions.Localization.IStringLocalizer<ValidateH5pView> L
 
-<div class="flex flex-col gap-2">
-    <header class="flex-none px-4">
-        <p class="text-lg">H5P-Validator</p>
-    </header>
-    <div class="bg-adlergrey-100 px-4">
-       
-        <ValidationNecessaryView></ValidationNecessaryView>
-            
-        <div class="bg-white border-adlergrey-300 gap-2 border-2 rounded py-1">
-
-            <div style="height: 450px; overflow: auto;" scrolling="yes" id="h5p-container"></div>
-            
-        </div>
-        
-        <footer class="flex flex-row gap-4 justify-end items-end">
-            <NotUsableH5pButton ValidateH5pController="@ValidateH5pController"/>
-            <PrimitiveH5pButton ValidateH5pController="@ValidateH5pController"/>
-            <CompletableH5pButton IsEnabled="@ValidateH5pVm.IsCompletable"
-                                  ValidateH5pController="@ValidateH5pController"/>
-            <CancelValidateH5pButton ValidateH5pController="ValidateH5pController"
-                                     DialogService="@DialogService"></CancelValidateH5pButton>
-
-        </footer>
-        
-    </div>
+<div class="flex justify-between items-center text-2xl text-adlergrey-800 adler">
+    <div>@L["Validation.HeaderTitle"]</div>
+    <p class="text-sm text-red-500 whitespace-nowrap">
+        @L["Validation.WarningKeepOpen"]
+    </p>
 </div>
-        
+
+<ValidationNecessaryView />
+
+<H5pStateView CurrentState="H5pStateView.H5pState.Unknown" />
+
+<div class="mt-5"></div>
+<div id="h5p-container"></div>
+<div class="mt-5"></div>
+
+@if (ValidateH5pVm?.IsCompletable == true)
+{
+<div class="text-green-600 flex items-center" role="status" aria-live="polite">
+    <span aria-hidden="true">&#10003;</span>
+    <span class="ml-2">@L["Validation.CompletableLabel"]</span>
+</div>
+}
+
+<button @onclick="@OpenContentFilesFolder"
+        class="relative btn-standard p-2 justify-end items-center shadow-lg"
+        aria-label='@L["Validation.Button.PrimitiveAria"]'>
+    <p class="pl-1 font-bold uppercase">@L["Validation.Button.Primitive"]</p>
+</button>
+
+<button @onclick="@OpenContentFilesFolder"
+        class="relative btn-standard p-2 justify-end items-center shadow-lg"
+        aria-label='@L["Validation.Button.UnusableAria"]'>
+    <p class="pl-1 font-bold uppercase">@L["Validation.Button.Unusable"]</p>
+</button>
 
 @code {
-    private bool showDefectExplanation = false;
+[Parameter] public required IValidateH5pViewModel ValidateH5pVm { get; set; }
+[Parameter] public required IValidateH5pController ValidateH5pController { get; set; }
 
-    [Parameter]
-    public required IValidateH5pViewModel ValidateH5pVm { get; set; }
+protected override async Task OnInitializedAsync()
+{
+ValidateH5pVm.OnChange += StateHasChanged;
+}
 
-    [Parameter]
-    public required IValidateH5pController ValidateH5pController { get; set; }
-
-    protected override async Task OnInitializedAsync()
-    {
-        ValidateH5pVm.OnChange += StateHasChanged;
-    }
+private void OpenContentFilesFolder()
+{
+// implement logic
+}
 }

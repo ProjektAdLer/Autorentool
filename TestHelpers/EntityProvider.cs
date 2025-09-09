@@ -122,10 +122,11 @@ public static class EntityProvider
     }
 
     public static StoryContent GetStoryContent(string name = "a name", List<string>? storyText = null,
-        bool unsavedChanges = false, string npcName = "a npc name", NpcMood npcMood = NpcMood.Welcome)
+        bool unsavedChanges = false, string npcName = "a npc name", NpcMood npcMood = NpcMood.Welcome,
+        bool exitAfterStorySequence = false)
     {
         storyText ??= new List<string> { "a story" };
-        return new StoryContent(name, unsavedChanges, storyText, npcName, npcMood);
+        return new StoryContent(name, unsavedChanges, storyText, npcName, npcMood, exitAfterStorySequence);
     }
 
     public static Topic GetTopic(string append = "", bool unsavedChanges = false)

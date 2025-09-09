@@ -318,7 +318,7 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
         var storyCollapsable = collapsables.First(collapsable =>
             collapsable.Instance.Title == "CreateStoryElementForm.Fields.Collapsable.Story.Title");
 
-        var addButton = storyCollapsable.FindComponentWithMarkup<MudIconButton>("add-story-block-button");
+        var addButton = storyCollapsable.FindComponentWithMarkup<MudButton>("add-story-block-button");
         addButton.Find("button").Click();
 
         var tfs = storyCollapsable.FindComponentsOrFail<MudTextField<string>>().ToList();

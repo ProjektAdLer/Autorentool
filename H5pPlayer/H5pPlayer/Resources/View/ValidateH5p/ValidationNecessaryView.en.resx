@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+            
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="ValidationPurpose.Title" xml:space="preserve">
+        <value>Purpose of Validation</value>
+    </data>
+    <data name="ValidationPurpose.Description" xml:space="preserve">
+        <value>You have added H5Ps as external learning material.
+H5Ps must first be checked for their functionality before they can be successfully used in a learning environment.
+This check determines whether points can be earned within the H5P by answering questions (e.g., H5P Interactive Video), which makes the H5P completable (displayed as a completable H5P = ), or whether it is a non-completable H5P where points are awarded simply by opening it (e.g., H5P Image Slider) (displayed as a non-completable H5P = ).
+It is also possible that an H5P cannot be displayed or is faulty (displayed as a defective H5P = ).
+You can find more information here.</value>
+    </data>
+</root>
