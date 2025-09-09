@@ -5,11 +5,11 @@
 @inherits MudBaseInput<NpcMood>
 <div>
     <p class="text-xs font-bold">@Localizer["NpcMoodSelect.Header.Text"]</p>
-    <div class="flex gap-2 items-center cursor-default">
+    <div class="flex gap-4 items-center space-x-4 cursor-default">
         <MudTooltip Class="bg-adlergrey-200 shadow-xl" Placement="Placement.Top" Delay="150" Duration="250"
                     Arrow="true">
             <ChildContent>
-                <div class="border border-adlergrey-100 bg-adlerbgbright" style="width: 100%; height: auto; aspect-ratio: 1/1; overflow: hidden;">
+                <div style="width: 100%; height: auto; aspect-ratio: 1/1; overflow: hidden;">
                     <MudImage Src="@NpcMoodPreviewHandler.GetIconForNpcAndMood(ElementModel, Value)"
                               Width="60"
                               Style="transform: scale(1.7); transform-origin: center top"/>

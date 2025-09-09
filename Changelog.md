@@ -7,12 +7,7 @@
 
 ### Added
 
-- Added title and description to the evaluation link.
-- Added exit or stay after story sequence option in story element.
-
 ### Changed
-
-- Use learning outcome generator for learning world like in learning space.
 
 ### Deprecated
 

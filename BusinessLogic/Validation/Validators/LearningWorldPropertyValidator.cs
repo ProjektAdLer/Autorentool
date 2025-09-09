@@ -34,8 +34,7 @@ public class LearningWorldPropertyValidator : AbstractValidator<LearningWorld>
             .NotEmpty()
             .When(x => !string.IsNullOrEmpty(x.EvaluationLinkName))
             .WithMessage(localizer["LearningWorldValidator.EvaluationLink.Required"])
-            .IsHttpOrHttpsUrl(localizer["LearningWorldValidator.EvaluationLink.Valid"])
-            .When(x => !string.IsNullOrEmpty(x.EvaluationLink));
+            .IsHttpOrHttpsUrl(localizer["LearningWorldValidator.EvaluationLink.Valid"]);
         RuleFor(x => x.EvaluationLinkName)
             .NotEmpty()
             .When(x => !string.IsNullOrEmpty(x.EvaluationLink))

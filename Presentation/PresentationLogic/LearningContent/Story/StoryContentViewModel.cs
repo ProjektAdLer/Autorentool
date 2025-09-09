@@ -12,18 +12,16 @@ public class StoryContentViewModel : IStoryContentViewModel
         StoryText = new List<string>();
         NpcName = "";
         NpcMood = NpcMood.Happy;
-        ExitAfterStorySequence = false;
     }
 
     public StoryContentViewModel(string name = "", List<string>? storyText = null, string npcName = "",
-        NpcMood npcMood = NpcMood.Happy, bool exitAfterStorySequence = false)
+        NpcMood npcMood = NpcMood.Happy)
     {
         Name = name;
         UnsavedChanges = true;
         StoryText = storyText ?? new List<string>();
         NpcName = npcName;
         NpcMood = npcMood;
-        ExitAfterStorySequence = exitAfterStorySequence;
     }
 
     public bool UnsavedChanges { get; set; }
@@ -32,7 +30,6 @@ public class StoryContentViewModel : IStoryContentViewModel
     public List<string> StoryText { get; set; }
     public string NpcName { get; set; }
     public NpcMood NpcMood { get; set; }
-    public bool ExitAfterStorySequence { get; set; }
 
     public bool Equals(ILearningContentViewModel? other)
     {

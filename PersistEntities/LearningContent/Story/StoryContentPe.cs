@@ -12,18 +12,15 @@ public class StoryContentPe : IStoryContentPe
         StoryText = new List<string>();
         NpcName = "";
         NpcMood = NpcMood.Happy;
-        ExitAfterStorySequence = false;
     }
 
-    public StoryContentPe(string name, bool unsavedChanges, List<string> storyText, string npcName, NpcMood npcMood,
-        bool exitAfterStorySequence)
+    public StoryContentPe(string name, bool unsavedChanges, List<string> storyText, string npcName, NpcMood npcMood)
     {
         Name = name;
         UnsavedChanges = unsavedChanges;
         StoryText = storyText;
         NpcName = npcName;
         NpcMood = npcMood;
-        ExitAfterStorySequence = exitAfterStorySequence;
     }
 
     public bool UnsavedChanges { get; set; }
@@ -32,7 +29,6 @@ public class StoryContentPe : IStoryContentPe
     public List<string> StoryText { get; set; }
     public string NpcName { get; set; }
     public NpcMood NpcMood { get; set; }
-    public bool ExitAfterStorySequence { get; set; }
 
     public bool Equals(ILearningContentPe? other)
     {

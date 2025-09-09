@@ -18,10 +18,9 @@ public class StoryContentUt
         var storyText = new List<string> { "a story", "and another story" };
         var npcName = "a npc name";
         var npcMood = NpcMood.Welcome;
-        var exitAfterStorySequence = true;
-
-        var storyContent = new StoryContent(name, unsavedChanges, storyText, npcName, npcMood, exitAfterStorySequence);
-
+        
+        var storyContent = new StoryContent(name, unsavedChanges, storyText, npcName, npcMood);
+        
         Assert.Multiple(() =>
         {
             Assert.That(storyContent.Name, Is.EqualTo(name));
@@ -29,10 +28,9 @@ public class StoryContentUt
             Assert.That(storyContent.StoryText, Is.EquivalentTo(storyText));
             Assert.That(storyContent.NpcName, Is.EqualTo(npcName));
             Assert.That(storyContent.NpcMood, Is.EqualTo(npcMood));
-            Assert.That(storyContent.ExitAfterStorySequence, Is.EqualTo(exitAfterStorySequence));
         });
     }
-
+    
     [Test]
     public void Equals_SameNameAndStoryText_ReturnsTrue()
     {
@@ -41,11 +39,9 @@ public class StoryContentUt
         var storyText = new List<string> { "a story", "and another story" };
         var npcName = "a npc name";
         var npcMood = NpcMood.Welcome;
-        var exitAfterStorySequence = true;
-
-        var storyContent = new StoryContent(name, unsavedChanges, storyText, npcName, npcMood, exitAfterStorySequence);
-        var otherStoryContent =
-            new StoryContent(name, unsavedChanges, storyText, npcName, npcMood, exitAfterStorySequence);
+        
+        var storyContent = new StoryContent(name, unsavedChanges, storyText, npcName, npcMood);
+        var otherStoryContent = new StoryContent(name, unsavedChanges, storyText, npcName, npcMood);
 
         Assert.Multiple(() =>
         {
@@ -62,10 +58,9 @@ public class StoryContentUt
         var storyText = new List<string> { "a story", "and another story" };
         var npcName = "a npc name";
         var npcMood = NpcMood.Welcome;
-        var exitAfterStorySequence = true;
-
-        var storyContent = new StoryContent(name, unsavedChanges, storyText, npcName, npcMood, exitAfterStorySequence);
-
+        
+        var storyContent = new StoryContent(name, unsavedChanges, storyText, npcName, npcMood);
+        
         Assert.Multiple(() =>
         {
             // ReSharper disable once EqualExpressionComparison
@@ -75,7 +70,7 @@ public class StoryContentUt
 #pragma warning restore NUnit2010
         });
     }
-
+    
     [Test]
     public void Equals_DifferentType_ReturnsFalse()
     {
@@ -84,9 +79,8 @@ public class StoryContentUt
         var storyText = new List<string> { "a story", "and another story" };
         var npcName = "a npc name";
         var npcMood = NpcMood.Welcome;
-        var exitAfterStorySequence = true;
-
-        var storyContent = new StoryContent(name, unsavedChanges, storyText, npcName, npcMood, exitAfterStorySequence);
+        
+        var storyContent = new StoryContent(name, unsavedChanges, storyText, npcName, npcMood);
         var otherStoryContent = Substitute.For<ILearningContent>();
 
         Assert.Multiple(() =>
@@ -95,7 +89,7 @@ public class StoryContentUt
             Assert.That(storyContent.Equals(otherStoryContent), Is.False);
         });
     }
-
+    
     [Test]
     public void Equals_WithNull_ReturnsFalse()
     {
@@ -111,7 +105,7 @@ public class StoryContentUt
     public void Equals_UnequalProperties_ReturnsFalse(StoryContent other)
     {
         var storyContent = GetStoryContent();
-
+     
         Assert.That(storyContent, Is.Not.EqualTo(other));
     }
 
@@ -119,11 +113,8 @@ public class StoryContentUt
     {
         public IEnumerator<StoryContent> GetEnumerator()
         {
-            yield return new StoryContent("different name", false, new List<string> { "a story", "and another story" },
-                "a npc name", NpcMood.Welcome, true);
-            yield return new StoryContent("a name", false,
-                new List<string> { "a different story", "and another story" }, "different npc name", NpcMood.Tired,
-                false);
+            yield return new StoryContent("different name", false, new List<string> { "a story", "and another story" }, "a npc name", NpcMood.Welcome);
+            yield return new StoryContent("a name", false, new List<string> { "a different story", "and another story" }, "different npc name", NpcMood.Tired);
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -139,9 +130,8 @@ public class StoryContentUt
         var storyText = new List<string> { "a story", "and another story" };
         var npcName = "a npc name";
         var npcMood = NpcMood.Welcome;
-        var exitAfterStorySequence = true;
-
-        var storyContent = new StoryContent(name, unsavedChanges, storyText, npcName, npcMood, exitAfterStorySequence);
+        
+        var storyContent = new StoryContent(name, unsavedChanges, storyText, npcName, npcMood);
         return storyContent;
     }
 }

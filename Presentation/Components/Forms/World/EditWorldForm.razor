@@ -105,12 +105,30 @@
 
             <Collapsable Title=@Localizer["EditWorldForm.Theme.Text"] InitiallyCollapsed="true">
                 <p class="text-xs px-6 pt-3">@Localizer["EditWorldForm.Theme.Field.Theme.Text"]</p>
-
-                <div class="w-full px-6 py-2">
-                    <WorldThemeSelect @bind-Selected="FormDataContainer.FormModel.WorldTheme"/>
+                <div class="px-6 py-2">
+                    <MudSelect @bind-Value="FormDataContainer.FormModel.WorldTheme"
+                               Text="@FormDataContainer.FormModel.WorldTheme.ToString()"
+                               For="@(() => FormModel.WorldTheme)">
+                        @foreach (var theme in _themes)
+                        {
+                            <!-- WorldTheme.Company is disabled because it is not yet supported -->
+                            <MudSelectItem Disabled="@theme.Equals(WorldTheme.Company)"
+                                           Value="@(theme)">@(ThemeHelper<WorldTheme>.Localize(theme))</MudSelectItem>
+                        }
+                    </MudSelect>
                 </div>
             </Collapsable>
 
+            @*<Collapsable Title=@Localizer["EditWorldForm.Fields.Collapsable.Goals.Title"] InitiallyCollapsed="true">
+                <div class="rounded-lg w-4/4 px-6">
+                    <p class="text-xs pt-3">@Localizer["EditWorldForm.Fields.Collapsable.Goals.Field.Goals.Text"]</p>
+                    <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
+                                  For="@(() => FormModel.Goals)"
+                                  Lines="3"
+                                  Variant="Variant.Outlined"
+                                  DebounceInterval="DebounceInterval"/>
+                </div>
+            </Collapsable>*@
             <Collapsable Title=@Localizer["EditWorldForm.Fields.Collapsable.Goals.Title"] InitiallyCollapsed="true">
                 <div class="w-4/4 px-6">
                     <p class="text-xs pt-3">@Localizer["EditWorldForm.Fields.Collapsable.Goals.Field.Goals.Text"]</p>
@@ -191,6 +209,7 @@
     public ILearningWorldViewModel WorldToEdit { get; set; }
 
     [Parameter] public int DebounceInterval { get; set; } = 300;
+
 
     //this indirection is necessary for the `For` attribute on the form fields to work properly when validating the form
     //please DO NOT REFACTOR THIS - n.stich
