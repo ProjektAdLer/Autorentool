@@ -63,6 +63,14 @@
         <Generator>ResXFileCodeGenerator</Generator>
         <LastGenOutput>CompletableH5pButton.de.Designer.cs</LastGenOutput>
       </EmbeddedResource>
+      <EmbeddedResource Update="Resources\View\ValidateH5p\NotUseableH5pButton.de.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>NotUseableH5pButton.de.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\View\ValidateH5p\NotUseableH5pButton.en.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>NotUseableH5pButton.de.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
     </ItemGroup>
     <ItemGroup>
       <Compile Update="Resources\H5pPlayerText.de.Designer.cs">
