@@ -24,4 +24,7 @@
     <data name="Button.NotUsableAria" xml:space="preserve">
         <value>Mark H5P as not usable</value>
     </data>
+    <data name="Tooltip.NotUsableDescription" xml:space="preserve">
+        <value>The H5P is not displayed or cannot be completed even though it contains a task.</value>
+    </data>
 </root>
