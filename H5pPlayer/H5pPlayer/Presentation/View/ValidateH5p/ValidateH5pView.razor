@@ -1,41 +1,37 @@
 ﻿@using H5pPlayer.Presentation.PresentationLogic.ValidateH5p
 @using MudBlazor
 @inject IDialogService DialogService
+@inject Microsoft.Extensions.Localization.IStringLocalizer Localizer
+
 
 <div class="flex flex-col gap-2">
     <header class="flex-none px-4">
-        <p class="text-lg">H5P-Validator</p>
+        <p class="text-lg">@Localizer["Message.ValidatorTitle"]</p>
     </header>
     <div class="bg-adlergrey-100 px-4">
-       
-        <ValidationNecessaryView></ValidationNecessaryView>
-            
+        <ValidationNecessaryView />
+
         <div class="bg-white border-adlergrey-300 gap-2 border-2 rounded py-1">
-
             <div style="height: 450px; overflow: auto;" scrolling="yes" id="h5p-container"></div>
-            
         </div>
-        
-        <footer class="flex flex-row gap-4 justify-end items-end">
-            <NotUsableH5pButton ValidateH5pController="@ValidateH5pController"/>
-            <PrimitiveH5pButton ValidateH5pController="@ValidateH5pController"/>
-            <CompletableH5pButton IsEnabled="@ValidateH5pVm.IsCompletable"
-                                  ValidateH5pController="@ValidateH5pController"/>
-            <CancelValidateH5pButton ValidateH5pController="ValidateH5pController"
-                                     DialogService="@DialogService"></CancelValidateH5pButton>
 
+        <footer class="flex flex-row gap-4 justify-end items-end">
+            <NotUsableH5pButton ValidateH5pController="@ValidateH5pController" />
+            <PrimitiveH5pButton  ValidateH5pController="@ValidateH5pController" />
+            <CompletableH5pButton IsEnabled="@ValidateH5pVm.IsCompletable"
+                                  ValidateH5pController="@ValidateH5pController" />
+            <CancelValidateH5pButton ValidateH5pController="ValidateH5pController"
+                                     DialogService="@DialogService" />
         </footer>
-        
     </div>
 </div>
-        
 
 @code {
     private bool showDefectExplanation = false;
 
-    [Parameter]
+    [Parameter] 
     public required IValidateH5pViewModel ValidateH5pVm { get; set; }
-
+    
     [Parameter]
     public required IValidateH5pController ValidateH5pController { get; set; }
 
