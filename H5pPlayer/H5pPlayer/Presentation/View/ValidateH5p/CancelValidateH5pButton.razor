@@ -4,16 +4,15 @@
 @using Microsoft.Extensions.Localization
 
 <button class="uppercase btn-standard shadow-lg text-adlergrey rounded-lg bg-adlerdeactivated hover:bg-adlerdarkblue hover:text-buttonbgblue"
-        @onclick="OpenAbortDialog">
+        @onclick="OpenAbortDialog"
+        aria-label="@Localizer["Dialog.CancelValidation"]">
     <div>@Localizer["Button.Cancel"]</div>
 </button>
-    
+
 @code {
-    
-    [Inject, AllowNull] 
+    [Inject, AllowNull]
     internal IStringLocalizer Localizer { get; set; }
-    
-    
+
     [Parameter, EditorRequired]
     public required IValidateH5pController ValidateH5pController { get; set; }
 
@@ -33,7 +32,10 @@
             BackdropClick = false,
             MaxWidth = MaxWidth.Large
         };
-
-        await DialogService.ShowAsync<CloseValidateH5pView>("Validierung abbrechen", parameters, options);
+        
+        await DialogService.ShowAsync<CloseValidateH5pView>(
+            Localizer["Dialog.CancelValidation"],
+            parameters,
+            options);
     }
 }
