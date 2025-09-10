@@ -1,14 +1,14 @@
 ﻿@using H5pPlayer.Presentation.PresentationLogic.ValidateH5p
+@inject Microsoft.Extensions.Localization.IStringLocalizer Localizer
 
 <button @onclick="MarkAsCompletable"
         class="@GetButtonClass()"
         disabled="@(!IsEnabled)">
-    Überprüfung erfolgreich
+    @Localizer["Button.Completable"]
 </button>
 
 @code {
-    [Parameter]
-    public bool IsEnabled { get; set; }
+    [Parameter] public bool IsEnabled { get; set; }
 
     [Parameter, EditorRequired]
     public required IValidateH5pController ValidateH5pController { get; set; }
