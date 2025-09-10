@@ -22,7 +22,8 @@
             <MudTextField @bind-Value="_searchString"
                           Immediate="true"
                           Adornment="Adornment.Start"
-                          AdornmentIcon="@Icons.Material.Outlined.Search"/>
+                          AdornmentIcon="@Icons.Material.Outlined.Search"
+                          Placeholder="@Localizer["LearningContentDialog.Search.Placeholder"]"/>
         </div>
     </MudContainer>
 
@@ -41,14 +42,19 @@
     
         <HeaderContent>
             <MudTh Class="bg-adlerbgbright pa-1"></MudTh>
-            <MudTh Class="bg-adlerbgbright text-adlerdarkblue-800 font-bold pa-1">Name</MudTh>
-            <MudTh Class="bg-adlerbgbright text-adlerdarkblue-800 font-bold pa-1">@Localizer["LearningContentDialog.LearningMaterial.Type"]</MudTh>
+            <MudTh Class="bg-adlerbgbright text-adlerdarkblue-800 font-bold pa-1">
+                @Localizer["LearningContentDialog.LearningMaterial.Name"]
+            </MudTh>
+            <MudTh Class="bg-adlerbgbright text-adlerdarkblue-800 font-bold pa-1">
+                @Localizer["LearningContentDialog.LearningMaterial.Type"]
+            </MudTh>
             <MudTh Class="bg-adlerbgbright text-adlerdarkblue-800 font-bold pa-1" Style="width: 25%;">
                 <MudTableSortLabel SortBy="new Func<ILearningContentFormModel, object>(SortByH5pState)">
-                    Zustand
+                    @Localizer["LearningContentDialog.LearningMaterial.State"]
                 </MudTableSortLabel>
             </MudTh>
-            </HeaderContent>
+        </HeaderContent>
+
         <RowTemplate>
             <MudTd Class="py-0 px-2">
                 <MudIconButton Icon="@Icons.Material.Filled.RemoveRedEye"
@@ -56,7 +62,8 @@
                                OnClick="() => ShowLearningContent(context)"
                                title="@Localizer["LearningContentDialog.LearningMaterial.Preview"]"/>
             </MudTd>
-            <MudTd Class="p-0 w-full" DataLabel="Name">
+
+            <MudTd Class="p-0 w-full" DataLabel='@Localizer["LearningContentDialog.LearningMaterial.Name"]'>
                 <div style="cursor:@(IsNameDisabled(context) ? "not-allowed" : "pointer")">
                     <MudTooltip Text="@context.Name"
                                 Arrow="true"
@@ -70,128 +77,110 @@
                     </MudTooltip>
                 </div>
             </MudTd>
-            <MudTd DataLabel="Type" Class="p-0 cursor-default">
+
+            <MudTd Class="p-0 cursor-default" DataLabel='@Localizer["LearningContentDialog.LearningMaterial.Type"]'>
                 @if (context is FileContentFormModel fileContentContext)
                 {
                     <div class="flex flex-row items-center justify-start">
-                        <span class="w-12 text-sm">@fileContentContext.Type</span>
+                        <span class="w-12 text-sm">
+                            @((fileContentContext.Type?.ToLowerInvariant()) switch
+                              {
+                                  "h5p"  => "h5p",  // keep technical type for h5p
+                                  "video"=> Localizer["LearningContentDialog.Type.Video"],
+                                  _      => Localizer["LearningContentDialog.Type.Other"]  // fallback
+                              })
+                        </span>
                     </div>
                 }
                 else
                 {
                     <div class="flex flex-row items-center justify-start">
-                        <span class="w-12 text-sm">video</span>
+                        <span class="w-12 text-sm">@Localizer["LearningContentDialog.Type.Video"]</span>
                     </div>
                 }
             </MudTd>
-            <MudTd Class="p-0 cursor-default" DataLabel="State">
-                
-                    @if (context is FileContentFormModel fileContentContext)
+
+            <MudTd Class="p-0 cursor-default" DataLabel='@Localizer["LearningContentDialog.LearningMaterial.State"]'>
+                @if (context is FileContentFormModel fileContentContext2)
+                {
+                    if (fileContentContext2.Type == "h5p")
                     {
-                        var fileContent = context as FileContentFormModel;
-                        @if (fileContentContext.Type == "h5p")
-                        {
-                            <H5PStateIcon FileContentVm="@FileContentFormModelToViewModel(fileContent!)"/>
-                        }
-                        else 
-                        {
-                            <MudTooltip>
-                                <div class="flex flex-row items-center justify-start gap-1">
-                                    @((MarkupString)H5PStateIcon.InlineSvg(H5PStateIcon.Svg.Lockable))
-                                    <p class="text-xs text-adlergrey">nutzbar</p>
-                                </div>
-                            </MudTooltip>
-                        }
+                        <H5PStateIcon FileContentVm="@FileContentFormModelToViewModel((FileContentFormModel)context)"/>
                     }
                     else
                     {
-                        <div class="flex flex-row items-center justify-start">
-                            <MudTooltip>
-                                <div class="flex flex-row items-center justify-start gap-1">
-                                    @((MarkupString)H5PStateIcon.InlineSvg(H5PStateIcon.Svg.Lockable))
-                                    <p class="text-xs text-adlergrey">nutzbar</p>
-                                </div>
-                            </MudTooltip>
-                        </div>
+                        <MudTooltip Text='@Localizer["LearningContentDialog.State.Usable"]'>
+                            <div class="flex flex-row items-center justify-start gap-1" aria-label='@Localizer["LearningContentDialog.State.Usable"]'>
+                                @((MarkupString)H5PStateIcon.InlineSvg(H5PStateIcon.Svg.Lockable))
+                                <p class="text-xs text-adlergrey">@Localizer["LearningContentDialog.State.Usable"]</p>
+                            </div>
+                        </MudTooltip>
                     }
-                
+                }
+                else
+                {
+                    <div class="flex flex-row items-center justify-start">
+                        <MudTooltip Text='@Localizer["LearningContentDialog.State.Usable"]'>
+                            <div class="flex flex-row items-center justify-start gap-1" aria-label='@Localizer["LearningContentDialog.State.Usable"]'>
+                                @((MarkupString)H5PStateIcon.InlineSvg(H5PStateIcon.Svg.Lockable))
+                                <p class="text-xs text-adlergrey">@Localizer["LearningContentDialog.State.Usable"]</p>
+                            </div>
+                        </MudTooltip>
+                    </div>
+                }
             </MudTd>
         </RowTemplate>
     </MudTable>
 </div>
-
 
 @code {
     [CascadingParameter] public IMudDialogInstance? MudDialog { get; set; }
 
     [Parameter, EditorRequired] public ILearningContentFormModel? LearningContent { get; set; }
     
-    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
-    internal IStringLocalizer<LearningContentDialog> Localizer { get; set; }
-
+    [Inject, AllowNull] internal IStringLocalizer<LearningContentDialog> Localizer { get; set; }
     [Inject, AllowNull] internal ILearningWorldPresenter WorldPresenter { get; set; }
-
     [Inject, AllowNull] internal IMapper Mapper { get; set; }
 
     private string? _searchString;
 
-    
     private bool IsNameDisabled(ILearningContentFormModel item)
     {
         if (item is FileContentFormModel file)
-        {
-            return file.Type == "h5p" && 
-                   !(file.H5PState == H5PContentState.Completable || file.H5PState == H5PContentState.Primitive);
-        }
+            return file.Type == "h5p" && !(file.H5PState == H5PContentState.Completable || file.H5PState == H5PContentState.Primitive);
         return false;
     }
-    private void RowClickEvent(TableRowClickEventArgs<ILearningContentFormModel> tableRowClickEventArgs)
+
+    private void RowClickEvent(TableRowClickEventArgs<ILearningContentFormModel> e)
     {
-        if (tableRowClickEventArgs.Item is FileContentFormModel fileContent)
+        if (e.Item is FileContentFormModel fileContent)
         {
             if (fileContent.Type == "h5p" &&
                 (fileContent.H5PState == H5PContentState.Completable || fileContent.H5PState == H5PContentState.Primitive))
-            {
-                MudDialog?.Close(DialogResult.Ok(tableRowClickEventArgs.Item));
-            } 
+                MudDialog?.Close(DialogResult.Ok(e.Item));
             else if (fileContent.Type != "h5p")
-            {
-                MudDialog?.Close(DialogResult.Ok(tableRowClickEventArgs.Item));
-            }
+                MudDialog?.Close(DialogResult.Ok(e.Item));
         }
-        else
-        {
-            MudDialog?.Close(DialogResult.Ok(tableRowClickEventArgs.Item));
-        }
+        else MudDialog?.Close(DialogResult.Ok(e.Item));
     }
 
     private string SelectedRowClassFunc(ILearningContentFormModel element, int rowNumber)
-    {
-        return element.Equals(LearningContent) ? "bg-adlerblue-200" : string.Empty;
-    }
+        => element.Equals(LearningContent) ? "bg-adlerblue-200" : string.Empty;
 
-    private bool Filter(ILearningContentFormModel element) =>
-        FilterInternal(element, _searchString);
+    private bool Filter(ILearningContentFormModel element) => FilterInternal(element, _searchString);
+    private bool FilterInternal(ILearningContentFormModel element, string? s) => FilterInternal(ILearningContentFormModel.GetSearchableStrings(element), s);
+    private bool FilterInternal(IEnumerable<string> strings, string? s)
+        => string.IsNullOrWhiteSpace(s) || strings.Any(str => str.ToLowerInvariant().Contains(s.ToLower()));
 
-    private bool FilterInternal(ILearningContentFormModel element, string? searchString) => FilterInternal(ILearningContentFormModel.GetSearchableStrings(element), searchString);
+    [Inject, AllowNull] internal IH5PPlayerPluginManager H5PPlayerPluginManager { get; set; }
+    [Inject, AllowNull] internal IPresentationLogic PresentationLogic { get; set; }
 
-    private bool FilterInternal(IEnumerable<string> searchableStrings, string? searchString)
-    {
-        return string.IsNullOrWhiteSpace(searchString) || searchableStrings.Any(str => str.ToLowerInvariant().Contains(searchString.ToLower()));
-    }
-
-    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
-    internal  IH5PPlayerPluginManager H5PPlayerPluginManager { get; set; }    
-    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
-    internal  IPresentationLogic PresentationLogic { get; set; }
     private async Task ShowLearningContent(ILearningContentFormModel context)
     {
-        if (context is FileContentFormModel fileContentFm && fileContentFm.Type =="h5p")
+        if (context is FileContentFormModel fileContentFm && fileContentFm.Type == "h5p")
         {
             var fileContentVm = FileContentFormModelToViewModel(fileContentFm);
-            var startH5PPlayerTO = new StartH5PPlayerTO();
-            startH5PPlayerTO.FileContentVm = fileContentVm;
-            startH5PPlayerTO.NavigationManager = Navigation;
+            var startH5PPlayerTO = new StartH5PPlayerTO { FileContentVm = fileContentVm, NavigationManager = Navigation };
             await H5PPlayerPluginManager.StartH5pPlayerToValidateAsync(startH5PPlayerTO);
         }
         else
@@ -200,24 +189,16 @@
         }
     }
 
-
     private IFileContentViewModel FileContentFormModelToViewModel(FileContentFormModel fileContentFm)
     {
-        var fileContentVm = new FileContentViewModel(fileContentFm.Name,fileContentFm.Type,fileContentFm.Filepath);
-        fileContentVm.H5PState = fileContentFm.H5PState;
-        fileContentVm.IsH5P = true;
-
-        return fileContentVm;
+        var vm = new FileContentViewModel(fileContentFm.Name, fileContentFm.Type, fileContentFm.Filepath)
+        {
+            H5PState = fileContentFm.H5PState,
+            IsH5P = true
+        };
+        return vm;
     }
     
     private object SortByH5pState(ILearningContentFormModel context)
-    {
-        
-        if (context is FileContentFormModel fileContentVm && fileContentVm.Type == "h5p")
-        {
-            return fileContentVm.H5PState;
-        }
-     
-        return H5PContentState.Completable; // oder was auch immer als Standard
-    }
+        => (context is FileContentFormModel f && f.Type == "h5p") ? f.H5PState : H5PContentState.Completable;
 }

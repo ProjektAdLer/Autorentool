@@ -27,4 +27,22 @@
     <data name="LearningContentDialog.LearningMaterial.Type" xml:space="preserve">
         <value>Type</value>
     </data>
+    <data name="LearningContentDialog.LearningMaterial.Name" xml:space="preserve">
+        <value>Name</value>
+    </data>
+    <data name="LearningContentDialog.LearningMaterial.State" xml:space="preserve">
+        <value>State</value>
+    </data>
+    <data name="LearningContentDialog.Search.Placeholder" xml:space="preserve">
+        <value>Search content…</value>
+    </data>
+    <data name="LearningContentDialog.Type.Video" xml:space="preserve">
+        <value>Video</value>
+    </data>
+    <data name="LearningContentDialog.Type.Other" xml:space="preserve">
+        <value>Other</value>
+    </data>
+    <data name="LearningContentDialog.State.Usable" xml:space="preserve">
+        <value>usable</value>
+    </data>
 </root>
