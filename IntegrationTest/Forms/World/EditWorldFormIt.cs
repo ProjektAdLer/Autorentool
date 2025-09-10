@@ -34,6 +34,7 @@ public class EditWorldFormIt : MudFormTestFixture<EditWorldForm, LearningWorldFo
         Mapper = Substitute.For<IMapper>();
         Context.Services.AddSingleton(WorldPresenter);
         Context.Services.AddSingleton(Mapper);
+        Context.RenderComponent<MudPopoverProvider>();
     }
 
     private ILearningWorldPresenter WorldPresenter { get; set; }
@@ -102,7 +103,6 @@ public class EditWorldFormIt : MudFormTestFixture<EditWorldForm, LearningWorldFo
     {
         var systemUnderTest = GetRenderedComponent();
         var mudForm = systemUnderTest.FindComponent<MudForm>();
-        Context.RenderComponent<MudPopoverProvider>();
         var collapsables = systemUnderTest.FindComponents<Collapsable>();
         collapsables[1].Find("div.toggler").Click();
         collapsables[2].Find("div.toggler").Click();
@@ -134,7 +134,6 @@ public class EditWorldFormIt : MudFormTestFixture<EditWorldForm, LearningWorldFo
     {
         var worldToMap = ViewModelProvider.GetLearningWorld();
         var systemUnderTest = GetRenderedComponent(worldToMap);
-        Context.RenderComponent<MudPopoverProvider>();
         Mapper.Received(1).Map(worldToMap, FormDataContainer.FormModel);
         Mapper.ClearReceivedCalls();
 
