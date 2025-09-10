@@ -1,12 +1,13 @@
 ﻿@using H5pPlayer.Presentation.PresentationLogic.ValidateH5p
+@inject Microsoft.Extensions.Localization.IStringLocalizer Localizer
 
 <button @onclick="ValidateLater"
-        class="uppercase btn-standard shadow-lg text-adlergrey rounded-lg bg-adlerdeactivated hover:bg-adlerdarkblue hover:text-buttonbgblue">
-    Später durchführen
+        class="uppercase btn-standard shadow-lg text-adlergrey rounded-lg bg-adlerdeactivated hover:bg-adlerdarkblue hover:text-buttonbgblue"
+        aria-label="@Localizer["Button.ValidateLaterAria"]">
+    @Localizer["Button.ValidateLater"]
 </button>
 
 @code {
-
     [Parameter, EditorRequired]
     public required IValidateH5pController ValidateH5pController { get; set; }
 
