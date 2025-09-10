@@ -79,6 +79,14 @@
         <Generator>ResXFileCodeGenerator</Generator>
         <LastGenOutput>PrimitiveH5pButton.de.Designer.cs</LastGenOutput>
       </EmbeddedResource>
+      <EmbeddedResource Update="Resources\View\ValidateH5p\ValidateH5pLaterButton.de.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>ValidateH5pLaterButton.de.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\View\ValidateH5p\ValidateH5pLaterButton.en.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>ValidateH5pLaterButton.de.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
     </ItemGroup>
     <ItemGroup>
       <Compile Update="Resources\H5pPlayerText.de.Designer.cs">
