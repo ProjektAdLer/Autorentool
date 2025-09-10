@@ -1,8 +1,10 @@
 ﻿@using H5pPlayer.Presentation.PresentationLogic.ValidateH5p
+@inject Microsoft.Extensions.Localization.IStringLocalizer Localizer
 
 <button @onclick="MarkAsPrimitive"
-        class="btn-standard uppercase shadow-lg">
-    H5P enthält keine Aufgabe
+        class="btn-standard uppercase shadow-lg"
+        aria-label="@Localizer["Button.PrimitiveAria"]">
+    @Localizer["Button.Primitive"]
 </button>
 
 @code {
