@@ -22,6 +22,6 @@
         <value>Keep this window open until validation is complete!</value>
     </data>
     <data name="Tooltip.ValidationExplanation" xml:space="preserve">
-        <value>H5Ps must first be checked for functionality before they can be used successfully in a learning environment. This check determines whether points can be earned by answering questions (making the H5P completable) or whether it is non-completable where progress comes from simply navigating through slides. It is also possible that an H5P is faulty or does not display at all.</value>
+        <value />
     </data>
 </root>
