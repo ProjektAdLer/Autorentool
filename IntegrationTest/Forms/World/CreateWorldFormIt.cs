@@ -40,6 +40,7 @@ public sealed class CreateWorldFormIt : MudFormTestFixture<CreateWorldForm, Lear
         Context.Services.AddSingleton(WorkspacePresenter);
         Context.Services.AddSingleton(WorkspaceViewModel);
         Context.Services.AddSingleton(FormDataContainer);
+        Context.RenderComponent<MudPopoverProvider>();
     }
 
     private IAuthoringToolWorkspacePresenter WorkspacePresenter { get; set; }
@@ -67,7 +68,6 @@ public sealed class CreateWorldFormIt : MudFormTestFixture<CreateWorldForm, Lear
     {
         var systemUnderTest = GetRenderedComponent();
         var mudForm = systemUnderTest.FindComponent<MudForm>();
-        Context.RenderComponent<MudPopoverProvider>();
         var collapsables = systemUnderTest.FindComponents<Collapsable>();
         collapsables[1].Find("div.toggler").Click();
         collapsables[2].Find("div.toggler").Click();

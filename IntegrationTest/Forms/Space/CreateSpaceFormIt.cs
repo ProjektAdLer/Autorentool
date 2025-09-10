@@ -29,6 +29,7 @@ public class CreateSpaceFormIt : MudFormTestFixture<CreateSpaceForm, LearningSpa
         themeLocalizer[Arg.Any<string>()].Returns(ci => new LocalizedString(ci.Arg<string>(), ci.Arg<string>()));
         ThemeHelper<SpaceTheme>.Initialize(themeLocalizer);
         Context.Services.AddSingleton(WorldPresenter);
+        Context.RenderComponent<MudPopoverProvider>();
     }
 
     private ILearningWorldPresenter WorldPresenter { get; set; }
@@ -51,7 +52,6 @@ public class CreateSpaceFormIt : MudFormTestFixture<CreateSpaceForm, LearningSpa
         var systemUnderTest = GetRenderedComponent();
 
         var mudForm = systemUnderTest.FindComponent<MudForm>();
-        Context.RenderComponent<MudPopoverProvider>();
         var collapsables = systemUnderTest.FindComponents<Collapsable>();
         foreach (var collapsable in collapsables.Skip(1))
         {
@@ -192,6 +192,7 @@ public class CreateSpaceFormIt : MudFormTestFixture<CreateSpaceForm, LearningSpa
             }
         );
     }
+
 
     private IRenderedComponent<CreateSpaceForm> GetRenderedComponent()
     {
