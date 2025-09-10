@@ -1,20 +1,23 @@
 ﻿@using MudBlazor
+@inject Microsoft.Extensions.Localization.IStringLocalizer Localizer
+
 
 <div class="flex flex-row justify-start items-center gap-2 w-full py-2">
     <p class="text-sm text-formerror font-bold whitespace-nowrap">
-        Dieses Fenster muss offen bleiben, bis die Validierung abgeschlossen ist!
+        @Localizer["Message.KeepOpenWarning"]
     </p>
-    <MudTooltip Placement="Placement.Bottom" Class="w-96 p-4 bg-adlerdarkblue-200 shadow-lg text-start leading-relaxed">
+
+    <MudTooltip Placement="Placement.Bottom"
+                Class="w-96 p-4 bg-adlerdarkblue-200 shadow-lg text-start leading-relaxed">
         <TooltipContent>
-            <MudText Class="cursor-default text-xs">H5Ps müssen zunächst auf ihre Funktion hin überprüft werden,
-                bevor sie in einer Lernwelt erfolgreich verwendet werden können.
-                Dabei wird überprüft, ob innerhalb des H5Ps Punkte durch das Beantworten
-                von Fragen erzielt werden können und das H5P somit abschließbar ist oder ob
-                es sich um ein nicht abschließbares H5P handelt, bei dem lediglich das Durchklicken der einzelnen Folien entscheidend ist. Auch ist es
-                möglich, dass ein H5P fehlerhaft ist oder gar nicht erst angezeigt.</MudText>
+            <MudText Class="cursor-default text-xs">
+                @Localizer["Tooltip.ValidationExplanation"]
+            </MudText>
         </TooltipContent>
         <ChildContent>
-            <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info" Class="text-adlergrey-500 hover:text-adlerdarkblue" />
+            <MudIcon Size="Size.Small"
+                     Icon="@Icons.Material.Filled.Info"
+                     Class="text-adlergrey-500 hover:text-adlerdarkblue" />
         </ChildContent>
-    </MudTooltip> 
+    </MudTooltip>
 </div>
