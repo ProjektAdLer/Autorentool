@@ -34,10 +34,10 @@
         <value>Language</value>
     </data>
     <data name="CreateWorldForm.Goals.Field.Description.Text" xml:space="preserve">
-        <value>Description for this learning world</value>
+        <value>Write a description for this learning world to give a overview of the content that will be covered.</value>
     </data>
     <data name="CreateWorldForm.Goals.Field.Goals.Text" xml:space="preserve">
-        <value>Learning outcome(s) for this learning world</value>
+        <value>Define learning outcomes that precisely describe the verifiable skills or knowledge that should be acquired upon completion of the learning world.</value>
     </data>
     <data name="CreateWorldForm.Title.Text" xml:space="preserve">
         <value>Create Learning World</value>
@@ -85,16 +85,16 @@
         <value>Learning World Theme</value>
     </data>
     <data name="CreateWorldForm.Theme.Field.Theme.Text" xml:space="preserve">
-        <value>Selection of themes with different theme worlds for the learning world</value>
+        <value>Selection of themes with different theme worlds for the learning world.</value>
     </data>
     <data name="CreateWorldForm.Finalization.Text" xml:space="preserve">
         <value>Link to the learning world finalisation</value>
     </data>
     <data name="CreateWorldForm.Finalization.Collapsable.Description.Text" xml:space="preserve">
-        <value>In this section, you can enter a link to a specially created online survey, to your university moodle or similar and also formulate a reference text.</value>
+        <value>Provide a link to a online survey or your university Moodle, and also formulate a reference text.</value>
     </data>
     <data name="CreateWorldForm.Finalization.Tooltip" xml:space="preserve">
-        <value>If you do not specify a link and hint text, the placeholder text is displayed in the 3D learning environment by default.</value>
+        <value>If no link or note text is specified, the placeholder text is displayed in the 3D learning environment by default.</value>
     </data>
     <data name="CreateWorldForm.Finalization.Field.EvaluationLinkText.Placeholder.Text" xml:space="preserve">
         <value>You have successfully completed all the learning rooms and thus passed the learning world, congratulations!</value>
@@ -107,5 +107,11 @@
     </data>
     <data name="CreateWorldForm.Goals.Button" xml:space="preserve">
         <value>Learning outcome formulation</value>
+    </data>
+    <data name="CreateWorldForm.General.Subtitle" xml:space="preserve">
+        <value>General Information</value>
+    </data>
+    <data name="CreateWorldForm.General.InfoText" xml:space="preserve">
+        <value>Provide general information about this learning world.</value>
     </data>
 </root>

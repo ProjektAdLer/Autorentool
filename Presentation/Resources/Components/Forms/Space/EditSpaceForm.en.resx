@@ -21,7 +21,7 @@
         <value>New</value>
     </data>
     <data name="EditSpaceForm.Fields.Collapsable.Goals.Field.Goals.Text" xml:space="preserve">
-        <value>Learning outcome(s) for this learning space</value>
+        <value>Define learning outcomes that precisely describe the verifiable skills or knowledge that should be acquired upon completion of the learning space.</value>
     </data>
     <data name="EditSpaceForm.Fields.Collapsable.Goals.Title" xml:space="preserve">
         <value>Learning Outcomes</value>
@@ -39,7 +39,7 @@
         <value>General</value>
     </data>
     <data name="EditSpaceForm.Fields.Collapsable.Goals.Field.Description.Text" xml:space="preserve">
-        <value>Description for this learning space</value>
+        <value>Write a description for this learning space to give a overview of the content that will be covered.</value>
     </data>
     <data name="EditSpaceForm.ApplicationException.Message" xml:space="preserve">
         <value>LearningWorldVm is null</value>
@@ -51,7 +51,7 @@
         <value>Required points to complete the learning space</value>
     </data>
     <data name="EditSpaceForm.Fields.Collapsable.Theme.Field.Theme.Text" xml:space="preserve">
-        <value>Selection of themes with different theme worlds for the learning space</value>
+        <value>Selection of themes with different theme worlds for the learning space.</value>
     </data>
     <data name="EditSpaceForm.Text" xml:space="preserve">
         <value>* Required</value>
@@ -66,10 +66,10 @@
         <value>Description</value>
     </data>
     <data name="EditSpaceForm.Fields.Collapsable.FloorPlan.Subtitle" xml:space="preserve">
-        <value>Selection of floor plans for the learning space. The numer indicates how many slots are available for placing learning and adaptivity elements</value>
+        <value>Select one of the different layouts for the learning space. The number indicates how many slots are available for placing adaptivity and learning elements.</value>
     </data>
     <data name="EditSpaceForm.Fields.Collapsable.CompletionConditions.Description.Text" xml:space="preserve">
-        <value>List of mandatory learning and adaptivity elements to be completed.</value>
+        <value>Overview of all mandatory adaptivity and learn elements to be completed.</value>
     </data>
     <data name="EditSpaceForm.Fields.Collapsable.CompletionConditions.Description.Appendix" xml:space="preserve">
         <value>elem.:</value>

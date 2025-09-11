@@ -4,7 +4,7 @@
 @using MudBlazor.Utilities
 @inherits MudBaseInput<NpcMood>
 <div>
-    <p class="text-xs font-bold cursor-default">@Localizer["NpcMoodSelect.Header.Text"]</p>
+    <p class="text-xs font-bold cursor-default text-adlertitledarkblue py-1">@Localizer["NpcMoodSelect.Header.Text"]</p>
     <div class="flex gap-4 items-center space-x-4 cursor-default">
         <MudTooltip Class="bg-adlergrey-200 shadow-xl" Placement="Placement.Top" Delay="150" Duration="250"
                     Arrow="true">
@@ -31,7 +31,8 @@
                    Label="@Localizer["NpcMoodSelect.MoodSelect.Label"]" 
                    Variant="Variant.Outlined"
                    Dense="true"
-                   Margin="Margin.Dense">
+                   Margin="Margin.Dense"
+                   Typo="Typo.subtitle2">
             @foreach (var npcMood in Enum.GetValues(typeof(NpcMood)).Cast<NpcMood>())
             {
                 <MudSelectItem T="NpcMood" Value="@(npcMood)"

@@ -1,4 +1,4 @@
-<div class="gap-2 @VerticalMargin @Style">
+<div class="gap-3 @VerticalMargin @Style">
     <div class="flex flex-row">
         <div class="flex flex-row toggler" @onclick="@Toggle" tabindex="0" @onkeydown="@OnKeyDown">
             @if (TogglerContent is not null)
@@ -9,11 +9,11 @@
             {
                 @if (_collapsed)
                 {
-                    <MudIcon Icon="@Icons.Material.Filled.ArrowRight" Class="text-adlertitledarkblue"/>
+                    <MudIcon Icon="@Icons.Material.Filled.ArrowRight" Class="text-adlertitledarkblue cursor-pointer"/>
                 }
                 else
                 {
-                    <MudIcon Icon="@Icons.Material.Filled.ArrowDropDown" Class="text-adlertitledarkblue"/>
+                    <MudIcon Icon="@Icons.Material.Filled.ArrowDropDown" Class="text-adlertitledarkblue cursor-pointer"/>
                 }
             }
             @if (Title is not null)
@@ -52,7 +52,7 @@
     [Parameter] public RenderFragment? TitleContent { get; set; }
     [Parameter] public RenderFragment? TitleContentAfterToggler { get; set; }
     [Parameter] public RenderFragment<bool>? TogglerContent { get; set; }
-    [Parameter] public string VerticalMargin { get; set; } = "my-2";
+    [Parameter] public string VerticalMargin { get; set; } = "ml-2 from-adlerbgbright to-white bg-gradient-to-br border-t border-adlergrey-100 p-2 mb-6";
 
     protected override void OnParametersSet()
     {
