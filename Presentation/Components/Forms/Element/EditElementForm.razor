@@ -55,16 +55,15 @@
                               Variant="Variant.Outlined"
                               Placeholder="@Localizer["EditElementForm.Fields.Collapsable.General.LearningElement.Placeholder"]"/>
                
-                    <div class="flex items-center justify-center gap-2 bg-adlerbggradientto rounded my-1 py-1">
+                    <div class="flex items-center justify-center gap-2 bg-adlerbggradientto rounded my-2 py-1">
                         <LabelledSwitch @bind-State="IsRequired"
                                         LeftLabel="@Localizer["EditElementForm.Fields.Collapsable.Element.Mandatory"]"
                                         RightLabel="@Localizer["EditElementForm.Fields.Collapsable.Element.Optional"]"/>
                     </div>
 
                     <div class="flex flex-row gap-2 w-full">
-
                         <div class="flex-initial items-center gap-1">
-                            <p class="text-xs pt-2 cursor-default">
+                            <p class="text-xs cursor-default">
                                 @Localizer["EditElementForm.Fields.Collapsable.General.Field.Workload.Text"]
                             </p>
                             <MudNumericField @bind-Value="FormDataContainer.FormModel.Workload"
@@ -73,10 +72,11 @@
                                              For="@(() => FormModel.Workload)"
                                              DebounceInterval="DebounceInterval"
                                              Variant="Variant.Outlined"
-                                             Margin="Margin.Dense"/>
+                                             Margin="Margin.Dense"
+                                             Typo="Typo.subtitle2"/>
                         </div>
                         <div class="flex-initial items-center gap-1 w-full">
-                            <p class="text-xs pt-2 cursor-default">
+                            <p class="text-xs cursor-default">
                                 @Localizer["EditElementForm.Fields.Collapsable.General.Field.Difficulty.Text"]
                             </p>
                             <MudSelect @bind-Value="FormDataContainer.FormModel.Difficulty"
