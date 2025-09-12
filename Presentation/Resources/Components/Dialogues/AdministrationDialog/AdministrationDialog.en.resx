@@ -18,15 +18,15 @@
         <value>AdLer server</value>
     </data>
     <data name="AdministrationDialog.PanelTwo.Help" xml:space="preserve">
-        <value>Read more information</value>
+        <value>Read more Information</value>
     </data>
     <data name="AdministrationDialog.PanelThree.Language" xml:space="preserve">
-        <value>Change language</value>
+        <value>Change Language</value>
     </data>
     <data name="AdministrationDialog.PanelOne.AdLerServer" xml:space="preserve">
-        <value>Login to AdLer server</value>
+        <value>Login to AdLer Server</value>
     </data>
     <data name="AdministrationDialog.PanelFour.Archive" xml:space="preserve">
-        <value>Export learning world</value>
+        <value>Export Learning World</value>
     </data>
 </root>

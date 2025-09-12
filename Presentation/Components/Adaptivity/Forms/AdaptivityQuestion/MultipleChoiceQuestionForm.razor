@@ -9,7 +9,7 @@
 @using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Question
 @using Shared.Adaptivity
 <div class="w-full flex flex-row items-center justify-between cursor-default">
-    <MudText Class="px-2" Typo="Typo.h6">
+    <MudText Typo="Typo.h6">
         @(Task.Questions.FirstOrDefault(x => x.Difficulty == Difficulty) == null
             ? Localizer["MultipleChoiceQuestionForm.TitleContent.Create." + Difficulty]
             : Localizer["MultipleChoiceQuestionForm.TitleContent.Edit." + Difficulty])
@@ -30,7 +30,7 @@
     <Fields>
         <div class="flex flex-col gap-1">
             <MudText
-                Class="cursor-default font-bold text-sm pl-2">@Localizer["MultipleChoiceQuestionForm.Field.QuestionText.Text"]</MudText>
+                Class="cursor-default font-bold text-adlertitledarkblue text-sm pl-2">@Localizer["MultipleChoiceQuestionForm.Field.QuestionText.Text"]</MudText>
             <div class="border-4 border-adlergrey-100 rounded-md mx-1.5 bg-white">
                 <MudTextField @bind-Value="FormDataContainer.FormModel.Text"
                               For="@(() => FormModel.Text)"
@@ -73,7 +73,7 @@
             }
         </div>
 <div class="flex flex-row justify-start items-center py-2">
-                <MudText Class="cursor-default font-bold text-sm pl-2.5">@Localizer["MultipleChoiceQuestionForm.Text.Choices"]
+                <MudText Class="cursor-default text-adlertitledarkblue font-bold text-sm pl-2.5">@Localizer["MultipleChoiceQuestionForm.Text.Choices"]
                     <MudTooltip Placement="Placement.Right" Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed cursor-default" Text="@Localizer["MultipleChoiceQuestionForm.Info.Infotext"]">
                         <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info" Class="text-adlergrey-200 hover:text-adlerdarkblue"></MudIcon>
                     </MudTooltip>
@@ -83,13 +83,13 @@
         <MudCollectionValidation T="ICollection<ChoiceFormModel>" Value="FormModel.CorrectChoices"
                                  For="@(() => FormModel.CorrectChoices)"/>
 
-        <div class="flex justify-center items-center w-full px-2 overflow-y-auto">
+        <div class="flex justify-center items-center w-full overflow-y-auto">
             @if (FormModel.IsSingleResponse)
             {
                 <div class="bg-white">
                     <MudRadioGroup T="ChoiceFormModel" Value="FormModel.CorrectChoices.First()"
                                    ValueChanged="ChangeCorrectChoice" Class="overflow-y-auto">
-                        <div class="overflow-y-scroll w-[460px] h-56 border-4 border-adlergrey-100 rounded-md">
+                        <div class="overflow-y-scroll w-[455px] h-56 border-4 border-adlergrey-100 rounded-md">
                             @foreach (var choice in FormDataContainer.FormModel.Choices)
                             {
                                 <div class="flex flex-row justify-center items-center">
@@ -120,7 +120,7 @@
             else
             {
                 <div class="bg-white">
-                    <div class="overflow-y-scroll w-[460px] h-56 border-4 border-adlergrey-100 rounded-md">
+                    <div class="overflow-y-scroll w-[455px] h-56 border-4 border-adlergrey-100 rounded-md">
                         @foreach (var choice in FormDataContainer.FormModel.Choices)
                         {
                             <div class="flex flex-row justify-center items-center">

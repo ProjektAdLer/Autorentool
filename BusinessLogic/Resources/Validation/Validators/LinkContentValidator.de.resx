@@ -19,6 +19,6 @@
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
     <data name="LinkContentValidator.Url.Invalid" xml:space="preserve">
-        <value>URL muss valide sein (z.B. https://www.youtube.com/watch?v=dQw4w9WgXcQ) - die Angabe von 'http' oder 'https' ist erforderlich.</value>
+        <value>URL muss valide sein (z. B. https://www.youtube.com/watch?v=dQw4w9WgXcQ) - die Angabe von 'http' oder 'https' ist erforderlich.</value>
     </data>
 </root>

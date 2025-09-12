@@ -58,10 +58,10 @@
         <value>* Erforderliche Angabe</value>
     </data>
     <data name="EditWorldForm.Fields.Collapsable.General.Field.EnrolmentKey.Text" xml:space="preserve">
-        <value>Einschreibeschlüssel</value>
+        <value>Geben Sie einen Einschreibeschlüssel ein, um den Zugang zu dieser Lernwelt zu beschränken.</value>
     </data>
     <data name="EditWorldForm.EnrolmentKey.Title" xml:space="preserve">
-        <value>Einschreibemethode</value>
+        <value>Einschreibeschlüssel</value>
     </data>
     <data name="EditWorldForm.EnrolmentKey.Tooltip" xml:space="preserve">
         <value>Der Zugang ist für alle möglich, die den Einschreibeschlüssel kennen. Studierende müssen den Einschreibeschlüssel jedes Mal neu eingeben, wenn sie auf die Lernwelt zugreifen.</value>
@@ -100,16 +100,16 @@
         <value>Geben Sie einen Link an (z. B. zu einer Online-Umfrage oder zu Ihrem Hochschul-Moodle) und formulieren Sie zusätzlich einen Hinweistext.</value>
     </data>
     <data name="EditWorldForm.Finalization.Tooltip" xml:space="preserve">
-        <value>Wenn kein Link und Hinweistext angeben werden, wird standardmäßig der Platzhaltertext in der 3D-Lernumgebung angezeigt.</value>
+        <value>Wenn Sie keinen Link und Hinweistext angeben, wird standardmäßig der Platzhaltertext im Hinweistextfeld in der 3D-Lernumgebung angezeigt.</value>
     </data>
     <data name="EditWorldForm.Finalization.Field.EvaluationLinkText.Placeholder.Text" xml:space="preserve">
         <value>Sie haben alle Lernräume erfolgreich abgeschlossen und somit die Lernwelt bestanden, herzlichen Glückwunsch!</value>
     </data>
     <data name="EditWorldForm.Finalization.Field.EvaluationLinkName.Placeholder.Text" xml:space="preserve">
-        <value>z.B. Online-Umfrage</value>
+        <value>z. B. Online-Umfrage</value>
     </data>
     <data name="EditWorldForm.Finalization.Field.EvaluationLink.Placeholder.Text" xml:space="preserve">
-        <value>Link zum Lernweltabschluss</value>
+        <value>Link (https://www...)</value>
     </data>
     <data name="EditWorldForm.Goals.Button" xml:space="preserve">
         <value>Lernziel-Formulierung</value>
@@ -119,5 +119,38 @@
     </data>
     <data name="EditWorldForm.General.Subtitle" xml:space="preserve">
         <value>Allgemeine Angaben</value>
+    </data>
+    <data name="EditWorldForm.Fields.Collapsable.General.Field.Name.Placeholder" xml:space="preserve">
+        <value>z. B. Einführung-in-die-Biologie</value>
+    </data>
+    <data name="EditWorldForm.Fields.Collapsable.General.Field.Shortname.Placeholder" xml:space="preserve">
+        <value>z. B. EinfBio2025</value>
+    </data>
+    <data name="EditWorldForm.Fields.Collapsable.General.Field.Authors.Placeholder" xml:space="preserve">
+        <value>z. B. Erika Musterfrau, Max Mustermann</value>
+    </data>
+    <data name="EditWorldForm.Fields.Collapsable.General.Field.Language.Placeholder" xml:space="preserve">
+        <value>z. B. Deutsch, Englisch</value>
+    </data>
+    <data name="EditWorldForm.Finalization.Field.EvaluationLinkText.Text" xml:space="preserve">
+        <value>Hinweistext</value>
+    </data>
+    <data name="EditWorldForm.Finalization.Field.EvaluationLinkName.Text" xml:space="preserve">
+        <value>Art des Links</value>
+    </data>
+    <data name="EditWorldForm.Fields.Collapsable.Content.Title" xml:space="preserve">
+        <value>Inhalt &amp; Orientierung</value>
+    </data>
+    <data name="EditWorldForm.Fields.Collapsable.Design.Title" xml:space="preserve">
+        <value>Gestaltung &amp; Darstellung</value>
+    </data>
+    <data name="EditWorldForm.Fields.Collapsable.Description.Placeholder" xml:space="preserve">
+        <value>Diese Lernwelt behandelt folgendes Thema: ...</value>
+    </data>
+    <data name="EditWorldForm.Fields.Collapsable.Interaction.Title" xml:space="preserve">
+        <value>Interaktion &amp; Ablauf</value>
+    </data>
+    <data name="EditWorldForm.General.Field.EnrolmentKey.Text" xml:space="preserve">
+        <value>Geben Sie einen Einschreibeschlüssel ein, um den Zugang zu dieser Lernwelt zu beschränken.</value>
     </data>
 </root>

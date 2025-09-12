@@ -89,4 +89,25 @@
     <data name="EditSpaceForm.Fields.Collapsable.NoElements" xml:space="preserve">
         <value>Noch keine Elemente hinzugefügt.</value>
     </data>
+    <data name="EditSpaceForm.Fields.Collapsable.General.Subtitle" xml:space="preserve">
+        <value>Allgemeine Angaben</value>
+    </data>
+    <data name="EditSpaceForm.Fields.Collapsable.General.Text" xml:space="preserve">
+        <value>Vergeben Sie einen Namen für diesen Lernraum.</value>
+    </data>
+    <data name="EditSpaceForm.Fields.Collapsable.General.Name.Placeholder" xml:space="preserve">
+        <value>z. B. Ökologie und Lebensräume</value>
+    </data>
+    <data name="EditSpaceForm.Fields.Collapsable.Description.Placeholder" xml:space="preserve">
+        <value>Dieser Lernraum behandelt folgendes Thema: ...</value>
+    </data>
+    <data name="EditSpaceForm.Fields.Collapsable.Design.Title" xml:space="preserve">
+        <value>Gestaltung &amp; Darstellung</value>
+    </data>
+    <data name="EditSpaceForm.Fields.Collapsable.Interaction.Title" xml:space="preserve">
+        <value>Interaktion &amp; Ablauf</value>
+    </data>
+    <data name="EditSpaceForm.Fields.Collapsable.Content.Title" xml:space="preserve">
+        <value>Inhalt &amp; Orientierung</value>
+    </data>
 </root>

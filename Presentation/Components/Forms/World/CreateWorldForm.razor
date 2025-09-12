@@ -28,7 +28,7 @@
                                       DebounceInterval="DebounceInterval"
                                       OnKeyUp="HandleKeyEvent"
                                       Label="@Localizer["CreateWorldForm.General.Field.Name.Text"]"
-                                      Placeholder="z. B. Einführung-in-die-Biologie"
+                                      Placeholder="@Localizer["CreateWorldForm.General.Field.Name.Placeholder"]"
                                       Typo="Typo.subtitle2"
                                       Margin="Margin.Dense"
                                       Variant="Variant.Outlined"/>
@@ -37,7 +37,7 @@
                                       DebounceInterval="DebounceInterval"
                                       OnKeyUp="HandleKeyEvent"
                                       Label="@Localizer["CreateWorldForm.General.Field.Shortname.Text"]"
-                                      Placeholder="z. B. EinfBio2024"
+                                      Placeholder="@Localizer["CreateWorldForm.General.Field.Shortname.Placeholder"]"
                                       Typo="Typo.subtitle2"
                                       Margin="Margin.Dense"
                                       Variant="Variant.Outlined"/>
@@ -45,7 +45,7 @@
                                       For="@(() => FormModel.Authors)"
                                       DebounceInterval="DebounceInterval"
                                       OnKeyUp="HandleKeyEvent"
-                                      Placeholder="z. B. Erika Musterfrau, Max Mustermann"
+                                      Placeholder="@Localizer["CreateWorldForm.General.Field.Authors.Placeholder"]"
                                       Typo="Typo.subtitle2"
                                       Margin="Margin.Dense"
                                       Variant="Variant.Outlined"
@@ -54,7 +54,7 @@
                                       For="@(() => FormModel.Language)"
                                       DebounceInterval="DebounceInterval"
                                       OnKeyUp="HandleKeyEvent"
-                                      Placeholder="z. B. Deutsch, Englisch"
+                                      Placeholder="@Localizer["CreateWorldForm.General.Field.Language.Placeholder"]"
                                       Typo="Typo.subtitle2"
                                       Margin="Margin.Dense"
                                       Variant="Variant.Outlined"
@@ -76,7 +76,7 @@
                                   DebounceInterval="DebounceInterval"
                                   Typo="Typo.subtitle2"
                                   Margin="Margin.Dense"
-                                  Label="Hinweistext"/>
+                                  Label="@Localizer["CreateWorldForm.Finalization.Field.EvaluationLinkText.Text"]"/>
                     <MudTextField @bind-Value="FormDataContainer.FormModel.EvaluationLinkName"
                                   For="@(() => FormModel.EvaluationLinkName)"
                                   @ref="_evaluationLinkNameField"
@@ -86,7 +86,7 @@
                                   Typo="Typo.subtitle2"
                                   Variant="Variant.Outlined"
                                   Margin="Margin.Dense"
-                                  Label="Art des Links"
+                                  Label="@Localizer["CreateWorldForm.Finalization.Field.EvaluationLinkName.Text"]"
                                   Class="py-1"/>
                     <MudTextField @bind-Value="FormDataContainer.FormModel.EvaluationLink"
                                   For="@(() => FormModel.EvaluationLink)"
@@ -101,7 +101,7 @@
                 </div>
             </Collapsable>
             
-            <Collapsable Title="Inhalt & Orientierung"
+            <Collapsable Title="@Localizer["CreateWorldForm.Content.Text"]"
                          InitiallyCollapsed="true">
                 <div class="w-4/4 px-6">
                     <p class="text-xs cursor-default font-bold text-adlertitledarkblue pt-2">@Localizer["CreateWorldForm.Fields.Collapsable.Description.Title"]</p>
@@ -109,7 +109,7 @@
                     <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
                                   For="@(() => FormModel.Description)"
                                   Lines="3"
-                                  Placeholder="Diese Lernwelt behandelt folgendes Thema: ..."
+                                  Placeholder="@Localizer["CreateWorldForm.Goals.Field.Description.Placeholder"]"
                                   Variant="Variant.Outlined"
                                   DebounceInterval="DebounceInterval"
                                   Typo="Typo.subtitle2"
@@ -119,13 +119,13 @@
                     <p class="text-xs cursor-default font-bold text-adlertitledarkblue pt-2">@Localizer["CreateWorldForm.Goals.Text"]</p>
                     <p class="text-xs cursor-default">@Localizer["CreateWorldForm.Goals.Field.Goals.Text"]</p>
                     <div class="flex justify-center">
-                        <MudButton Class="w-72 btn-standard"
+                        <MudButton Class="w-80 btn-standard"
                                    OnClick="OpenLearningOutcomesOverview">@Localizer["CreateWorldForm.Goals.Button"]</MudButton>
                     </div>
                 </div>
             </Collapsable>
             
-            <Collapsable Title="Gestaltung & Darstellung" InitiallyCollapsed="true">
+            <Collapsable Title="@Localizer["CreateWorldForm.Collapsable.Design"]" InitiallyCollapsed="true">
                 <div class="w-4/4 px-6">
                     <p class="text-xs font-bold text-adlertitledarkblue cursor-default pt-2">@Localizer["CreateWorldForm.Theme.Text"]</p>
                     <p class="text-xs cursor-default">@Localizer["CreateWorldForm.Theme.Field.Theme.Text"]</p>
@@ -140,7 +140,9 @@
                         {
                             <!-- WorldTheme.Company is disabled because it is not yet supported -->
                             <MudSelectItem Disabled="@theme.Equals(WorldTheme.Company)"
-                                           Value="@(theme)">@(ThemeHelper<WorldTheme>.Localize(theme))</MudSelectItem>
+                                           Value="@(theme)">
+                                <p class="text-sm">@(ThemeHelper<WorldTheme>.Localize(theme))</p>
+                            </MudSelectItem>
                         }
                     </MudSelect>
 
@@ -168,11 +170,11 @@
                 </div>
             </Collapsable>
             
-        <Collapsable Title="Interaktion & Ablauf"
+        <Collapsable Title="@Localizer["CreateWorldForm.Collapsable.Interaction"]"
                      InitiallyCollapsed="true">
             <div class="w-4/4 px-6">
-                <p class="text-xs text-adlertitledarkblue font-bold cursor-default pt-2">@Localizer["CreateWorldForm.General.Field.EnrolmentKey.Text"]</p>
-                <p class="text-xs cursor-default">Geben Sie einen Einschreibeschlüssel ein, um den Zugang zu dieser Lernwelt zu beschränken.
+                <p class="text-xs text-adlertitledarkblue font-bold cursor-default pt-2">@Localizer["CreateWorldForm.EnrolmentKey.Title"]</p>
+                <p class="text-xs cursor-default">@Localizer["CreateWorldForm.General.Field.EnrolmentKey.Text"]
                     <MudTooltip Placement="Placement.Right" Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed">
                         <TooltipContent>
                             <MudText

@@ -37,6 +37,6 @@
         <value>EvaluationLink darf nicht leer sein, wenn EvaluationLinkName gesetzt ist.</value>
     </data>
     <data name="LearningWorldValidator.EvaluationLink.Valid" xml:space="preserve">
-        <value>URL muss valide sein (z.B. https://www.youtube.com/watch?v=dQw4w9WgXcQ) - die Angabe von 'http' oder 'https' ist erforderlich.</value>
+        <value>URL muss valide sein (z. B. https://www.youtube.com/watch?v=dQw4w9WgXcQ) - die Angabe von 'http' oder 'https' ist erforderlich.</value>
     </data>
 </root>

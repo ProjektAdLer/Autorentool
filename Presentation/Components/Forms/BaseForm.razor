@@ -77,7 +77,7 @@
 
     [Parameter] public Func<object, string, Task<IEnumerable<string>>>? CustomValidatorFunc { get; set; }
 
-    [Parameter] public string FormClass { get; set; } = "pl-4 2xl:pl-4 2xl:pr-4 overflow-y-scroll top-28 h-[75%] 2xl:h-[83%] absolute flex flex-col w-[100%] mt-2 border-t border-dotted";
+    [Parameter] public string FormClass { get; set; } = "overflow-y-scroll top-28 h-[75%] 2xl:h-[83%] absolute flex flex-col w-[100%] border-t border-dotted";
 
     internal string? SubmitErrorMessage { get; set; }
 

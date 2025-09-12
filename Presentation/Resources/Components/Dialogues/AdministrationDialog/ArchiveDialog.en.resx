@@ -15,7 +15,7 @@
         <value>Export as ZIP</value>
     </data>
     <data name="DialogContent.LearningWorldArchive.Title" xml:space="preserve">
-        <value>Export learning world</value>
+        <value>Export Learning World</value>
     </data>
     <data name="ExportArchive.Hover" xml:space="preserve">
         <value>Exportieren the learning world as ZIP file (e.g. to send to another computer or as a backup)</value>

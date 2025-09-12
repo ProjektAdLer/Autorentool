@@ -51,7 +51,7 @@
         <value>Required points to complete the learning space</value>
     </data>
     <data name="CreateSpaceForm.Fields.Collapsable.Theme.Field.Theme.Text" xml:space="preserve">
-        <value>Selection of themes with different theme worlds for the learning space.</value>
+        <value>Select one of the various themes for the learning space.</value>
     </data>
     <data name="CreateSpaceForm.Text" xml:space="preserve">
         <value>* Required</value>
@@ -73,5 +73,26 @@
     </data>
     <data name="CreateAdaptivityElementForm.Fields.Collapsable.Tasks.Button.Task.More" xml:space="preserve">
         <value>Tasks</value>
+    </data>
+    <data name="CreateSpaceForm.Fields.Collapsable.General.Subtitle" xml:space="preserve">
+        <value>General Information</value>
+    </data>
+    <data name="CreateSpaceForm.Fields.Collapsable.General.Text" xml:space="preserve">
+        <value>Assign a name to this learning space.</value>
+    </data>
+    <data name="CreateSpaceForm.Fields.Collapsable.General.Field.Name.Placeholder" xml:space="preserve">
+        <value>e.g. Ecology and Habitats</value>
+    </data>
+    <data name="CreateSpaceForm.Fields.Collapsable.Content.Title" xml:space="preserve">
+        <value>Content &amp; Orientation</value>
+    </data>
+    <data name="CreateSpaceForm.Fields.Collapsable.Description.Placeholder" xml:space="preserve">
+        <value>This learning space covers the following topic: ...</value>
+    </data>
+    <data name="CreateSpaceForm.Fields.Collapsable.Design.Title" xml:space="preserve">
+        <value>Design &amp; Presentation</value>
+    </data>
+    <data name="CreateSpaceForm.Fields.Collapsable.Interaction.Title" xml:space="preserve">
+        <value>Interaction &amp; Process</value>
     </data>
 </root>

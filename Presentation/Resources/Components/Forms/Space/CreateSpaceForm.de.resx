@@ -86,4 +86,25 @@
     <data name="CreateAdaptivityElementForm.Fields.Collapsable.Tasks.Button.Task.More" xml:space="preserve">
         <value>Aufgaben</value>
     </data>
+    <data name="CreateSpaceForm.Fields.Collapsable.General.Subtitle" xml:space="preserve">
+        <value>Allgemeine Angaben</value>
+    </data>
+    <data name="CreateSpaceForm.Fields.Collapsable.General.Text" xml:space="preserve">
+        <value>Vergeben Sie einen Namen für diesen Lernraum.</value>
+    </data>
+    <data name="CreateSpaceForm.Fields.Collapsable.General.Field.Name.Placeholder" xml:space="preserve">
+        <value>z. B. Ökologie und Lebensräume</value>
+    </data>
+    <data name="CreateSpaceForm.Fields.Collapsable.Content.Title" xml:space="preserve">
+        <value>Inhalt &amp; Orientierung</value>
+    </data>
+    <data name="CreateSpaceForm.Fields.Collapsable.Description.Placeholder" xml:space="preserve">
+        <value>Dieser Lernraum behandelt folgendes Thema: ...</value>
+    </data>
+    <data name="CreateSpaceForm.Fields.Collapsable.Design.Title" xml:space="preserve">
+        <value>Gestaltung &amp; Darstellung</value>
+    </data>
+    <data name="CreateSpaceForm.Fields.Collapsable.Interaction.Title" xml:space="preserve">
+        <value>Interaktion &amp; Ablauf</value>
+    </data>
 </root>

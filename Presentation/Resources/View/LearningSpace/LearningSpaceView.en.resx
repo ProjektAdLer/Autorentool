@@ -26,7 +26,7 @@
         <value>Learning Space Editor</value>
     </data>
     <data name="LearningSpace.ElementName.Text" xml:space="preserve">
-        <value>Selected learning element:</value>
+        <value>Selected Learning Element:</value>
     </data>
     <data name="LearningSpace.SpaceWorkload.Text" xml:space="preserve">
         <value>Workload: </value>

@@ -46,13 +46,13 @@
         <value>Text field</value>
     </data>
     <data name="Note.Label.Text" xml:space="preserve">
-        <value>Note on the reference</value>
+        <value>Note on the Reference</value>
     </data>
     <data name="Reference.Content.Label.Text" xml:space="preserve">
-        <value>Reference to an external learning material</value>
+        <value>Reference to an External Learning Material</value>
     </data>
     <data name="Reference.Element.Label.Text" xml:space="preserve">
-        <value>Reference to a learning element</value>
+        <value>Reference to a Learning Element</value>
     </data>
     <data name="Reference.Element.Info.Text" xml:space="preserve">
         <value>When referring to a learning element, you can refer to all unplaced learning elements and to all learning elements that have already been placed in learning spaces.</value>
