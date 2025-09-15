@@ -498,15 +498,6 @@
 
     <FooterButtons>
         <div class="flex flex-row justify-end absolute left-0 bottom-0 border-t-2 border-adlergrey-100 bg-adlerbgbright w-full">
-            @if (ElementMode == ElementMode.Normal)
-            {
-                <MudIconButton Icon="@Icons.Material.Filled.RemoveRedEye"
-                               Class="btn-standard rounded-lg shadow-lg"
-                               OnClick="ShowSelectedElementContentAsync"
-                               title=@Localizer["EditElementForm.Button.ShowLearningElement.Title"].Value>
-
-                </MudIconButton>
-            }
             <SubmitThenRemapButton RemapAction="MapIntoContainer"/>
         </div>
     </FooterButtons>

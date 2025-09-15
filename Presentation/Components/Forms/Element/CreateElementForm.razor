@@ -336,7 +336,6 @@
                 }
             </div>
         </Collapsable>
-    
         
         <Collapsable Title="@Localizer["CreateElementForm.Fields.Collapsable.Interaction.Title"]"
                      InitiallyCollapsed="@(ElementMode == ElementMode.Story)">
@@ -703,8 +702,7 @@
         return ElementModelHandler.GetElementModels(elementModelContentType, fileType,
             SelectedViewModelsProvider.LearningObjectInPathWay is LearningSpaceViewModel space ? WorldPresenter.LearningWorldVm?.WorldTheme : null);
     }
-
-
+    
     private async Task ShowH5PInfoDialog()
     {
         var dialogParams = new DialogParameters()
@@ -713,8 +711,7 @@
         };
         await DialogService.ShowAsync<GenericInfoDialog>("H5P Info", dialogParams);
     }
-
-
+    
     private string LearningContentName
     {
         get => FormDataContainer.FormModel.LearningContent?.Name ?? String.Empty;
