@@ -84,7 +84,7 @@
     private MudForm? _form;
 
     private bool _showErrors = false;
-    
+
     private bool ShowErrors
     {
         get => _showErrors;
@@ -132,7 +132,7 @@
 
     public async Task<bool> SubmitAsync()
     {
-        ShowErrors = true;
+        await InvokeAsync(() => ShowErrors = true);
         if (_form is null) throw new InvalidOperationException("_form is null by @ref");
         await _form.Validate();
         if (!_form.IsValid)
