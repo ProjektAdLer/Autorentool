@@ -31,84 +31,84 @@
           FormDataContainer="FormDataContainer">
     <Fields>
         <Collapsable Title=@Localizer["CreateElementForm.Fields.Collapsable.General.Title"]
-                         InitiallyCollapsed="false">
+                     InitiallyCollapsed="false">
             <div class="w-4/4 px-6">
                 <p class="font-bold text-xs text-adlertitledarkblue cursor-default pt-2">@Localizer["CreateElementForm.Fields.Collapsable.General.Subtitle"]</p>
-                
+
                 @if (ElementMode == ElementMode.Normal)
                 {
-                <p class="text-xs cursor-default">@Localizer["CreateElementForm.Fields.Collapsable.General.LearningElement.Text"]</p>
-                <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
-                              For="@(() => FormModel.Name)"
-                              @ref="_nameField"
-                              DebounceInterval="DebounceInterval"
-                              OnKeyUp="HandleKeyEvent"
-                              Label=@Localizer["CreateElementForm.Fields.Collapsable.General.Field.Name.Text"]
-                              Margin="Margin.Dense"
-                              Typo="Typo.subtitle2"
-                              Variant="Variant.Outlined"
-                              Placeholder="@Localizer["CreateElementForm.Fields.Collapsable.General.LearningElement.Placeholder"]"/>
+                    <p class="text-xs cursor-default">@Localizer["CreateElementForm.Fields.Collapsable.General.LearningElement.Text"]</p>
+                    <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
+                                  For="@(() => FormModel.Name)"
+                                  @ref="_nameField"
+                                  DebounceInterval="DebounceInterval"
+                                  OnKeyUp="HandleKeyEvent"
+                                  Label=@Localizer["CreateElementForm.Fields.Collapsable.General.Field.Name.Text"]
+                                  Margin="Margin.Dense"
+                                  Typo="Typo.subtitle2"
+                                  Variant="Variant.Outlined"
+                                  Placeholder="@Localizer["CreateElementForm.Fields.Collapsable.General.LearningElement.Placeholder"]"/>
 
-                <div class="flex items-center justify-center gap-2 bg-adlerbggradientto rounded my-2 py-1">
-                    <LabelledSwitch @bind-State="IsRequired"
-                                    LeftLabel="@Localizer["CreateElementForm.Fields.Collapsable.Element.Mandatory"]"
-                                    RightLabel="@Localizer["CreateElementForm.Fields.Collapsable.Element.Optional"]"/>
-                </div>
-
-                <div class="flex flex-row gap-2 w-full">
-                    <div class="flex-initial items-center gap-1">
-                        <p class="text-xs cursor-default">
-                            @Localizer["CreateElementForm.Fields.Collapsable.General.Field.Workload.Text"]
-                        </p>
-                        <MudNumericField @bind-Value="FormDataContainer.FormModel.Workload"
-                                         Min="0"
-                                         Max="1000"
-                                         For="@(() => FormModel.Workload)"
-                                         DebounceInterval="DebounceInterval"
-                                         OnKeyUp="HandleKeyEvent"
-                                         Variant="Variant.Outlined"
-                                         Margin="Margin.Dense"
-                                         Typo="Typo.subtitle2"/>
+                    <div class="flex items-center justify-center gap-2 bg-adlerbggradientto rounded my-2 py-1">
+                        <LabelledSwitch @bind-State="IsRequired"
+                                        LeftLabel="@Localizer["CreateElementForm.Fields.Collapsable.Element.Mandatory"]"
+                                        RightLabel="@Localizer["CreateElementForm.Fields.Collapsable.Element.Optional"]"/>
                     </div>
 
-                    <div class="flex-initial items-center gap-1 w-full">
-                        <p class="text-xs cursor-default">
-                            @Localizer["CreateElementForm.Fields.Collapsable.General.Field.Difficulty.Text"]
-                        </p>
-                        <MudSelect @bind-Value="FormDataContainer.FormModel.Difficulty"
-                                   Immediate="false"
-                                   For="@(() => FormModel.Difficulty)"
-                                   OnKeyUp="HandleKeyEvent"
-                                   Variant="Variant.Outlined"
-                                   Margin="Margin.Dense"
-                                   Typo="Typo.subtitle2">
-                            <MudSelectItem Value="@(LearningElementDifficultyEnum.Easy)">
-                                <div class="flex items-center gap-2">
-                                    <MudIcon Class="drop-shadow w-4 h-4"
-                                             Icon="@CustomIcons.DifficultyPolygonEasy"></MudIcon>
-                                    <p class="text-sm">@Localizer["CreateElementForm.Difficulty.Easy"]</p>
-                                </div>
-                            </MudSelectItem>
-                            <MudSelectItem Value="@(LearningElementDifficultyEnum.Medium)">
-                                <div class="flex items-center gap-2">
-                                    <MudIcon Class="drop-shadow w-4 h-4"
-                                             Icon="@CustomIcons.DifficultyPolygonMedium"></MudIcon>
-                                    <p class="text-sm">@Localizer["CreateElementForm.Difficulty.Medium"]</p>
-                                </div>
-                            </MudSelectItem>
-                            <MudSelectItem Value="@(LearningElementDifficultyEnum.Hard)">
-                                <div class="flex items-center gap-2">
-                                    <MudIcon Class="drop-shadow w-4 h-4"
-                                             Icon="@CustomIcons.DifficultyPolygonHard"></MudIcon>
-                                    <p class="text-sm">@Localizer["CreateElementForm.Difficulty.Hard"]</p>
-                                </div>
-                            </MudSelectItem>
-                            <MudSelectItem Value="@(LearningElementDifficultyEnum.None)">
-                                <p class="text-sm">@Localizer["CreateElementForm.Difficulty.None"]</p>
-                            </MudSelectItem>
-                        </MudSelect>
+                    <div class="flex flex-row gap-2 w-full">
+                        <div class="flex-initial items-center gap-1">
+                            <p class="text-xs cursor-default">
+                                @Localizer["CreateElementForm.Fields.Collapsable.General.Field.Workload.Text"]
+                            </p>
+                            <MudNumericField @bind-Value="FormDataContainer.FormModel.Workload"
+                                             Min="0"
+                                             Max="1000"
+                                             For="@(() => FormModel.Workload)"
+                                             DebounceInterval="DebounceInterval"
+                                             OnKeyUp="HandleKeyEvent"
+                                             Variant="Variant.Outlined"
+                                             Margin="Margin.Dense"
+                                             Typo="Typo.subtitle2"/>
+                        </div>
+
+                        <div class="flex-initial items-center gap-1 w-full">
+                            <p class="text-xs cursor-default">
+                                @Localizer["CreateElementForm.Fields.Collapsable.General.Field.Difficulty.Text"]
+                            </p>
+                            <MudSelect @bind-Value="FormDataContainer.FormModel.Difficulty"
+                                       Immediate="false"
+                                       For="@(() => FormModel.Difficulty)"
+                                       OnKeyUp="HandleKeyEvent"
+                                       Variant="Variant.Outlined"
+                                       Margin="Margin.Dense"
+                                       Typo="Typo.subtitle2">
+                                <MudSelectItem Value="@(LearningElementDifficultyEnum.Easy)">
+                                    <div class="flex items-center gap-2">
+                                        <MudIcon Class="drop-shadow w-4 h-4"
+                                                 Icon="@CustomIcons.DifficultyPolygonEasy"></MudIcon>
+                                        <p class="text-sm">@Localizer["CreateElementForm.Difficulty.Easy"]</p>
+                                    </div>
+                                </MudSelectItem>
+                                <MudSelectItem Value="@(LearningElementDifficultyEnum.Medium)">
+                                    <div class="flex items-center gap-2">
+                                        <MudIcon Class="drop-shadow w-4 h-4"
+                                                 Icon="@CustomIcons.DifficultyPolygonMedium"></MudIcon>
+                                        <p class="text-sm">@Localizer["CreateElementForm.Difficulty.Medium"]</p>
+                                    </div>
+                                </MudSelectItem>
+                                <MudSelectItem Value="@(LearningElementDifficultyEnum.Hard)">
+                                    <div class="flex items-center gap-2">
+                                        <MudIcon Class="drop-shadow w-4 h-4"
+                                                 Icon="@CustomIcons.DifficultyPolygonHard"></MudIcon>
+                                        <p class="text-sm">@Localizer["CreateElementForm.Difficulty.Hard"]</p>
+                                    </div>
+                                </MudSelectItem>
+                                <MudSelectItem Value="@(LearningElementDifficultyEnum.None)">
+                                    <p class="text-sm">@Localizer["CreateElementForm.Difficulty.None"]</p>
+                                </MudSelectItem>
+                            </MudSelect>
+                        </div>
                     </div>
-                </div>
                 }
 
                 @if (ElementMode == ElementMode.Adaptivity)
@@ -155,8 +155,8 @@
                 }
             </div>
         </Collapsable>
-        
-        <Collapsable Title="@Localizer["CreateElementForm.Fields.Collapsable.Content.Title"]" 
+
+        <Collapsable Title="@Localizer["CreateElementForm.Fields.Collapsable.Content.Title"]"
                      InitiallyCollapsed="@(ElementMode != ElementMode.Story)">
             <div class="w-4/4 px-6">
                 @if (ElementMode == ElementMode.Normal)
@@ -172,7 +172,7 @@
                                   DebounceInterval="DebounceInterval"
                                   Typo="Typo.subtitle2"
                                   Placeholder="@Localizer["CreateElementForm.Fields.Collapsable.Goals.Field.Description.Placeholder"]"/>
-                    
+
                     <p class="text-xs font-bold text-adlertitledarkblue cursor-default pt-2">@Localizer["CreateElementForm.Fields.Collapsable.Goals.Title"]</p>
                     <p class="text-xs cursor-default">
                         @Localizer["CreateElementForm.Fields.Collapsable.Goals.Field.Goals.Text"]
@@ -198,7 +198,7 @@
                                   DebounceInterval="DebounceInterval"
                                   Typo="Typo.subtitle2"
                                   Placeholder="@Localizer["CreateElementForm.Fields.Collapsable.Goals.Field.Description.AdaptivityElement.Text"]"/>
-                    
+
                     <p class="text-xs font-bold text-adlertitledarkblue cursor-default pt-2">@Localizer["CreateElementForm.Fields.Collapsable.Goals.Title"]</p>
                     <p class="text-xs cursor-default">
                         @Localizer["CreateElementForm.Fields.Collapsable.Goals.AdaptivityElement.Text"]
@@ -279,34 +279,34 @@
         <Collapsable Title="@Localizer["CreateElementForm.Fields.Collapsable.Design.Title"]"
                      InitiallyCollapsed="true">
             <div class="w-4/4 px-6">
-                    @switch (ElementMode)
-                    {
-                        case ElementMode.Story:
-                            <p class="text-xs font-bold text-adlertitledarkblue cursor-default pt-2">
-                                @Localizer["CreateElementForm.Fields.Collapsable.3DRepresentation.Title"]
-                            </p>
-                            <p class="text-xs cursor-default">
-                                @Localizer["CreateElementForm.Fields.Collapsable.Story.NPC.Text"]
-                            </p>
-                            break;
-                        case ElementMode.Adaptivity:
-                            <p class="text-xs font-bold text-adlertitledarkblue cursor-default pt-2">
-                                @Localizer["CreateElementForm.Fields.Collapsable.3DRepresentation.Robot.Title"]
-                            </p>
-                            <p class="text-xs cursor-default">
-                                @Localizer["CreateElementForm.Fields.Collapsable.Adaptivity.Robot.Text"]
-                            </p>
-                            break;
-                        case ElementMode.Normal:
-                            <p class="text-xs font-bold text-adlertitledarkblue cursor-default pt-2">
-                                @Localizer["CreateElementForm.Fields.Collapsable.3DRepresentation.Furniture.Title"]
-                            </p>
-                            <p class="text-xs cursor-default">
-                                @Localizer["CreateElementForm.Fields.Collapsable.Learning.Object.Text"]
-                            </p>
-                            break;
-                    }
-                    
+                @switch (ElementMode)
+                {
+                    case ElementMode.Story:
+                        <p class="text-xs font-bold text-adlertitledarkblue cursor-default pt-2">
+                            @Localizer["CreateElementForm.Fields.Collapsable.3DRepresentation.Title"]
+                        </p>
+                        <p class="text-xs cursor-default">
+                            @Localizer["CreateElementForm.Fields.Collapsable.Story.NPC.Text"]
+                        </p>
+                        break;
+                    case ElementMode.Adaptivity:
+                        <p class="text-xs font-bold text-adlertitledarkblue cursor-default pt-2">
+                            @Localizer["CreateElementForm.Fields.Collapsable.3DRepresentation.Robot.Title"]
+                        </p>
+                        <p class="text-xs cursor-default">
+                            @Localizer["CreateElementForm.Fields.Collapsable.Adaptivity.Robot.Text"]
+                        </p>
+                        break;
+                    case ElementMode.Normal:
+                        <p class="text-xs font-bold text-adlertitledarkblue cursor-default pt-2">
+                            @Localizer["CreateElementForm.Fields.Collapsable.3DRepresentation.Furniture.Title"]
+                        </p>
+                        <p class="text-xs cursor-default">
+                            @Localizer["CreateElementForm.Fields.Collapsable.Learning.Object.Text"]
+                        </p>
+                        break;
+                }
+
                 <div
                     class="@(ElementMode != ElementMode.Adaptivity ? "overflow-y-scroll h-52 border-adlergrey-200 border rounded" : "")">
                     <ElementModelGridSelect @bind-Value="FormDataContainer.FormModel.ElementModel"
@@ -336,7 +336,7 @@
                 }
             </div>
         </Collapsable>
-        
+
         <Collapsable Title="@Localizer["CreateElementForm.Fields.Collapsable.Interaction.Title"]"
                      InitiallyCollapsed="@(ElementMode == ElementMode.Story)">
             <div class="w-4/4 px-6">
@@ -404,8 +404,9 @@
                                 </div>
                             }
                         }
+
                         break;
-                
+
                     case ElementMode.Adaptivity:
                         <p class="text-xs font-bold text-adlertitledarkblue cursor-default pt-2">@Localizer["CreateAdaptivityElementForm.Fields.Collapsable.Tasks.Title"]</p>
                         <p class="text-xs cursor-default">@Localizer["CreateAdaptivityElementForm.Fields.Collapsable.Tasks.Text"]</p>
@@ -442,7 +443,7 @@
                                     (@Localizer["CreateAdaptivityElementForm.Fields.Collapsable.Tasks.Button.Task.Mandatory"]: @mandatoryCount)
                                 </span>
                             </p>
-                            
+
                             @if (count > 0)
                             {
                                 <ul class="pl-2 py-2 mt-0 border border-adlergrey-300 rounded w-full list-disc list-inside cursor-default max-h-40 overflow-y-auto">
@@ -451,7 +452,8 @@
                                         var isMandatory = task.MinimumRequiredDifficulty != null;
                                         <li class="text-sm">
                                             @task.Name
-                                            <span class="ml-1 @(isMandatory ? "text-adlergrey-800" : "italic text-adlergrey-300")">
+                                            <span
+                                                class="ml-1 @(isMandatory ? "text-adlergrey-800" : "italic text-adlergrey-300")">
                                                 (@(isMandatory ? @Localizer["CreateAdaptivityElementForm.Fields.Collapsable.Tasks.Button.Task.Mandatory"] : "optional"))
                                             </span>
                                         </li>
@@ -469,7 +471,7 @@
                         </div>
 
                         break;
-                
+
                     case ElementMode.Story:
                         <p class="text-xs font-bold text-adlertitledarkblue cursor-default pt-2">@Localizer["CreateElementForm.Fields.Collapsable.3DRepresentation.Field.ExitAfterStorySequence.Title"]</p>
                         <p class="text-xs cursor-default">@Localizer["CreateElementForm.Fields.Collapsable.3DRepresentation.Field.ExitAfterStorySequence.Text"]</p>
@@ -545,7 +547,7 @@
 
     private LabelledSwitchState ExitAfterStorySequenceState
     {
-        get => StoryContentModel!.ExitAfterStorySequence ? LabelledSwitchState.Right : LabelledSwitchState.Left;
+        get => (StoryContentModel?.ExitAfterStorySequence ?? false) ? LabelledSwitchState.Right : LabelledSwitchState.Left;
         set => StoryContentModel!.ExitAfterStorySequence = value == LabelledSwitchState.Right;
     }
 
@@ -702,7 +704,7 @@
         return ElementModelHandler.GetElementModels(elementModelContentType, fileType,
             SelectedViewModelsProvider.LearningObjectInPathWay is LearningSpaceViewModel space ? WorldPresenter.LearningWorldVm?.WorldTheme : null);
     }
-    
+
     private async Task ShowH5PInfoDialog()
     {
         var dialogParams = new DialogParameters()
@@ -711,7 +713,7 @@
         };
         await DialogService.ShowAsync<GenericInfoDialog>("H5P Info", dialogParams);
     }
-    
+
     private string LearningContentName
     {
         get => FormDataContainer.FormModel.LearningContent?.Name ?? String.Empty;

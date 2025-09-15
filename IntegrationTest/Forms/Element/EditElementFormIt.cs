@@ -115,9 +115,9 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
     {
         var systemUnderTest = GetFormWithPopoverProvider(elementMode: ElementMode.Adaptivity);
 
-        var collapsables = systemUnderTest.FindComponents<Collapsable>();
-        Assert.That(() => collapsables.Single(collapsable =>
-                collapsable.Instance.Title == "EditAdaptivityElementForm.Fields.Collapsable.Tasks.Title"),
+        var selection = systemUnderTest.FindAll("p");
+        Assert.That(() => selection.Single(collapsable =>
+                collapsable.ToMarkup().Contains("EditAdaptivityElementForm.Fields.Collapsable.Tasks.Title")),
             Throws.Nothing);
     }
 
@@ -129,11 +129,7 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
         var mudForm = systemUnderTest.FindComponent<MudForm>();
         var popover = systemUnderTest.FindComponent<MudPopoverProvider>();
 
-        var collapsables = systemUnderTest.FindComponents<Collapsable>();
-        collapsables[2].Find("div.toggler").Click();
-        collapsables[3].Find("div.toggler").Click();
-        collapsables[4].Find("div.toggler").Click();
-        //await systemUnderTest.InvokeAsync(() => systemUnderTest);
+        UncollapseAllCollapsables(systemUnderTest, ElementMode.Normal);
 
         ConfigureValidatorAllMembers();
 
@@ -163,10 +159,7 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
         var popover = systemUnderTest.FindComponent<MudPopoverProvider>();
         var assertionAttempts = 0;
 
-        var collapsables = systemUnderTest.FindComponents<Collapsable>();
-        collapsables[2].Find("div.toggler").Click();
-        collapsables[3].Find("div.toggler").Click();
-        collapsables[4].Find("div.toggler").Click();
+        UncollapseAllCollapsables(systemUnderTest, ElementMode.Normal);
 
         ChangeFields(systemUnderTest, popover);
 
@@ -185,7 +178,8 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
                 assertionAttempts++;
             },
             TimeSpan.FromSeconds(3));
-        Console.WriteLine($@"{nameof(SubmitThenRemapButton_CallsPresenterWithNewValues_ThenRemapsEntityIntoForm)}: Assertion attempts: {assertionAttempts}");
+        Console.WriteLine(
+            $@"{nameof(SubmitThenRemapButton_CallsPresenterWithNewValues_ThenRemapsEntityIntoForm)}: Assertion attempts: {assertionAttempts}");
     }
 
     private void AssertFieldsSet(IRenderedFragment systemUnderTest)
@@ -210,7 +204,7 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
         var mudNumericFields = systemUnderTest.FindComponents<MudNumericField<int>>();
         var mudSelect = systemUnderTest.FindComponent<MudSelect<LearningElementDifficultyEnum>>();
         var mudSwitch = systemUnderTest.FindComponent<MudSwitch<bool>>();
-        
+
         var editContentButton = systemUnderTest.FindComponents<MudIconButton>();
         editContentButton[1].Find("button").Click();
 
@@ -251,9 +245,9 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
         Context.RenderComponent<MudPopoverProvider>();
         var systemUnderTest = GetRenderedComponent(vm);
 
-        systemUnderTest.FindComponentWithMarkup<MudIconButton>("btn-standard rounded").Find("button").Click();
+        systemUnderTest.FindComponentWithMarkup<MudIconButton>("show-content-preview").Find("button").Click();
 
-        WorldPresenter.Received(1).ShowSelectedElementContentAsync(vm);
+        PresentationLogic.Received(1).ShowLearningContentAsync(FormDataContainer.FormModel.LearningContent!);
     }
 
     [Test]
@@ -269,6 +263,26 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
 
         await dialogServiceMock.Received(1).ShowAsync<AdaptivityContentDialog>(Arg.Any<string>(),
             Arg.Any<DialogParameters>(), Arg.Any<DialogOptions>());
+    }
+
+    private static void UncollapseAllCollapsables(IRenderedFragment systemUnderTest, ElementMode elementMode)
+    {
+        var collapsables = systemUnderTest.FindComponents<Collapsable>();
+        Assert.That(collapsables, Has.Count.EqualTo(4));
+        switch (elementMode)
+        {
+            case ElementMode.Normal:
+            case ElementMode.Adaptivity:
+                collapsables[1].Find("div.toggler").Click();
+                collapsables[2].Find("div.toggler").Click();
+                break;
+            case ElementMode.Story:
+                collapsables[2].Find("div.toggler").Click();
+                collapsables[3].Find("div.toggler").Click();
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(elementMode), elementMode, null);
+        }
     }
 
     private IRenderedComponent<EditElementForm> GetRenderedComponent(ILearningElementViewModel? vm = null,
