@@ -16,7 +16,7 @@
     <MudForm Model="@FormDataContainer.FormModel" @ref="@_form" Validation="@ValidateModel" FieldChanged="@FieldChanged"
              Class="@FormClass">
         <MudCardContent Class="p-0">
-            @if (FieldErrors().Result.Any())
+            @if (ShowErrors && FieldErrors().Result.Any())
             {
                 <div class="mt-2 form-error-message">
                     <MudAlert Severity="Severity.Error" Variant="Variant.Outlined">
@@ -83,6 +83,18 @@
 
     private MudForm? _form;
 
+    private bool _showErrors = false;
+    
+    private bool ShowErrors
+    {
+        get => _showErrors;
+        set
+        {
+            _showErrors = value;
+            StateHasChanged();
+        }
+    }
+
     private async Task<IEnumerable<string>> FieldErrors()
     {
         if (_form == null) return [];
@@ -115,10 +127,12 @@
     public void Reset()
     {
         FormDataContainer.FormModel = new TForm();
+        ShowErrors = false;
     }
 
     public async Task<bool> SubmitAsync()
     {
+        ShowErrors = true;
         if (_form is null) throw new InvalidOperationException("_form is null by @ref");
         await _form.Validate();
         if (!_form.IsValid)
