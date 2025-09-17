@@ -19,7 +19,7 @@
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
     <data name="Header.ContentFilesAdd.Title" xml:space="preserve">
-        <value>Add external learning material</value>
+        <value>Add External Learning Material</value>
     </data>
     <data name="AuthoringTool.Text" xml:space="preserve">
         <value>Authoring tool</value>
@@ -31,7 +31,7 @@
         <value>Upload learning world to the AdLer server</value>
     </data>
     <data name="LearningWorld.Home.Hover" xml:space="preserve">
-        <value>My learning worlds</value>
+        <value>My Learning Worlds</value>
     </data>
     <data name="LearningWorld.Save.Hover" xml:space="preserve">
         <value>Save learning world</value>

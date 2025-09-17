@@ -23,10 +23,10 @@
         </value>
     </resheader>
     <data name="LearningSpace.Title.Text" xml:space="preserve">
-        <value>Learning space editor</value>
+        <value>Learning Space Editor</value>
     </data>
     <data name="LearningSpace.ElementName.Text" xml:space="preserve">
-        <value>Selected learning element:</value>
+        <value>Selected Learning Element:</value>
     </data>
     <data name="LearningSpace.SpaceWorkload.Text" xml:space="preserve">
         <value>Workload: </value>
@@ -38,7 +38,7 @@
         <value>Replace learning element</value>
     </data>
     <data name="LearningSpace.SpaceTheme.Text" xml:space="preserve">
-        <value>Theme: </value>
+        <value>Space theme: </value>
     </data>
     <data name="LearningSpace.SpaceGoals.Text" xml:space="preserve">
         <value>Learning outcomes: </value>
@@ -62,7 +62,7 @@
         <value>Learning outcomes of this learning space</value>
     </data>
     <data name="LearningSpace.LearningOutcomesOverview.Title" xml:space="preserve">
-        <value>Learning outcomes overview</value>
+        <value>Learning Outcomes Overview</value>
     </data>
     <data name="LearningSpace.LearningOutcomesOverview.Text.Part1" xml:space="preserve">
         <value>Learning outcomes for the learning space</value>

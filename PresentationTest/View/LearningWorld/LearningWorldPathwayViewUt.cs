@@ -22,6 +22,7 @@ using Presentation.View.LearningSpace;
 using Presentation.View.LearningWorld;
 using Shared;
 using Shared.Command;
+using Shared.Theme;
 using TestContext = Bunit.TestContext;
 
 namespace PresentationTest.View.LearningWorld;
@@ -38,6 +39,7 @@ public class LearningWorldPathwayViewUt
         _selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
         _localizer = Substitute.For<IStringLocalizer<LearningWorldPathwayView>>();
         _localizer[Arg.Any<string>()].Returns(ci => new LocalizedString(ci.Arg<string>(), ci.Arg<string>()));
+        _dialogService = Substitute.For<IDialogService>();
         _ctx.ComponentFactories.AddStub<LearningSpaceView>();
         _ctx.ComponentFactories.AddStub<DraggableObjectInPathWay>();
         _ctx.ComponentFactories.AddStub<PathWay>();
@@ -47,6 +49,10 @@ public class LearningWorldPathwayViewUt
         _ctx.Services.AddSingleton(_worldPresenter);
         _ctx.Services.AddSingleton(_selectedViewModelsProvider);
         _ctx.Services.AddSingleton(_localizer);
+        _ctx.Services.AddSingleton(_dialogService);
+        var themeLocalizer = Substitute.For<IStringLocalizer<WorldTheme>>();
+        themeLocalizer[Arg.Any<string>()].Returns(ci => new LocalizedString(ci.Arg<string>(), ci.Arg<string>()));
+        ThemeHelper<WorldTheme>.Initialize(themeLocalizer);
     }
 
     [TearDown]
@@ -60,6 +66,7 @@ public class LearningWorldPathwayViewUt
     private ILearningWorldPresenter _worldPresenter = null!;
     private ISelectedViewModelsProvider _selectedViewModelsProvider = null!;
     private IStringLocalizer<LearningWorldPathwayView> _localizer = null!;
+    private IDialogService _dialogService = null!;
 
     [Test]
     public void Constructor_InjectsDependencies()
@@ -131,11 +138,11 @@ public class LearningWorldPathwayViewUt
 
         var systemUnderTest = GetLearningWorldViewForTesting();
 
-        var p = systemUnderTest.FindAllOrFail("p").ToList();
-        p[1].MarkupMatches(
-            @"<p class=""text-xs 2xl:text-base text-adlerblue-600""><span class=""text-adlergrey-600"">LearningWorldView.Workload.Text</span> 42<span class=""text-adlergrey-600"">LearningWorldView.Workload.TimeScale</span></p>");
+        var p = systemUnderTest.FindAllOrFail("li").ToList();
         p[2].MarkupMatches(
-            @"<p class=""text-xs 2xl:text-base text-adlerblue-600""><span class=""text-adlergrey-600"">LearningWorldView.Condition.Text</span> 9<span class=""text-adlergrey-600"">/</span>17<span class=""text-adlergrey-600"">LearningWorldView.Condition.Elements</span></p>");
+            @"<li class=""marker:text-adlergrey pl-1 text-xs 2xl:text-base text-adlerblue-600""><span class=""text-adlergrey-600"">LearningWorldView.Workload.Text</span> 42<span class=""text-adlergrey-600"">LearningWorldView.Workload.TimeScale</span></li>");
+        p[3].MarkupMatches(
+            @"<li class=""marker:text-adlergrey pl-1 text-xs 2xl:text-base text-adlerblue-600""><span class=""text-adlergrey-600"">LearningWorldView.Condition.Text</span> 9<span class=""text-adlergrey-600"">/</span>17<span class=""text-adlergrey-600"">LearningWorldView.Condition.Elements</span></li>");
     }
 
     [Test]
@@ -216,9 +223,9 @@ public class LearningWorldPathwayViewUt
         var systemUnderTest = GetLearningWorldViewForTesting();
 
         var addSpaceButton = systemUnderTest.Find(".create-space-button");
-        
+
         await addSpaceButton.ClickAsync(new MouseEventArgs());
-        
+
         _worldPresenter.Received().AddNewLearningSpace();
     }
 
@@ -230,7 +237,7 @@ public class LearningWorldPathwayViewUt
         var addConditionButton = systemUnderTest.Find(".create-condition-button");
 
         await addConditionButton.ClickAsync(new MouseEventArgs());
-        
+
         _worldPresenter.Received().CreatePathWayCondition();
     }
 

@@ -55,7 +55,8 @@ public class CollapsableUt
         Assert.Multiple(() =>
         {
             Assert.That(icon.Instance.Parameters["Icon"], Is.EqualTo(Icons.Material.Filled.ArrowRight));
-            Assert.That(() => systemUnderTest.Find("div.inner"), Throws.TypeOf<ElementNotFoundException>());
+            var innerDiv = systemUnderTest.Find("div.inner");
+            Assert.That(innerDiv.GetAttribute("style"), Does.Contain("display: none;"));
         });
     }
 
@@ -162,7 +163,7 @@ public class CollapsableUt
         
         var systemUnderTest = RenderComponent(initiallyCollapsed: collapsed, title: title);
         
-        Assert.That(() => systemUnderTest.Find("div.gap-2.my-2"), Throws.Nothing);
+        Assert.That(() => systemUnderTest.Find("div.gap-3.ml-2"), Throws.Nothing);
     }
     
     [Test]
@@ -174,7 +175,7 @@ public class CollapsableUt
         
         var systemUnderTest = RenderComponent(initiallyCollapsed: collapsed, title: title, verticalMargin: verticalMargin);
         
-        Assert.That(() => systemUnderTest.Find("div.gap-2.my-2"), Throws.Nothing);
+        Assert.That(() => systemUnderTest.Find("div.gap-3.my-2"), Throws.Nothing);
     }
 
     [Test]
@@ -187,21 +188,18 @@ public class CollapsableUt
 
         var togglerDiv = systemUnderTest.Find("div.toggler");
 
-        Assert.Multiple(() =>
-        {
-            Assert.That(() => systemUnderTest.Find("p.child-content"), Throws.TypeOf<ElementNotFoundException>());
-        });
+        var innerDiv = systemUnderTest.Find("div.inner");
+        Assert.That(innerDiv.GetAttribute("style"), Does.Contain("display: none;"));
 
         togglerDiv.Click();
 
-        Assert.Multiple(() => { Assert.That(() => systemUnderTest.Find("p.child-content"), Throws.Nothing); });
-
+        innerDiv = systemUnderTest.Find("div.inner");
+        Assert.That(innerDiv.GetAttribute("style"), Does.Not.Contain("display: none;"));
+        
         togglerDiv.Click();
 
-        Assert.Multiple(() =>
-        {
-            Assert.That(() => systemUnderTest.Find("p.child-content"), Throws.TypeOf<ElementNotFoundException>());
-        });
+        innerDiv = systemUnderTest.Find("div.inner");
+        Assert.That(innerDiv.GetAttribute("style"), Does.Contain("display: none;"));
     }
 
     private static RenderFragment GetChildContent()

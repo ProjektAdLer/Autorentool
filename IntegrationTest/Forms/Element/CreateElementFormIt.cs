@@ -122,9 +122,9 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
     {
         var systemUnderTest = GetFormWithPopoverProvider(elementMode: ElementMode.Adaptivity);
 
-        var collapsables = systemUnderTest.FindComponents<Collapsable>();
-        Assert.That(() => collapsables.Single(collapsable =>
-                collapsable.Instance.Title == "CreateAdaptivityElementForm.Fields.Collapsable.Tasks.Title"),
+        var selection = systemUnderTest.FindAll("p");
+        Assert.That(() => selection.Single(collapsable =>
+                collapsable.ToMarkup().Contains("CreateAdaptivityElementForm.Fields.Collapsable.Tasks.Title")),
             Throws.Nothing);
     }
 
@@ -136,11 +136,7 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
         var mudForm = systemUnderTest.FindComponent<MudForm>();
         var popover = systemUnderTest.FindComponent<MudPopoverProvider>();
 
-        var collapsables = systemUnderTest.FindComponents<Collapsable>();
-        collapsables[2].Find("div.toggler").Click();
-        collapsables[3].Find("div.toggler").Click();
-        collapsables[4].Find("div.toggler").Click();
-        //await systemUnderTest.InvokeAsync(() => systemUnderTest);
+        UncollapseAllCollapsables(systemUnderTest, ElementMode.Normal);
 
         ConfigureValidatorAllMembers();
 
@@ -170,11 +166,7 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
         var mudForm = systemUnderTest.FindComponent<MudForm>();
         var popover = systemUnderTest.FindComponent<MudPopoverProvider>();
 
-        var collapsables = systemUnderTest.FindComponents<Collapsable>();
-        collapsables[2].Find("div.toggler").Click();
-        collapsables[3].Find("div.toggler").Click();
-        collapsables[4].Find("div.toggler").Click();
-        //await systemUnderTest.InvokeAsync(() => systemUnderTest);
+        UncollapseAllCollapsables(systemUnderTest, ElementMode.Normal);
 
         ConfigureValidatorAllMembers();
 
@@ -245,10 +237,7 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
         var mudForm = systemUnderTest.FindComponent<MudForm>();
         var popover = systemUnderTest.FindComponent<MudPopoverProvider>();
 
-        var collapsables = systemUnderTest.FindComponents<Collapsable>();
-        collapsables[2].Find("div.toggler").Click();
-        collapsables[3].Find("div.toggler").Click();
-        collapsables[4].Find("div.toggler").Click();
+        UncollapseAllCollapsables(systemUnderTest, ElementMode.Normal);
 
         ConfigureValidatorAllMembers();
 
@@ -313,17 +302,20 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
         Context.RenderComponent<MudPopoverProvider>();
         var sut = GetRenderedComponent(ElementMode.Story);
 
+        UncollapseAllCollapsables(sut, ElementMode.Story);
         var collapsables = sut.FindComponents<Collapsable>();
 
         var storyCollapsable = collapsables.First(collapsable =>
-            collapsable.Instance.Title == "CreateStoryElementForm.Fields.Collapsable.Story.Title");
+            collapsable.Instance.Title == "CreateElementForm.Fields.Collapsable.Content.Title");
 
-        var addButton = storyCollapsable.FindComponentWithMarkup<MudIconButton>("add-story-block-button");
+        var addButton = storyCollapsable.FindComponentWithMarkup<MudButton>("add-story-block-button");
         addButton.Find("button").Click();
 
         var tfs = storyCollapsable.FindComponentsOrFail<MudTextField<string>>().ToList();
         tfs.ElementAt(0).Find("textarea").Change("a sob story");
         tfs.ElementAt(1).Find("textarea").Change("a happy story");
+
+        Assert.That(sut.Instance.FormDataContainer.FormModel.LearningContent, Is.TypeOf<StoryContentFormModel>());
 
         var submitButton = sut.FindComponent<DefaultSubmitButton>();
         submitButton.Find("button").Click();
@@ -333,6 +325,26 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
         Assert.That(storyContent.StoryText, Has.Count.EqualTo(2));
         Assert.That(storyContent.StoryText.ElementAt(0), Is.EqualTo("a sob story"));
         Assert.That(storyContent.StoryText.ElementAt(1), Is.EqualTo("a happy story"));
+    }
+
+    private static void UncollapseAllCollapsables(IRenderedFragment systemUnderTest, ElementMode elementMode)
+    {
+        var collapsables = systemUnderTest.FindComponents<Collapsable>();
+        Assert.That(collapsables, Has.Count.EqualTo(4));
+        switch (elementMode)
+        {
+            case ElementMode.Normal:
+            case ElementMode.Adaptivity:
+                collapsables[1].Find("div.toggler").Click();
+                collapsables[2].Find("div.toggler").Click();
+                break;
+            case ElementMode.Story:
+                collapsables[2].Find("div.toggler").Click();
+                collapsables[3].Find("div.toggler").Click();
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(elementMode), elementMode, null);
+        }
     }
 
     private void AssertFieldsSet(IRenderedFragment systemUnderTest)

@@ -24,7 +24,7 @@
         <value>Information about the adaptivity element - Opens a browser windowInformation about the adaptivity element - Opens a browser window</value>
     </data>
     <data name="DialogContent.Help.Didactic.LearningOutcomeGuide" xml:space="preserve">
-        <value>Input support</value>
+        <value>Input Support</value>
     </data>
     <data name="DialogContent.Help.Didactic.LearningOutcomeGuide.Hover" xml:space="preserve">
         <value>Information on input support for formulate learning outcomes - Opens a browser window</value>
@@ -54,7 +54,7 @@
         <value>Software components of the authoring tool - Opens a browser window</value>
     </data>
     <data name="DialogContent.Help.UserManual.Title" xml:space="preserve">
-        <value>Read more information</value>
+        <value>Read more Information</value>
     </data>
     <data name="Feedback.MenuItem.Technical.Text" xml:space="preserve">
         <value>Report technical error</value>

@@ -48,4 +48,7 @@
     <data name="ErrorString.TaskReferencesNonexistantContent.Message" xml:space="preserve">
         <value>Element &lt;b&gt;{0}&lt;/b&gt; referenziert ein nicht existierendes externes Lernmaterial. Bitte überprüfen Sie die gesetzten Referenzen in diesem Element.</value>
     </data>
+    <data name="3DWorld.Generate.Button.Title" xml:space="preserve">
+        <value>Lernwelt hochladen</value>
+    </data>
 </root>

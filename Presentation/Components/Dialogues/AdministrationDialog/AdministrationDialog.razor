@@ -1,6 +1,6 @@
 @using System.Diagnostics.CodeAnalysis
 @using Microsoft.Extensions.Localization
-<MudPaper id="LmsLoginDialog.Dialog.Paper" Height="450px" Style="overflow: hidden; position: relative;">
+<MudPaper id="LmsLoginDialog.Dialog.Paper" Height="500px" Style="overflow: hidden; position: relative;">
     <div class="w-full flex flex-row items-center justify-between">
         <MudText
             Class="cursor-default p-4 text-adlerdarkblue font-bold text-lg cursor-default">@Localizer["DialogContent.Header"]</MudText>
@@ -9,7 +9,7 @@
                        ButtonType="ButtonType.Submit" Class="relative items-center flex justify-end button-submit"/>
     </div>
 
-    <div class="flex flex-row gap-2 bg-adlerbgbright h-full">
+    <div class="flex flex-row bg-adlerbgbright h-full">
         <div class="flex">
             <MudPaper Width="100px" Height="590px" Class="bg-adlergrey-100" Elevation="0">
                 <MudTabs Position="Position.Left" MinimumTabWidth="100px" Color="Color.Info"

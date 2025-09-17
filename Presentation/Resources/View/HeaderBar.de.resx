@@ -94,7 +94,7 @@
         <value>Lernwelt exportieren (ZIP)</value>
     </data>
     <data name="ExportArchive.Hover" xml:space="preserve">
-        <value>Lernwelt als ZIP-Datei exportieren (z.B. zu anderem Rechner senden oder für Sicherungskopie)</value>
+        <value>Lernwelt als ZIP-Datei exportieren (z. B. zu anderem Rechner senden oder für Sicherungskopie)</value>
     </data>
     <data name="ConfirmReplaceOrCreateCopyDialog.Title" xml:space="preserve">
         <value>Lernwelt existiert bereits</value>

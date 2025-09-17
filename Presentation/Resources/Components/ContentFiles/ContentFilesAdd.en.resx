@@ -28,7 +28,7 @@
         <value>The file {0} was empty, skipping it.</value>
     </data>
     <data name="Collapsable.Title" xml:space="preserve">
-        <value>Add video as link</value>
+        <value>Add Video As Link</value>
     </data>
     <data name="FileUpload.ButtonTemplate.Text2" xml:space="preserve">
         <value>Allowed file formats: {0}.</value>
@@ -58,7 +58,7 @@
         <value>The file {0} is empty. It could therefore not be imported.</value>
     </data>
     <data name="ContentFilesAdd.AddedMaterial.Success" xml:space="preserve">
-        <value>Added external learning material</value>
+        <value>Added External Learning Material</value>
     </data>
     <data name="ContentFilesAdd.UnsupportedFileEnding.Snackbar" xml:space="preserve">
         <value>Unsupported file ending: External learning material not added</value>
@@ -85,6 +85,6 @@
         <value>Error while loading external learning material</value>
     </data>
     <data name="ContentFilesAdd.Header" xml:space="preserve">
-        <value>Add external learning material</value>
+        <value>Add External Learning Material</value>
     </data>
 </root>

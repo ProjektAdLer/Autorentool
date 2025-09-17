@@ -34,16 +34,16 @@
         <value>Language</value>
     </data>
     <data name="CreateWorldForm.Goals.Field.Description.Text" xml:space="preserve">
-        <value>Description for this learning world</value>
+        <value>Write a description for this learning world to give a overview of the content that will be covered.</value>
     </data>
     <data name="CreateWorldForm.Goals.Field.Goals.Text" xml:space="preserve">
-        <value>Learning outcome(s) for this learning world</value>
+        <value>Define learning outcomes that precisely describe the verifiable skills or knowledge that should be acquired upon completion of the learning world.</value>
     </data>
     <data name="CreateWorldForm.Title.Text" xml:space="preserve">
-        <value>Create learning world</value>
+        <value>Create Learning World</value>
     </data>
     <data name="CreateWorldForm.Goals.Text" xml:space="preserve">
-        <value>Learning outcomes</value>
+        <value>Learning Outcomes</value>
     </data>
     <data name="CreateWorldForm.SnackbarMessage" xml:space="preserve">
         <value>Learning world created</value>
@@ -52,19 +52,19 @@
         <value>* Required</value>
     </data>
     <data name="CreateWorldForm.General.Field.EnrolmentKey.Text" xml:space="preserve">
-        <value>Enrolment key</value>
+        <value>Enter an enrollment key to restrict access to this learning world.</value>
     </data>
     <data name="CreateWorldForm.Fields.Collapsable.Description.Title" xml:space="preserve">
         <value>Description</value>
     </data>
     <data name="CreateWorldForm.EnrolmentKey.Title" xml:space="preserve">
-        <value>Enrolment method</value>
+        <value>Enrollment Key</value>
     </data>
     <data name="CreateWorldForm.EnrolmentKey.Tooltip" xml:space="preserve">
-        <value>An enrolment key enables access to the learning world to be restricted to only those who know the key. &lt;br&gt; &lt;br&gt; If the field is left blank, any user may enrol in the learning world. &lt;br&gt; &lt;br&gt; If an enrolment key is specified, any user attempting to enrol in the learning world will be restricted to supply the key. Note that users only need to supply the enrolment key once, when they enrol in the learning world.</value>
+        <value>An enrollment key enables access to the learning world to be restricted to only those who know the key. &lt;br&gt; &lt;br&gt; If the field is left blank, any user may enrol in the learning world. &lt;br&gt; &lt;br&gt; If an enrolment key is specified, any user attempting to enrol in the learning world will be restricted to supply the key. Note that users only need to supply the enrolment key once, when they enrol in the learning world.</value>
     </data>
     <data name="CreateWorldForm.Fields.Collapsable.Story.Title" xml:space="preserve">
-        <value>Framework for the story</value>
+        <value>Framework for the Story</value>
     </data>
     <data name="CreateWorldForm.Fields.Collapsable.Story.Field.Description.Text" xml:space="preserve">
         <value>Formulate an introduction and a conclusion for your story here in order to embed the learning world in a framework.</value>
@@ -82,30 +82,69 @@
         <value>And so it ended...</value>
     </data>
     <data name="CreateWorldForm.Theme.Text" xml:space="preserve">
-        <value>Learning world theme</value>
+        <value>Learning World Theme</value>
     </data>
     <data name="CreateWorldForm.Theme.Field.Theme.Text" xml:space="preserve">
-        <value>Selection of themes with different theme worlds for the learning world</value>
+        <value>Select one of the various themes for the learning world.</value>
     </data>
     <data name="CreateWorldForm.Finalization.Text" xml:space="preserve">
-        <value>Link to the learning world finalisation</value>
+        <value>Link to the Learning World Finalisation</value>
     </data>
     <data name="CreateWorldForm.Finalization.Collapsable.Description.Text" xml:space="preserve">
-        <value>In this section, you can enter a link to a specially created online survey, to your university moodle or similar and also formulate a reference text.</value>
+        <value>Provide a link to a online survey or your university Moodle, and also formulate a reference text.</value>
     </data>
     <data name="CreateWorldForm.Finalization.Tooltip" xml:space="preserve">
-        <value>If you do not specify a link and hint text, the placeholder text is displayed in the 3D learning environment by default.</value>
+        <value>If no link or note text is specified, the placeholder text in the note text field is displayed in the 3D learning environment by default.</value>
     </data>
     <data name="CreateWorldForm.Finalization.Field.EvaluationLinkText.Placeholder.Text" xml:space="preserve">
-        <value>You have successfully completed all the learning rooms and thus passed the learning world, congratulations!</value>
+        <value>You have successfully completed all the learning spaces and thus passed the learning world, congratulations!</value>
     </data>
     <data name="CreateWorldForm.Finalization.Field.EvaluationLinkName.Placeholder.Text" xml:space="preserve">
         <value>e.g. online survey</value>
     </data>
     <data name="CreateWorldForm.Finalization.Field.EvaluationLink.Placeholder.Text" xml:space="preserve">
-        <value>--- Link to evaluation</value>
+        <value>Link (https://www...)</value>
     </data>
     <data name="CreateWorldForm.Goals.Button" xml:space="preserve">
         <value>Learning outcome formulation</value>
+    </data>
+    <data name="CreateWorldForm.General.Subtitle" xml:space="preserve">
+        <value>General Information</value>
+    </data>
+    <data name="CreateWorldForm.General.InfoText" xml:space="preserve">
+        <value>Provide general information about this learning world.</value>
+    </data>
+    <data name="CreateWorldForm.Content.Text" xml:space="preserve">
+        <value>Content &amp; Orientation</value>
+    </data>
+    <data name="CreateWorldForm.General.Field.Name.Placeholder" xml:space="preserve">
+        <value>e.g. Introduction-to-Biology</value>
+    </data>
+    <data name="CreateWorldForm.General.Field.Shortname.Placeholder" xml:space="preserve">
+        <value>e.g. IntroBio2025</value>
+    </data>
+    <data name="CreateWorldForm.General.Field.Authors.Placeholder" xml:space="preserve">
+        <value>e.g. Erika Examplewoman, Max Exampleman</value>
+    </data>
+    <data name="CreateWorldForm.General.Field.Language.Placeholder" xml:space="preserve">
+        <value>e.g. German, English</value>
+    </data>
+    <data name="CreateWorldForm.Goals.Field.Description.Placeholder" xml:space="preserve">
+        <value>This learning world covers the following topic: ...</value>
+    </data>
+    <data name="CreateWorldForm.Collapsable.Design" xml:space="preserve">
+        <value>Design &amp; Presentation</value>
+    </data>
+    <data name="CreateWorldForm.Collapsable.Interaction" xml:space="preserve">
+        <value>Interaction &amp; Process</value>
+    </data>
+    <data name="CreateWorldForm.Finalization.Field.EvaluationLinkText.Text" xml:space="preserve">
+        <value>Instruction Text</value>
+    </data>
+    <data name="CreateWorldForm.Finalization.Field.EvaluationLinkName.Text" xml:space="preserve">
+        <value>Link Type</value>
+    </data>
+    <data name="EditElementForm.Fields.Collapsable.Goals.AdaptivityElement.Text" xml:space="preserve">
+        <value>Define learning outcomes that precisely describe the verifiable skills or knowledge that should be acquired upon completion of the adaptivity element.</value>
     </data>
 </root>

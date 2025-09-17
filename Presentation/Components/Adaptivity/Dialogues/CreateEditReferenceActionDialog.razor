@@ -16,7 +16,7 @@
 <div class="relative w-[800px] h-[520px] flex flex-col mx-4">
     <MudText Class="px-2 mb-1 text-sm cursor-default">@Localizer["Reference.Text"]</MudText>
     <div class="border-adlergrey-200 border-4 rounded m-2">
-        <MudText Class="font-bold text-sm cursor-default px-3 py-1 pt-2">@Localizer["Note.Label.Text"]</MudText>
+        <MudText Class="font-bold text-adlertitledarkblue text-sm cursor-default px-3 py-1 pt-2">@Localizer["Note.Label.Text"]</MudText>
         <div class="border-4 border-adlergrey-100 rounded-lg mx-1.5">
             <MudTextField Variant="Variant.Outlined"
                           Class="shadow-none m-0"
@@ -33,7 +33,7 @@
                 <MudForm Class="bg-white border-t-2 border-adlergrey-200" @ref="_form">
                     <div class="p-2">
                         <div class="flex flex-row justify-between items-center gap-1">
-                            <MudText Class="cursor-default font-bold text-sm p-1 text-adlertextgrey">@Localizer["Reference.Element.Label.Text"]
+                            <MudText Class="cursor-default font-bold text-sm text-adlertitledarkblue p-1">@Localizer["Reference.Element.Label.Text"]
                                 <MudTooltip Placement="Placement.Right" Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed cursor-default" Text="@Localizer["Reference.Element.Info.Text"]">
                                     <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info" Class="text-adlergrey-300 hover:text-adlerdarkblue"></MudIcon>
                                 </MudTooltip>
@@ -65,7 +65,7 @@
                 <MudForm Class="bg-white border-t-2 border-adlergrey-100" @ref="_form">
                     <div class="p-2">
                         <div class="flex flex-row justify-between items-center gap-1">
-                            <MudText Class="font-bold text-sm p-1 cursor-default text-adlertextgrey">@Localizer["Reference.Content.Label.Text"]
+                            <MudText Class="font-bold text-sm p-1 cursor-default text-adlertitledarkblue">@Localizer["Reference.Content.Label.Text"]
                                 <MudTooltip Placement="Placement.Right" Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed cursor-default" Text="@Localizer["Reference.Content.Info.Text"]">
                                     <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info" Class="text-adlergrey-300 hover:text-adlerdarkblue"></MudIcon>
                                 </MudTooltip>

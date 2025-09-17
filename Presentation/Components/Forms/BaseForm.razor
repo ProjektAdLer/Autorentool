@@ -1,7 +1,7 @@
 @typeparam TForm where TForm : new()
 @typeparam TEntity
-@using MudBlazor.Utilities
 @using System.Diagnostics.CodeAnalysis
+@using MudBlazor.Utilities
 @implements IBaseForm
 
 <MudFocusTrap DefaultFocus="DefaultFocus.None">
@@ -13,8 +13,22 @@
         </MudButtonGroup>
     </MudCardActions>
 
-    <MudForm Model="@FormDataContainer.FormModel" @ref="@_form" Validation="@ValidateModel" FieldChanged="@FieldChanged">
+    <MudForm Model="@FormDataContainer.FormModel" @ref="@_form" Validation="@ValidateModel" FieldChanged="@FieldChanged"
+             Class="@FormClass">
         <MudCardContent Class="p-0">
+            @if (ShowErrors && FieldErrors().Result.Any())
+            {
+                <div class="mt-2 form-error-message">
+                    <MudAlert Severity="Severity.Error" Variant="Variant.Outlined">
+                        <ul>
+                            @foreach (var error in FieldErrors().Result)
+                            {
+                                <li>@error</li>
+                            }
+                        </ul>
+                    </MudAlert>
+                </div>
+            }
             @Fields
             @if (SubmitErrorMessage != null)
             {
@@ -24,11 +38,11 @@
             }
         </MudCardContent>
     </MudForm>
-    
+
     <MudCardActions Class="flex items-end justify-end py-1">
         <MudButtonGroup OverrideStyles="false">
             <CascadingValue Value="this">
-                    @FooterButtons
+                @FooterButtons
             </CascadingValue>
         </MudButtonGroup>
     </MudCardActions>
@@ -58,15 +72,36 @@
 
     [Parameter] public RenderFragment? HeaderButtons { get; set; }
 
-    
 
     [Parameter, EditorRequired] public RenderFragment? FooterButtons { get; set; }
 
     [Parameter] public Func<object, string, Task<IEnumerable<string>>>? CustomValidatorFunc { get; set; }
 
+    [Parameter] public string FormClass { get; set; } = "overflow-y-scroll top-28 h-[75%] 2xl:h-[83%] absolute flex flex-col w-[100%] border-t border-dotted";
+
     internal string? SubmitErrorMessage { get; set; }
 
-    private MudForm? _form; 
+    private MudForm? _form;
+
+    private bool _showErrors = false;
+
+    private bool ShowErrors
+    {
+        get => _showErrors;
+        set
+        {
+            _showErrors = value;
+            StateHasChanged();
+        }
+    }
+
+    private async Task<IEnumerable<string>> FieldErrors()
+    {
+        if (_form == null) return [];
+        await _form.Validate();
+        return _form.Errors.ToList();
+    }
+
     public async Task FocusField(MudTextField<string> focusField)
     {
         // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
@@ -92,13 +127,19 @@
     public void Reset()
     {
         FormDataContainer.FormModel = new TForm();
+        ShowErrors = false;
     }
 
     public async Task<bool> SubmitAsync()
     {
+        await InvokeAsync(() => ShowErrors = true);
         if (_form is null) throw new InvalidOperationException("_form is null by @ref");
         await _form.Validate();
-        if (!_form.IsValid) return false;
+        if (!_form.IsValid)
+        {
+            return false;
+        }
+
         try
         {
             await OnValidSubmit.InvokeAsync(FormDataContainer.FormModel);
@@ -109,6 +150,7 @@
         {
             SubmitErrorMessage = $"An error has occured trying to submit the form: {e.Message}";
         }
+
         return true;
     }
 

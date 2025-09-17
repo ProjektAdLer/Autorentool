@@ -24,7 +24,7 @@
         <value>Login</value>
     </data>
     <data name="DialogContent.LoggedIn.Message" xml:space="preserve">
-        <value>Logged in as</value>
+        <value>Logged in as:</value>
     </data>
     <data name="DialogContent.Field.Password" xml:space="preserve">
         <value>Password</value>
@@ -42,7 +42,7 @@
         <value>This was successful!</value>
     </data>
     <data name="Header.Moodle.Text" xml:space="preserve">
-        <value>Login to AdLer server</value>
+        <value>Login to AdLer Server</value>
     </data>
     <data name="DialogContent.Button.ForgotPassword" xml:space="preserve">
         <value>Forgot password?</value>
@@ -54,7 +54,7 @@
         <value>Show password</value>
     </data>
     <data name="DialogContent.Button.Login.Title" xml:space="preserve">
-        <value>Login to AdLer server</value>
+        <value>Login to AdLer Server</value>
     </data>
     <data name="DialogContent.Button.Logout.Title" xml:space="preserve">
         <value>Logout from AdLer server</value>
@@ -100,7 +100,7 @@ This deletion action also irrevocably removes the courses from Moodle.</value>
         <value>AdLer server</value>
     </data>
     <data name="DialogContent.Delete.Title" xml:space="preserve">
-        <value>Deleting Moodle courses</value>
+        <value>Deleting Moodle Courses</value>
     </data>
     <data name="DialogContent.Delete.Subtitle" xml:space="preserve">
         <value>Moodle courses</value>
@@ -157,7 +157,7 @@ This deletion action also irrevocably removes the courses from Moodle.</value>
         <value>Story element</value>
     </data>
     <data name="DialogContent.Help.Didactic.LearningOutcomeGuide" xml:space="preserve">
-        <value>Input support</value>
+        <value>Input Support</value>
     </data>
     <data name="DialogContent.Help.Didactic.LearningOutcomeGuide.Hover" xml:space="preserve">
         <value>Information on input support for formulate learning outcomes - Opens a browser window</value>
@@ -190,16 +190,10 @@ This deletion action also irrevocably removes the courses from Moodle.</value>
         <value>Report technical error</value>
     </data>
     <data name="DialogContent.Help.UserManual.Title" xml:space="preserve">
-        <value>Read more information</value>
+        <value>Read more Information</value>
     </data>
     <data name="DialogContent.Language.Title" xml:space="preserve">
-        <value>Change language</value>
-    </data>
-    <data name="DialogContent.LearningWorldArchive.Title" xml:space="preserve">
-        <value>Export learning world</value>
-    </data>
-    <data name="DialogContent.LearningWorldArchive.Button" xml:space="preserve">
-        <value>Export learning world</value>
+        <value>Change Language</value>
     </data>
     <data name="ErrorString.Missing.LearningContent.Message" xml:space="preserve">
         <value>Element &lt;b&gt;{0}&lt;/b&gt; references external learning material that does not exist</value>

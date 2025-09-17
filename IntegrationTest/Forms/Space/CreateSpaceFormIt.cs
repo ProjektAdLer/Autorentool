@@ -22,13 +22,14 @@ namespace IntegrationTest.Forms.Space;
 public class CreateSpaceFormIt : MudFormTestFixture<CreateSpaceForm, LearningSpaceFormModel, LearningSpace>
 {
     [SetUp]
-    public void Setup()
+    public new void Setup()
     {
         WorldPresenter = Substitute.For<ILearningWorldPresenter>();
         var themeLocalizer = Substitute.For<IStringLocalizer<SpaceTheme>>();
         themeLocalizer[Arg.Any<string>()].Returns(ci => new LocalizedString(ci.Arg<string>(), ci.Arg<string>()));
         ThemeHelper<SpaceTheme>.Initialize(themeLocalizer);
         Context.Services.AddSingleton(WorldPresenter);
+        Context.RenderComponent<MudPopoverProvider>();
     }
 
     private ILearningWorldPresenter WorldPresenter { get; set; }
@@ -51,12 +52,7 @@ public class CreateSpaceFormIt : MudFormTestFixture<CreateSpaceForm, LearningSpa
         var systemUnderTest = GetRenderedComponent();
 
         var mudForm = systemUnderTest.FindComponent<MudForm>();
-        Context.RenderComponent<MudPopoverProvider>();
-        var collapsables = systemUnderTest.FindComponents<Collapsable>();
-        foreach (var collapsable in collapsables.Skip(1))
-        {
-            collapsable.Find("div.toggler").Click();
-        }
+        UncollapseAllCollapsables(systemUnderTest);
 
         ConfigureValidatorAllMembersTestOr123OrCampus();
 
@@ -163,6 +159,15 @@ public class CreateSpaceFormIt : MudFormTestFixture<CreateSpaceForm, LearningSpa
             Arg.Any<int>(), Arg.Any<SpaceTheme>());
     }
 
+    private static void UncollapseAllCollapsables(IRenderedFragment systemUnderTest)
+    {
+        var collapsables = systemUnderTest.FindComponents<Collapsable>();
+        Assert.That(collapsables, Has.Count.EqualTo(4));
+        collapsables[1].Find("div.toggler").Click();
+        collapsables[2].Find("div.toggler").Click();
+        collapsables[3].Find("div.toggler").Click();
+    }
+
     private void ConfigureValidatorNameIsTest()
     {
         Validator.ValidateAsync(Entity, Arg.Any<string>()).Returns(ci =>
@@ -192,6 +197,7 @@ public class CreateSpaceFormIt : MudFormTestFixture<CreateSpaceForm, LearningSpa
             }
         );
     }
+
 
     private IRenderedComponent<CreateSpaceForm> GetRenderedComponent()
     {

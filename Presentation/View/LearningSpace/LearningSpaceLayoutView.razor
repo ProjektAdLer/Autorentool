@@ -34,7 +34,12 @@
                     <ChildContent>
                         @if (!LearningSpace.LearningSpaceLayout.LearningElements.ContainsKey(x))
                         {
-                            <MudIcon Icon="@Icons.Material.Filled.Add" Style="font-size: 2rem;"></MudIcon>
+                            <div class="w-full h-full relative">
+                                <p class="absolute -top-0 right-0 m-1 z-10 text-xs font-bold">@(@x + 1)</p>
+                                <div class="flex items-center justify-center w-full h-full">
+                                    <MudIcon Icon="@Icons.Material.Filled.Add" Style="font-size: 2rem;"></MudIcon>
+                                </div>
+                            </div>
                         }
                     </ChildContent>
                 </MudDropZone>

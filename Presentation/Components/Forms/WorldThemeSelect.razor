@@ -1,0 +1,83 @@
+@using Shared.Theme
+<div class="p-2 bg-adlergrey-100 border-adlergrey-200 border rounded">
+    <div class="grid gap-2">
+        @foreach (var theme in _themeValues)
+        {
+            var disabled = _disabledThemes.Contains(theme);
+            var isSelected = Selected == theme;
+
+            <MudTooltip Class="bg-adlergrey-200 shadow-xl"
+                        Placement="Placement.Top" Delay="150" Duration="250" Arrow="true">
+                <ChildContent>
+                    <MudPaper Class="@BuildItemCss(isSelected, disabled)"
+                              @onclick="@(() => OnSelect(theme, disabled))"
+                              role="button"
+                              aria-pressed="@isSelected"
+                              aria-label="@(ThemeHelper<WorldTheme>.Localize(theme))">
+                        <div class="flex items-center gap-2 p-2">
+                            <MudImage Src="@GetThemeImagePath(theme)"
+                                      Alt="Lernwelttheme"
+                                      Class="w-14 h-14 rounded-xl object-cover"/>
+                            <div class="flex flex-col">
+                                <p class="text-sm 2xl:text-base">
+                                    @(ThemeHelper<WorldTheme>.Localize(theme))
+                                </p>
+                            </div>
+                        </div>
+                    </MudPaper>
+                </ChildContent>
+                <TooltipContent>
+                    <div class="flex flex-col gap-2 justify-center items-center w-80 p-2">
+                        <p class="text-sm 2xl:text-base">
+                            @(ThemeHelper<WorldTheme>.Localize(theme))
+                        </p>
+                        <MudImage Src="@GetThemeImagePath(theme, true)"
+                                  Width="350"
+                                  Alt="Lernraumtheme"/>
+                    </div>
+                </TooltipContent>
+            </MudTooltip>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter, EditorRequired] public WorldTheme Selected { get; set; }
+    [Parameter] public EventCallback<WorldTheme> SelectedChanged { get; set; }
+
+    private readonly WorldTheme[] _themeValues = Enum.GetValues<WorldTheme>();
+
+    private readonly WorldTheme[] _disabledThemes = [WorldTheme.Company];
+
+
+    private async Task OnSelect(WorldTheme theme, bool disabled)
+    {
+        if (disabled) return;
+
+        Selected = theme;
+        await SelectedChanged.InvokeAsync(Selected);
+    }
+
+    private static string BuildItemCss(bool isSelected, bool disabled)
+    {
+        var classes = "rounded-2xl transition-all";
+        classes += !disabled ? " cursor-pointer" : " opacity-50 cursor-not-allowed";
+        classes += isSelected ? " bg-adlerblue-600 shadow-lg" : (!disabled ? " bg-white hover:bg-adlergrey-100" : "");
+        classes += (!isSelected || disabled) ? " border-default" : "";
+        return classes.Trim();
+    }
+
+    private static string GetThemeImagePath(WorldTheme theme, bool large = false)
+    {
+        var suffix = large ? "_lg.png" : "_sm.png";
+        return theme switch
+        {
+            WorldTheme.Suburb => $"/CustomIcons/World/WorldTheme/Suburb/theme-bg-narrativeframework-suburb{suffix}",
+            WorldTheme.CampusKempten => $"/CustomIcons/World/WorldTheme/CampusKE/theme-bg-narrativeframework-campuske{suffix}",
+            WorldTheme.CampusAschaffenburg => $"/CustomIcons/World/WorldTheme/CampusAB/theme-bg-narrativeframework-campusab{suffix}",
+            WorldTheme.Company => $"/CustomIcons/World/WorldTheme/Company/theme-bg-narrativeframework-company{suffix}",
+            _ => ""
+        };
+    }
+
+}

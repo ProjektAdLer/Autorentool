@@ -298,7 +298,8 @@ public class CreateAtf : ICreateAtf
             introStoryJson = new StoryElementJson(((StoryContentPe)introStory.LearningContent).StoryText.ToArray(),
                 ElementModelHelper.GetAtfString(introStory.ElementModel),
                 ((StoryContentPe)introStory.LearningContent).NpcMood.ToString().ToLower(),
-                ((StoryContentPe)introStory.LearningContent).NpcName);
+                ((StoryContentPe)introStory.LearningContent).NpcName,
+                ((StoryContentPe)introStory.LearningContent).ExitAfterStorySequence);
         }
 
         if (storyElements.TryGetValue(1, out var outroStory))
@@ -306,7 +307,8 @@ public class CreateAtf : ICreateAtf
             outroStoryJson = new StoryElementJson(((StoryContentPe)outroStory.LearningContent).StoryText.ToArray(),
                 ElementModelHelper.GetAtfString(outroStory.ElementModel),
                 ((StoryContentPe)outroStory.LearningContent).NpcMood.ToString().ToLower(),
-                ((StoryContentPe)outroStory.LearningContent).NpcName);
+                ((StoryContentPe)outroStory.LearningContent).NpcName,
+                ((StoryContentPe)outroStory.LearningContent).ExitAfterStorySequence);
         }
 
         return new SpaceStoryJson(introStoryJson, outroStoryJson);

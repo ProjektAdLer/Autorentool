@@ -5,6 +5,8 @@ using Bunit;
 using Bunit.TestDoubles;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Localization;
+using MudBlazor;
 using NSubstitute;
 using NUnit.Framework;
 using Presentation.Components.Forms;
@@ -14,6 +16,7 @@ using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.Mediator;
 using Presentation.PresentationLogic.SelectedViewModels;
 using Presentation.View.LearningWorld;
+using Shared.Theme;
 using TestHelpers;
 using TestContext = Bunit.TestContext;
 
@@ -32,14 +35,20 @@ public class LearningWorldTreeViewUt
         LearningWorldPresenterOverview = Substitute.For<ILearningWorldPresenterOverviewInterface>();
         Mediator = Substitute.For<IMediator>();
         SelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        DialogService = Substitute.For<IDialogService>();
         _context.Services.AddSingleton(LearningWorldPresenterOverview);
         _context.Services.AddSingleton(Mediator);
         _context.Services.AddSingleton(SelectedViewModelsProvider);
+        _context.Services.AddSingleton(DialogService);
+        var themeLocalizer = Substitute.For<IStringLocalizer<WorldTheme>>();
+        themeLocalizer[Arg.Any<string>()].Returns(ci => new LocalizedString(ci.Arg<string>(), ci.Arg<string>()));
+        ThemeHelper<WorldTheme>.Initialize(themeLocalizer);
         _context.ComponentFactories.AddStub<LearningWorldTreeViewItem>();
     }
 
     private ILearningWorldPresenterOverviewInterface LearningWorldPresenterOverview { get; set; }
     private IMediator Mediator { get; set; }
+    private IDialogService DialogService { get; set; }
     private ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
     private LearningWorldViewModel? World { get; set; }
     private LearningElementViewModel StoryEle1 { get; set; } = null!;
@@ -80,7 +89,7 @@ public class LearningWorldTreeViewUt
             Assert.That(items[2].Instance.Parameters["IsSelected"], Is.False);
         });
     }
-    
+
     [Test]
     public void Render_LearningWorldSet_RendersNameWorkloadAndCondition()
     {
@@ -93,11 +102,11 @@ public class LearningWorldTreeViewUt
 
         var systemUnderTest = GetRenderedComponent();
 
-        var p = systemUnderTest.FindAllOrFail("p").ToList();
-        p[1].MarkupMatches(
-            @"<p class=""text-xs 2xl:text-base text-adlerblue-600""><span class=""text-adlergrey-600"">OverView.Workload</span> 42<span class=""text-adlergrey-600"">OverView.Workload.TimeScale</span></p>");
+        var p = systemUnderTest.FindAllOrFail("li").ToList();
         p[2].MarkupMatches(
-            @"<p class=""text-xs 2xl:text-base text-adlerblue-600""><span class=""text-adlergrey-600"">LearningWorldTreeView.Condition.Text</span> 9<span class=""text-adlergrey-600"">/</span>17<span class=""text-adlergrey-600"">LearningWorldTreeView.Condition.Elements</span></p>");
+            @"<li class=""marker:text-adlergrey pl-1 text-xs 2xl:text-base text-adlerblue-600""><span class=""text-adlergrey-600"">OverView.Workload</span> 42<span class=""text-adlergrey-600"">OverView.Workload.TimeScale</span></li>");
+        p[3].MarkupMatches(
+            @"<li class=""marker:text-adlergrey pl-1 text-xs 2xl:text-base text-adlerblue-600""><span class=""text-adlergrey-600"">LearningWorldTreeView.Condition.Text</span> 9<span class=""text-adlergrey-600"">/</span>17<span class=""text-adlergrey-600"">LearningWorldTreeView.Condition.Elements</span></li>");
     }
 
     [Test]
@@ -148,7 +157,8 @@ public class LearningWorldTreeViewUt
 
         var items = collapsables[0].FindComponents<Stub<LearningWorldTreeViewItem>>();
         await sut.InvokeAsync(async () =>
-            await ((EventCallback<ILearningElementViewModel>)items[0].Instance.Parameters["OnSelect"]).InvokeAsync(Ele1));
+            await ((EventCallback<ILearningElementViewModel>)items[0].Instance.Parameters["OnSelect"])
+                .InvokeAsync(Ele1));
 
         LearningWorldPresenterOverview.Received().SetSelectedLearningElement(Ele1);
         SelectedViewModelsProvider.LearningElement.Returns(Ele1);

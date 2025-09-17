@@ -24,7 +24,7 @@
         </value>
     </resheader>
     <data name="OverView.Workload" xml:space="preserve">
-        <value>Dauer:</value>
+        <value>Dauer (Gesamt):</value>
     </data>
     <data name="OverView.Workload.TimeScale" xml:space="preserve">
         <value> min</value>
@@ -37,5 +37,14 @@
     </data>
     <data name="LearningWorldTreeView.Condition.Elements" xml:space="preserve">
         <value>Elem.</value>
+    </data>
+    <data name="OverView.WorldGoals.Overview" xml:space="preserve">
+        <value>Lernziele dieser Lernwelt</value>
+    </data>
+    <data name="OverView.WorldGoals.Text" xml:space="preserve">
+        <value>Lernziele:</value>
+    </data>
+    <data name="OverView.Theme.Text" xml:space="preserve">
+        <value>Welt-Theme:</value>
     </data>
 </root>

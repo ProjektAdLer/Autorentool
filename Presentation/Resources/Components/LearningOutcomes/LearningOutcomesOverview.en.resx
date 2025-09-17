@@ -19,7 +19,7 @@
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
     <data name="LearningOutcomesOverview.Title" xml:space="preserve">
-        <value>Learning outcome formulation</value>
+        <value>Learning Outcome Formulation</value>
     </data>
     <data name="LearningOutcomesOverview.Text.LearningSpace" xml:space="preserve">
         <value>You can formulate your learning outcome(s) for this learning space yourself or use the integrated input support for formulation.</value>
@@ -28,7 +28,7 @@
         <value>You can formulate your learning outcome(s) for this learning world yourself or use the integrated input support for formulation.</value>
     </data>
     <data name="LearningOutcomesOverview.Button.Structured" xml:space="preserve">
-        <value>Input support</value>
+        <value>Input Support</value>
     </data>
     <data name="LearningOutcomesOverview.Button.Manual" xml:space="preserve">
         <value>Formulate learning outcome yourself</value>
