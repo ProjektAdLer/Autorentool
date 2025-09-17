@@ -35,11 +35,11 @@
               RowClass="cursor-pointer"
               OnRowClick="RowClickEvent"
               Filter="Filter"
-              RowClassFunc="@SelectedRowClassFunc" 
-              FixedHeader="true" 
+              RowClassFunc="@SelectedRowClassFunc"
+              FixedHeader="true"
               Elevation="0"
               HeaderClass="cursor-default">
-    
+
         <HeaderContent>
             <MudTh Class="bg-adlerbgbright pa-1"></MudTh>
             <MudTh Class="bg-adlerbgbright text-adlerdarkblue-800 font-bold pa-1">
@@ -82,14 +82,7 @@
                 @if (context is FileContentFormModel fileContentContext)
                 {
                     <div class="flex flex-row items-center justify-start">
-                        <span class="w-12 text-sm">
-                            @((fileContentContext.Type?.ToLowerInvariant()) switch
-                              {
-                                  "h5p"  => "h5p",  // keep technical type for h5p
-                                  "video"=> Localizer["LearningContentDialog.Type.Video"],
-                                  _      => Localizer["LearningContentDialog.Type.Other"]  // fallback
-                              })
-                        </span>
+                        <span class="w-12 text-sm">@fileContentContext.Type</span>
                     </div>
                 }
                 else
@@ -110,7 +103,8 @@
                     else
                     {
                         <MudTooltip Text='@Localizer["LearningContentDialog.State.Usable"]'>
-                            <div class="flex flex-row items-center justify-start gap-1" aria-label='@Localizer["LearningContentDialog.State.Usable"]'>
+                            <div class="flex flex-row items-center justify-start gap-1"
+                                 aria-label='@Localizer["LearningContentDialog.State.Usable"]'>
                                 @((MarkupString)H5PStateIcon.InlineSvg(H5PStateIcon.Svg.Lockable))
                                 <p class="text-xs text-adlergrey">@Localizer["LearningContentDialog.State.Usable"]</p>
                             </div>
@@ -121,7 +115,8 @@
                 {
                     <div class="flex flex-row items-center justify-start">
                         <MudTooltip Text='@Localizer["LearningContentDialog.State.Usable"]'>
-                            <div class="flex flex-row items-center justify-start gap-1" aria-label='@Localizer["LearningContentDialog.State.Usable"]'>
+                            <div class="flex flex-row items-center justify-start gap-1"
+                                 aria-label='@Localizer["LearningContentDialog.State.Usable"]'>
                                 @((MarkupString)H5PStateIcon.InlineSvg(H5PStateIcon.Svg.Lockable))
                                 <p class="text-xs text-adlergrey">@Localizer["LearningContentDialog.State.Usable"]</p>
                             </div>
@@ -137,7 +132,7 @@
     [CascadingParameter] public IMudDialogInstance? MudDialog { get; set; }
 
     [Parameter, EditorRequired] public ILearningContentFormModel? LearningContent { get; set; }
-    
+
     [Inject, AllowNull] internal IStringLocalizer<LearningContentDialog> Localizer { get; set; }
     [Inject, AllowNull] internal ILearningWorldPresenter WorldPresenter { get; set; }
     [Inject, AllowNull] internal IMapper Mapper { get; set; }
@@ -169,6 +164,7 @@
 
     private bool Filter(ILearningContentFormModel element) => FilterInternal(element, _searchString);
     private bool FilterInternal(ILearningContentFormModel element, string? s) => FilterInternal(ILearningContentFormModel.GetSearchableStrings(element), s);
+
     private bool FilterInternal(IEnumerable<string> strings, string? s)
         => string.IsNullOrWhiteSpace(s) || strings.Any(str => str.ToLowerInvariant().Contains(s.ToLower()));
 
@@ -198,7 +194,8 @@
         };
         return vm;
     }
-    
+
     private object SortByH5pState(ILearningContentFormModel context)
         => (context is FileContentFormModel f && f.Type == "h5p") ? f.H5PState : H5PContentState.Completable;
+
 }

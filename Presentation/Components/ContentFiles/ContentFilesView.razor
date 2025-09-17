@@ -23,25 +23,26 @@
         <h2 class="text-base 2xl:text-lg text-center font-bold text-adlertitledarkblue mx-2">@Localizer["Header"]</h2>
     </header>
     <div class="px-4">
-        <MudTable T="ILearningContentViewModel" 
-                  Items="Items" 
-                  RowClass="bg-white" 
+        <MudTable T="ILearningContentViewModel"
+                  Items="Items"
+                  RowClass="bg-white"
                   Class="max-w-5xl flex flex-col flex-nowrap shadow-none bg-adlerbgbright rounded border-adlergrey-100 border-2"
                   Height="220px"
-                  Virtualize="true" 
-                  Filter="Filter" 
-                  Hover="true" 
-                  HeaderClass="table-head-bordered border-t-2 border-adlergrey-100" 
-                  CustomHeader="true" 
+                  Virtualize="true"
+                  Filter="Filter"
+                  Hover="true"
+                  HeaderClass="table-head-bordered border-t-2 border-adlergrey-100"
+                  CustomHeader="true"
                   FixedHeader="true"
                   OnRowMouseEnter="args => { _rowShowingPopover = args.Item; }"
                   OnRowMouseLeave=" _ => { if (!_cursorInsidePopover) _rowShowingPopover = null; }" @ref="_table">
             <ToolBarContent>
                 <MudTextField @bind-Value="SearchString" Immediate="true" Adornment="Adornment.Start"
-                              AdornmentIcon="@Icons.Material.Outlined.Search" Style="margin-top: 0; width: 200px; font-size: 14px;" Margin="Margin.Dense"/>
+                              AdornmentIcon="@Icons.Material.Outlined.Search"
+                              Style="margin-top: 0; width: 200px; font-size: 14px;" Margin="Margin.Dense"/>
             </ToolBarContent>
             <HeaderContent>
-                <MudTHeadRow Class="header-centered">       
+                <MudTHeadRow Class="header-centered">
                     <MudTh Class="cursor-default p-1 h-8">
                         <div class="flex flex-row items-center">
                             <MudIconButton Icon="@Icons.Material.Filled.Delete"
@@ -49,18 +50,22 @@
                                            Disabled="@(!_deletionCandidates.Any())"
                                            OnClick="() => DeleteSelected()"
                                            title="@Localizer["Content.MudTd.Delete"]"/>
-                            <MudCheckBox T="bool?" TriState="true" Value="@MultipleSelected" ValueChanged="OnMultipleSelectedChanged" Class="m-1 p-0" Size="Size.Small" 
+                            <MudCheckBox T="bool?" TriState="true" Value="@MultipleSelected"
+                                         ValueChanged="OnMultipleSelectedChanged" Class="m-1 p-0" Size="Size.Small"
                                          Dense="true"></MudCheckBox>
                             <MudText Class="m-0 pl-1 text-sm text-adlergrey-500">@_deletionCandidates.Count()</MudText>
                             <MudMenu Dense="true">
                                 <ActivatorContent>
-                                    <MudIconButton Icon="@Icons.Material.Filled.ArrowDropDown" Class="p-0 m-0"></MudIconButton>
+                                    <MudIconButton Icon="@Icons.Material.Filled.ArrowDropDown"
+                                                   Class="p-0 m-0"></MudIconButton>
                                 </ActivatorContent>
                                 <ChildContent>
                                     <MudText Class="text-sm py-2 px-4">@Localizer["Content.Select.Text"]</MudText>
                                     <MudDivider></MudDivider>
-                                    <MudMenuItem OnClick="OnSelectAll">@Localizer["Content.Select.Option.All"]</MudMenuItem>
-                                    <MudMenuItem OnClick="OnSelectAllUnused">@Localizer["Content.Select.Option.AllUnused"]</MudMenuItem>
+                                    <MudMenuItem
+                                        OnClick="OnSelectAll">@Localizer["Content.Select.Option.All"]</MudMenuItem>
+                                    <MudMenuItem
+                                        OnClick="OnSelectAllUnused">@Localizer["Content.Select.Option.AllUnused"]</MudMenuItem>
                                 </ChildContent>
 
                             </MudMenu>
@@ -95,21 +100,27 @@
                     <div class="flex justify-start">
                         @if (GetUsage(context).Any())
                         {
-                            <MudMenu ActivationEvent="MouseEvent.MouseOver" AnchorOrigin="Origin.CenterRight" TransformOrigin="Origin.CenterLeft">
+                            <MudMenu ActivationEvent="MouseEvent.MouseOver" AnchorOrigin="Origin.CenterRight"
+                                     TransformOrigin="Origin.CenterLeft">
                                 <ActivatorContent>
 
-                                    <MudBadge Content="@GetUsage(context).Count().ToString()" Class="my-3 p-0" BadgeClass="text-white bg-adlerblue-200" Overlap="false" Origin="Origin.CenterRight">
+                                    <MudBadge Content="@GetUsage(context).Count().ToString()" Class="my-3 p-0"
+                                              BadgeClass="text-white bg-adlerblue-200" Overlap="false"
+                                              Origin="Origin.CenterRight">
                                         <MudText></MudText>
                                     </MudBadge>
                                 </ActivatorContent>
-                                <ChildContent >
-                                    <UsedContentFilesDialog LearningContent="@context" Usages="@GetUsage(context)"></UsedContentFilesDialog>
+                                <ChildContent>
+                                    <UsedContentFilesDialog LearningContent="@context"
+                                                            Usages="@GetUsage(context)"></UsedContentFilesDialog>
                                 </ChildContent>
                             </MudMenu>
                         }
                     </div>
                     <div class="flex justify-start">
-                        <MudCheckBox T="bool" Value="_deletionCandidates.Contains(context)" ValueChanged="b => OnCheckedChange(context, b)" Class="flex justify-center m-0 py-1.5"></MudCheckBox>
+                        <MudCheckBox T="bool" Value="_deletionCandidates.Contains(context)"
+                                     ValueChanged="b => OnCheckedChange(context, b)"
+                                     Class="flex justify-center m-0 py-1.5"></MudCheckBox>
                     </div>
                 </MudTd>
                 <MudTd Class="py-0 px-0 w-full" Style="max-width: 425px;" DataLabel="Name">
@@ -118,7 +129,8 @@
                                 Placement="Placement.Top"
                                 Class="bg-adlergrey-200 shadow-xl text-adlergrey-800"
                                 Duration="Double.Epsilon">
-                        <p class="pt-2 cursor-default truncate grow shrink" style="max-width: 415px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">@context.Name</p>
+                        <p class="pt-2 cursor-default truncate grow shrink"
+                           style="max-width: 415px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">@context.Name</p>
                     </MudTooltip>
                     <MudPopover Open="Equals(_rowShowingPopover, context)" Class="bg-adlerdarkblue flex flex-row"
                                 AnchorOrigin="Origin.CenterCenter" TransformOrigin="Origin.CenterCenter"
@@ -126,18 +138,24 @@
                                 @onmouseleave="() => { _cursorInsidePopover = false; _rowShowingPopover = null; }">
 
                         <MudIconButton OnClick="() => ShowLearningContent(context)"
-                                       Icon="@Icons.Material.Filled.RemoveRedEye" Class="m-0 p-1 text-white hover:text-adlerbggradientfrom" title=@Localizer["Content.MudTd.Preview"]>
+                                       Icon="@Icons.Material.Filled.RemoveRedEye"
+                                       Class="m-0 p-1 text-white hover:text-adlerbggradientfrom"
+                                       title=@Localizer["Content.MudTd.Preview"]>
                         </MudIconButton>
-                        
+
                         @if (SelectedViewModelsProvider.LearningWorld?.Name != null)
                         {
                             <MudIconButton OnClick="() => NewElementWithContent(context)"
-                                           Icon="@Icons.Material.Filled.Add" Class="m-0 p-1 text-white hover:text-adlerbggradientfrom" title=@Localizer["Content.MudTd.NewElement"]>
+                                           Icon="@Icons.Material.Filled.Add"
+                                           Class="m-0 p-1 text-white hover:text-adlerbggradientfrom"
+                                           title=@Localizer["Content.MudTd.NewElement"]>
                             </MudIconButton>
                         }
-                        
+
                         <MudIconButton OnClick="() => Delete(context)"
-                                       Icon="@Icons.Material.Filled.Delete" Class="m-0 p-1 text-white hover:text-adlerbggradientfrom" title=@Localizer["Content.MudTd.Delete"]>
+                                       Icon="@Icons.Material.Filled.Delete"
+                                       Class="m-0 p-1 text-white hover:text-adlerbggradientfrom"
+                                       title=@Localizer["Content.MudTd.Delete"]>
                         </MudIconButton>
                     </MudPopover>
                 </MudTd>
@@ -162,56 +180,57 @@
                         <div class="flex flex-row items-center justify-start">
                             <span class="w-12 text-sm">@fileContentContext.Type</span>
                         </div>
-                        }
-                        else 
-                        {
-                            <div class="flex flex-row items-center justify-start">
-                                <span class="w-12 text-sm">video</span>
-                            </div>
-                        }
-                    </MudTd>
-                    <MudTd DataLabel="State" Class="p-0 cursor-default">
-                       @if (context is FileContentViewModel fileContentContext)
-                        {
-                            var fileContent = context as IFileContentViewModel;
-                            <div class="flex flex-row items-center justify-start">
-                                @if (fileContentContext.Type == "h5p")
-                                {
-                                    <H5PStateIcon FileContentVm="@fileContent"/>
-                                }
-                                else 
-                                {
-                                    <MudTooltip>
-                                         <div class="flex flex-row items-center justify-start gap-1">
-                                             @((MarkupString)H5PStateIcon.InlineSvg(H5PStateIcon.Svg.Lockable))
-                                            <p class="text-xs text-adlergrey">nutzbar</p>
-                                        </div>
-                                    </MudTooltip>
-                                }
-                            </div>
-                        }
-                        else
-                        {
-                            <div class="flex flex-row items-center justify-start">
+                    }
+                    else
+                    {
+                        <div class="flex flex-row items-center justify-start">
+                            <span class="w-12 text-sm">video</span>
+                        </div>
+                    }
+                </MudTd>
+                <MudTd DataLabel="State" Class="p-0 cursor-default">
+                    @if (context is FileContentViewModel fileContentContext)
+                    {
+                        var fileContent = context as IFileContentViewModel;
+                        <div class="flex flex-row items-center justify-start">
+                            @if (fileContentContext.Type == "h5p")
+                            {
+                                <H5PStateIcon FileContentVm="@fileContent"/>
+                            }
+                            else
+                            {
                                 <MudTooltip>
                                     <div class="flex flex-row items-center justify-start gap-1">
                                         @((MarkupString)H5PStateIcon.InlineSvg(H5PStateIcon.Svg.Lockable))
                                         <p class="text-xs text-adlergrey">nutzbar</p>
                                     </div>
                                 </MudTooltip>
-                            </div>
-                        }
-                    </MudTd>
-                }
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="flex flex-row items-center justify-start">
+                            <MudTooltip>
+                                <div class="flex flex-row items-center justify-start gap-1">
+                                    @((MarkupString)H5PStateIcon.InlineSvg(H5PStateIcon.Svg.Lockable))
+                                    <p class="text-xs text-adlergrey">nutzbar</p>
+                                </div>
+                            </MudTooltip>
+                        </div>
+                    }
+                </MudTd>
             </RowTemplate>
             <PagerContent>
-                <MudTablePager HideRowsPerPage="true" HorizontalAlignment="HorizontalAlignment.Center" Class="h-8 cursor-default" />
+                <MudTablePager HideRowsPerPage="true" HorizontalAlignment="HorizontalAlignment.Center"
+                               Class="h-8 cursor-default"/>
                 <div class="w-full max-h-40% min-h-fit shrink grow flex flex-row items-center justify-between pb-2">
                     <div class="flex justify-center items-center">
                         <MudSwitch Class="pl-2 w-2xs" @bind-Value="_showFilepath" Color="Color.Info"></MudSwitch>
                         <p class="text-xs flex justify-start">@Localizer["PagerContent.Filepath.Text"]</p>
                     </div>
-                    <button @onclick="@OpenContentFilesFolder" class="relative btn-standard p-2 justify-end items-center shadow-lg">
+                    <button @onclick="@OpenContentFilesFolder"
+                            class="relative btn-standard p-2 justify-end items-center shadow-lg">
                         <MudIcon Icon="@Icons.Material.Filled.FolderOpen"></MudIcon>
                         <p class="pl-1 font-bold uppercase">@Localizer["PagerContent.Button.Text"]</p>
                     </button>
@@ -530,12 +549,11 @@
 
     private object SortByH5pState(ILearningContentViewModel context)
     {
-        
         if (context is FileContentViewModel fileContentVm && fileContentVm.Type == "h5p")
         {
             return fileContentVm.H5PState;
         }
-     
+
         return H5PContentState.Completable; // oder was auch immer als Standard
     }
 

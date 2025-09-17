@@ -37,7 +37,7 @@
         <value>Inhalte suchen…</value>
     </data>
     <data name="LearningContentDialog.Type.Video" xml:space="preserve">
-        <value>Video</value>
+        <value>video</value>
     </data>
     <data name="LearningContentDialog.Type.Other" xml:space="preserve">
         <value>Sonstiges</value>
