@@ -1,23 +1,18 @@
-﻿@using System.Diagnostics.CodeAnalysis
-@using H5pPlayer.Presentation.PresentationLogic.ValidateH5p
-@using MudBlazor
+﻿@using H5pPlayer.Presentation.PresentationLogic.ValidateH5p
 @using Microsoft.Extensions.Localization
-
-<button class="uppercase btn-standard shadow-lg text-adlergrey rounded-lg bg-adlerdeactivated hover:bg-adlerdarkblue hover:text-buttonbgblue"
-        @onclick="OpenAbortDialog"
-        aria-label="@Localizer["Dialog.CancelValidation"]">
+@using MudBlazor
+@inject IStringLocalizer<CancelValidateH5pButton> Localizer
+<button
+    class="uppercase btn-standard shadow-lg text-adlergrey rounded-lg bg-adlerdeactivated hover:bg-adlerdarkblue hover:text-buttonbgblue"
+    @onclick="OpenAbortDialog"
+    aria-label="@Localizer["Dialog.CancelValidation"]">
     <div>@Localizer["Button.Cancel"]</div>
 </button>
 
 @code {
-    [Inject, AllowNull]
-    internal IStringLocalizer Localizer { get; set; }
+    [Parameter, EditorRequired] public required IValidateH5pController ValidateH5pController { get; set; }
 
-    [Parameter, EditorRequired]
-    public required IValidateH5pController ValidateH5pController { get; set; }
-
-    [Parameter, EditorRequired]
-    public IDialogService DialogService { get; set; } = default!;
+    [Parameter, EditorRequired] public IDialogService DialogService { get; set; } = default!;
 
     private async Task OpenAbortDialog()
     {
@@ -32,10 +27,11 @@
             BackdropClick = false,
             MaxWidth = MaxWidth.Large
         };
-        
+
         await DialogService.ShowAsync<CloseValidateH5pView>(
             Localizer["Dialog.CancelValidation"],
             parameters,
             options);
     }
+
 }
