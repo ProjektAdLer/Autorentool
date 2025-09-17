@@ -118,11 +118,7 @@ public class EditSpaceFormIt : MudFormTestFixture<EditSpaceForm, LearningSpaceFo
         var systemUnderTest = GetRenderedComponent(vm);
         var mudForm = systemUnderTest.FindComponent<MudForm>();
 
-        var collapsables = systemUnderTest.FindComponents<Collapsable>();
-        collapsables[1].Find("div.toggler").Click();
-        collapsables[3].Find("div.toggler").Click();
-        collapsables[4].Find("div.toggler").Click();
-        collapsables[5].Find("div.toggler").Click();
+        UncollapseAllCollapsables(systemUnderTest);
 
         ConfigureValidatorAllMembersTestOr123OrCampus();
 
@@ -161,11 +157,7 @@ public class EditSpaceFormIt : MudFormTestFixture<EditSpaceForm, LearningSpaceFo
         Mapper.Received(1).Map(vm, FormDataContainer.FormModel);
         Mapper.ClearReceivedCalls();
 
-        var collapsables = systemUnderTest.FindComponents<Collapsable>();
-        collapsables[1].Find("div.toggler").Click();
-        collapsables[3].Find("div.toggler").Click();
-        collapsables[4].Find("div.toggler").Click();
-        collapsables[5].Find("div.toggler").Click();
+        UncollapseAllCollapsables(systemUnderTest);
 
         var mudStringInputs = systemUnderTest.FindComponents<MudTextField<string>>();
         var mudSelect = systemUnderTest.FindComponent<MudSelect<SpaceTheme>>();
@@ -193,7 +185,17 @@ public class EditSpaceFormIt : MudFormTestFixture<EditSpaceForm, LearningSpaceFo
                 assertionAttempts++;
             },
             TimeSpan.FromSeconds(3));
-        Console.WriteLine($@"{nameof(SubmitThenRemapButton_CallsPresenterWithNewValues_ThenRemapsEntityIntoForm)}: Assertion attempts: {assertionAttempts}");
+        Console.WriteLine(
+            $@"{nameof(SubmitThenRemapButton_CallsPresenterWithNewValues_ThenRemapsEntityIntoForm)}: Assertion attempts: {assertionAttempts}");
+    }
+
+    private static void UncollapseAllCollapsables(IRenderedFragment systemUnderTest)
+    {
+        var collapsables = systemUnderTest.FindComponents<Collapsable>();
+        Assert.That(collapsables, Has.Count.EqualTo(4));
+        collapsables[1].Find("div.toggler").Click();
+        collapsables[2].Find("div.toggler").Click();
+        collapsables[3].Find("div.toggler").Click();
     }
 
     private void ConfigureValidatorAllMembersTestOr123OrCampus()

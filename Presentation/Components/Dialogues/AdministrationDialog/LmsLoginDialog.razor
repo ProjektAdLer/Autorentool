@@ -12,8 +12,8 @@
 
 @if (_isLmsConnected)
 {
-    <article class="flex flex-col gap-2">
-        <section class="flex flex-col gap-2 px-4 w-full">
+    <article class="flex flex-col gap-2 w-full px-4">
+        <section class="flex flex-col gap-2 w-full">
             <div class="gap-1 py-2 flex flex-row justify-center items-center">
                 <MudText
                     Class="cursor-default text-lg font-bold text-adlerheaderblue">
@@ -33,9 +33,9 @@
             </div>
 
             <div class="logged-in-container flex flex-col justify-center gap-2 py-2">
-                <div id="LmsLoginDialog.LoggedInContainer.Div" class="flex flex-row gap-1 justify-center">
+                <div id="LmsLoginDialog.LoggedInContainer.Div" class="flex flex-row gap-1 justify-start items-center bg-adlergrey-100 rounded p-4">
                     <p id="LmsLoginDialog.LoggedInMessage.Text"
-                       class="cursor-default text-sm text-adlergrey-700">@Localizer["DialogContent.LoggedIn.Message"]</p>
+                       class="cursor-default text-sm text-adlergrey-700 w-28">@Localizer["DialogContent.LoggedIn.Message"]</p>
                     <p id="LmsLoginDialog.LoggedInUserName.Text"
                        class="cursor-default text-sm text-adlerblue-700">@(PresentationLogic.LoginName) (@BackendUrl)</p>
                 </div>
@@ -49,7 +49,7 @@
 
         <MudDivider DividerType="DividerType.FullWidth" Style="border-color: rgb(204,204,204)"></MudDivider>
 
-        <section class="flex flex-col px-4 w-full h-[400px]">
+        <section class="flex flex-col w-full h-[400px]">
             <div class="flex flex-row justify-center items-center gap-1 pb-2">
                 <p class="cursor-default text-lg font-bold text-adlerheaderblue py-2">@Localizer["DialogContent.Delete.Title"]</p>
                 <MudTooltip Placement="Placement.Right"
@@ -70,7 +70,7 @@
 
             <MudList T="LmsWorldViewModel" Class="border border-adlergrey-200 rounded">
                 <MudText Class="cursor-default pl-4 font-bold">@Localizer["DialogContent.Delete.Subtitle"]</MudText>
-                <div class="h-28 overflow-y-scroll">
+                <div class="h-32 overflow-y-scroll">
                     @foreach (var lmsWorld in _lmsWorldList)
                     {
                         <MudListItem T="LmsWorldViewModel" Style="height: 48px" Class="py-0 cursor-default"

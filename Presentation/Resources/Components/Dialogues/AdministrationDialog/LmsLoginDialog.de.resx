@@ -30,7 +30,7 @@
         <value>Anmelden</value>
     </data>
     <data name="DialogContent.LoggedIn.Message" xml:space="preserve">
-        <value>Erfolgreich angemeldet als</value>
+        <value>Angemeldet als:</value>
     </data>
     <data name="DialogContent.Button.Logout" xml:space="preserve">
         <value>Abmelden</value>
@@ -204,12 +204,6 @@ Mit dieser ausgeführten Aktion des Löschens werden die Kurse unwiderruflich au
     <data name="DialogContent.Language.Title" xml:space="preserve">
         <value>Sprache ändern</value>
     </data>
-    <data name="DialogContent.LearningWorldArchive.Title" xml:space="preserve">
-        <value>Lernwelt exportieren</value>
-    </data>
-    <data name="DialogContent.LearningWorldArchive.Button" xml:space="preserve">
-        <value>Lernwelt exportieren</value>
-    </data>
     <data name="ErrorString.Missing.LearningContent.Message" xml:space="preserve">
         <value>Element &lt;b&gt;{0}&lt;/b&gt; referenziert externes Lernmaterial, welches nicht existiert</value>
     </data>
@@ -218,5 +212,8 @@ Mit dieser ausgeführten Aktion des Löschens werden die Kurse unwiderruflich au
     </data>
     <data name="ErrorString.TaskReferencesNonexistantElement.Message" xml:space="preserve">
         <value>Element &lt;b&gt;{0}&lt;/b&gt; referenziert ein nicht existierendes Element. Bitte überprüfen Sie die gesetzten Referenzen in diesem Element.</value>
+    </data>
+    <data name="DialogContent.Header" xml:space="preserve">
+        <value>Administration</value>
     </data>
 </root>

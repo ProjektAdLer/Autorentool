@@ -67,13 +67,7 @@ public sealed class CreateWorldFormIt : MudFormTestFixture<CreateWorldForm, Lear
     {
         var systemUnderTest = GetRenderedComponent();
         var mudForm = systemUnderTest.FindComponent<MudForm>();
-        var collapsables = systemUnderTest.FindComponents<Collapsable>();
-        collapsables[1].Find("div.toggler").Click();
-        collapsables[2].Find("div.toggler").Click();
-        collapsables[3].Find("div.toggler").Click();
-        collapsables[4].Find("div.toggler").Click();
-        collapsables[5].Find("div.toggler").Click();
-        collapsables[6].Find("div.toggler").Click();
+        UncollapseAllCollapsables(systemUnderTest);
         await systemUnderTest.InvokeAsync(() => systemUnderTest.Render());
 
         ConfigureValidatorAllMembersTest();
@@ -183,6 +177,15 @@ public sealed class CreateWorldFormIt : MudFormTestFixture<CreateWorldForm, Lear
             Arg.Any<string>(), Arg.Any<string>(), Arg.Any<LearningOutcomeCollectionViewModel>(), Arg.Any<WorldTheme>(),
             Arg.Any<string>(),
             Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
+    }
+
+    private static void UncollapseAllCollapsables(IRenderedFragment systemUnderTest)
+    {
+        var collapsables = systemUnderTest.FindComponents<Collapsable>();
+        Assert.That(collapsables, Has.Count.EqualTo(4));
+        collapsables[1].Find("div.toggler").Click();
+        collapsables[2].Find("div.toggler").Click();
+        collapsables[3].Find("div.toggler").Click();
     }
 
     private void ConfigureValidatorNameIsTest()

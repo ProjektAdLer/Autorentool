@@ -5,7 +5,7 @@
 @using Presentation.Components.Forms.Models
 @using Presentation.PresentationLogic.LearningWorld
 @using Shared.Theme
-<div class="absolute w-full z-30">
+<div class="absolute w-full z-30 cursor-default">
     <header class="py-2 2xl:py-3 bg-adlerbgbright border-b-2 border-adlergrey-100 overflow-hidden flex justify-center">
         <h2 class="text-base 2xl:text-lg text-center font-bold text-adlertitledarkblue mx-2">@Localizer["CreateSpaceForm.Header.Title"]</h2>
     </header>
@@ -20,67 +20,27 @@
     <Fields>
         <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.General.Title"]
                      InitiallyCollapsed="false">
-            <div class="rounded-lg w-4/4 px-6">
+            <div class="w-4/4 px-6">
+                <p class="font-bold text-xs text-adlertitledarkblue cursor-default pt-2">@Localizer["CreateSpaceForm.Fields.Collapsable.General.Subtitle"]</p>
+                <p class="text-xs cursor-default">@Localizer["CreateSpaceForm.Fields.Collapsable.General.Text"]</p>
                 <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
                               For="@(() => FormModel.Name)"
                               @ref="_nameField"
                               DebounceInterval="DebounceInterval"
                               OnKeyUp="HandleKeyEvent"
-                              Placeholder="@Localizer["CreateSpaceForm.Fields.Collapsable.General.Field.Name.Text"]"
-                              Margin="Margin.Normal"
-                              Typo="Typo.body1"/>
+                              Margin="Margin.Dense"
+                              Typo="Typo.subtitle2"
+                              Variant="Variant.Outlined"
+                              Label="@Localizer["CreateSpaceForm.Fields.Collapsable.General.Field.Name.Text"]"
+                              Placeholder="@Localizer["CreateSpaceForm.Fields.Collapsable.General.Field.Name.Placeholder"]"/>
             </div>
         </Collapsable>
-
-        <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.CompletionConditions.Title"]
+        
+        <Collapsable Title="@Localizer["CreateSpaceForm.Fields.Collapsable.Content.Title"]" 
                      InitiallyCollapsed="true">
-            <div class="px-6">
-                <p class="text-xs pt-3">
-                        <span class="text-adlergrey-800">
-                            @Localizer["CreateSpaceForm.Fields.Collapsable.CompletionConditions.Description.Text"]
-                        </span>
-                </p>
-                <p class="text-xs text-adlerblue-600">0
-                    <span class="text-adlergrey-800"> / </span> 0
-                    <span
-                        class="text-adlergrey-800"> @Localizer["CreateSpaceForm.Fields.Collapsable.CompletionConditions.Description.Appendix"] </span>
-                </p>
-                <ul class="py-2 pl-2 mt-0 border border-adlergrey-300 rounded w-full list-disc list-inside">
-                    <li class="text-xs">...</li>
-                </ul>
-            </div>
-        </Collapsable>
-
-        <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.Theme.Title"] InitiallyCollapsed="true">
-            <p class="text-xs px-6 pt-3">@Localizer["CreateSpaceForm.Fields.Collapsable.Theme.Field.Theme.Text"]</p>
-            <div class="px-6 py-2">
-                <MudSelect @bind-Value="FormDataContainer.FormModel.SpaceTheme"
-                           OnKeyUp="HandleKeyEvent"
-                           Text="@FormDataContainer.FormModel.SpaceTheme.ToString()"
-                           For="@(() => FormModel.SpaceTheme)">
-                    @foreach (var theme in _themes)
-                    {
-                        <MudSelectItem
-                            Value="@(theme)">@(ThemeHelper<SpaceTheme>.Localize(theme, LearningWorldPresenter.LearningWorldVm?.WorldTheme.ToString()))</MudSelectItem>
-                    }
-                </MudSelect>
-            </div>
-        </Collapsable>
-
-        <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.Goals.Title"] InitiallyCollapsed="true">
-            <div class="w-4/4 px-6 flex flex-col">
-                <p class="text-xs pt-3">@Localizer["CreateSpaceForm.Fields.Collapsable.Goals.Field.Goals.Text"]</p>
-                <div class="flex justify-center">
-                    <MudButton Class="w-72 btn-standard"
-                               OnClick="OpenLearningOutcomesOverview">@Localizer["CreateSpaceForm.Goals.Button"]</MudButton>
-                </div>
-            </div>
-        </Collapsable>
-
-        <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.Description.Title"]
-                     InitiallyCollapsed="true">
-            <div class="rounded-lg w-4/4 px-6">
-                <p class="text-xs pt-3">
+            <div class="w-4/4 px-6">
+                <p class="text-xs font-bold text-adlertitledarkblue cursor-default pt-2">@Localizer["CreateSpaceForm.Fields.Collapsable.Description.Title"]</p>
+                <p class="text-xs cursor-default">
                     @Localizer["CreateSpaceForm.Fields.Collapsable.Goals.Field.Description.Text"]
                 </p>
                 <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
@@ -88,10 +48,64 @@
                               Lines="3"
                               Variant="Variant.Outlined"
                               DebounceInterval="DebounceInterval"
-                              Class="pb-4 mt-0"/>
+                              Label="@Localizer["CreateSpaceForm.Fields.Collapsable.Description.Title"]"
+                              Placeholder="@Localizer["CreateSpaceForm.Fields.Collapsable.Description.Placeholder"]"
+                              Margin="Margin.Dense"
+                              Typo="Typo.subtitle2"/>
+                    
+                <p class="text-xs font-bold text-adlertitledarkblue cursor-default pt-2">@Localizer["CreateSpaceForm.Fields.Collapsable.Goals.Title"]</p>
+                <p class="text-xs cursor-default">@Localizer["CreateSpaceForm.Fields.Collapsable.Goals.Field.Goals.Text"]</p>
+                <div class="flex justify-center">
+                    <MudButton Class="w-80 btn-standard"
+                               OnClick="OpenLearningOutcomesOverview">@Localizer["CreateSpaceForm.Goals.Button"]</MudButton>
+                </div>
             </div>
         </Collapsable>
 
+        <Collapsable Title="@Localizer["CreateSpaceForm.Fields.Collapsable.Design.Title"]"
+                     InitiallyCollapsed="true">
+            <div class="w-4/4 px-6">
+                <p class="text-xs font-bold text-adlertitledarkblue cursor-default pt-2">@Localizer["CreateSpaceForm.Fields.Collapsable.Theme.Title"]</p>
+                <p class="text-xs cursor-default">@Localizer["CreateSpaceForm.Fields.Collapsable.Theme.Field.Theme.Text"]</p>
+                <MudSelect @bind-Value="FormDataContainer.FormModel.SpaceTheme"
+                           OnKeyUp="HandleKeyEvent"
+                           Text="@FormDataContainer.FormModel.SpaceTheme.ToString()"
+                           For="@(() => FormModel.SpaceTheme)" 
+                           Variant="Variant.Outlined"
+                           Label="@Localizer["CreateSpaceForm.Fields.Collapsable.Theme.Title"]"
+                           Typo="Typo.subtitle2"
+                           Margin="Margin.Dense">
+                    @foreach (var theme in _themes)
+                    {
+                        <MudSelectItem Value="@(theme)">
+                            <p class="text-sm">@(ThemeHelper<SpaceTheme>.Localize(theme, LearningWorldPresenter.LearningWorldVm?.WorldTheme.ToString()))</p>
+                        </MudSelectItem>
+                    }
+                </MudSelect>
+            </div>
+        </Collapsable>
+        
+        <Collapsable Title="@Localizer["CreateSpaceForm.Fields.Collapsable.Interaction.Title"]"
+                     InitiallyCollapsed="true">
+            <div class="w-4/4 px-6">
+                    <p class="text-xs font-bold text-adlertitledarkblue cursor-default pt-2">@Localizer["CreateSpaceForm.Fields.Collapsable.CompletionConditions.Title"]</p>
+                    <p class="text-xs cursor-default">
+                        <span class="text-adlergrey-800">
+                            @Localizer["CreateSpaceForm.Fields.Collapsable.CompletionConditions.Description.Text"]
+                        </span>
+                    </p>
+                    <p class="text-xs text-adlerblue-600 cursor-default">0
+                        <span class="text-adlergrey-800"> / </span> 0
+                        <span
+                            class="text-adlergrey-800"> @Localizer["CreateSpaceForm.Fields.Collapsable.CompletionConditions.Description.Appendix"] </span>
+                    </p>
+                    <ul class="py-2 pl-2 mt-0 border border-adlergrey-300 rounded w-full list-disc list-inside cursor-default">
+                        <p class="text-sm italic text-adlergrey-600">
+                            @Localizer["CreateSpaceForm.Fields.Collapsable.NoElements"]
+                        </p>
+                    </ul>
+            </div>
+        </Collapsable>
     </Fields>
     <FooterButtons>
         <div

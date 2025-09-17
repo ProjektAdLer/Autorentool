@@ -1,0 +1,59 @@
+<root>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="EditWorldForm.Fields.Collapsable.General.Field.Name.Text" xml:space="preserve">
+        <value />
+    </data>
+    <data name="EditWorldForm.Fields.Collapsable.General.Field.EnrolmentKey.Text" xml:space="preserve">
+        <value />
+    </data>
+    <data name="EditWorldForm.General.Subtitle" xml:space="preserve">
+        <value />
+    </data>
+    <data name="EditWorldForm.General.InfoText" xml:space="preserve">
+        <value />
+    </data>
+    <data name="EditWorldForm.Fields.Collapsable.General.Field.Name.Placeholder" xml:space="preserve">
+        <value />
+    </data>
+    <data name="EditWorldForm.Fields.Collapsable.General.Field.Shortname.Placeholder" xml:space="preserve">
+        <value />
+    </data>
+    <data name="EditWorldForm.Fields.Collapsable.General.Field.Authors.Placeholder" xml:space="preserve">
+        <value />
+    </data>
+    <data name="EditWorldForm.Fields.Collapsable.General.Field.Language.Placeholder" xml:space="preserve">
+        <value />
+    </data>
+    <data name="EditWorldForm.Finalization.Field.EvaluationLinkText.Text" xml:space="preserve">
+        <value />
+    </data>
+    <data name="EditWorldForm.Finalization.Field.EvaluationLinkName.Text" xml:space="preserve">
+        <value />
+    </data>
+    <data name="EditWorldForm.Fields.Collapsable.Content.Title" xml:space="preserve">
+        <value />
+    </data>
+    <data name="EditWorldForm.Fields.Collapsable.Design.Title" xml:space="preserve">
+        <value />
+    </data>
+    <data name="EditWorldForm.Fields.Collapsable.Description.Placeholder" xml:space="preserve">
+        <value />
+    </data>
+    <data name="EditWorldForm.Fields.Collapsable.Interaction.Title" xml:space="preserve">
+        <value />
+    </data>
+    <data name="EditWorldForm.General.Field.EnrolmentKey.Text" xml:space="preserve">
+        <value />
+    </data>
+</root>

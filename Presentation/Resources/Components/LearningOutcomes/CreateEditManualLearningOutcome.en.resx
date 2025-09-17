@@ -22,7 +22,7 @@
         <value>Create</value>
     </data>
     <data name="CreateEditManualLearningOutcome.Title.Part1" xml:space="preserve">
-        <value>Learning outcome formulation: </value>
+        <value>Learning Outcome Formulation: </value>
     </data>
     <data name="CreateEditManualLearningOutcome.Title.Part2" xml:space="preserve">
         <value>Formulate learning outcome yourself</value>
@@ -34,7 +34,7 @@
         <value>Formulate your learning outcome for this learning world.</value>
     </data>
     <data name="CreateEditManualLearningOutcome.Subtitle" xml:space="preserve">
-        <value>Learning outcome</value>
+        <value>Learning Outcome</value>
     </data>
     <data name="CreateEditManualLearningOutcome.Placeholder" xml:space="preserve">
         <value>You will be able to...</value>

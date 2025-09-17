@@ -103,13 +103,7 @@ public class EditWorldFormIt : MudFormTestFixture<EditWorldForm, LearningWorldFo
     {
         var systemUnderTest = GetRenderedComponent();
         var mudForm = systemUnderTest.FindComponent<MudForm>();
-        var collapsables = systemUnderTest.FindComponents<Collapsable>();
-        collapsables[1].Find("div.toggler").Click();
-        collapsables[2].Find("div.toggler").Click();
-        collapsables[3].Find("div.toggler").Click();
-        collapsables[4].Find("div.toggler").Click();
-        collapsables[5].Find("div.toggler").Click();
-        collapsables[6].Find("div.toggler").Click();
+        UncollapseAllCollapsables(systemUnderTest);
         await systemUnderTest.InvokeAsync(() => systemUnderTest.Render());
 
         ConfigureValidatorAllMembersTest();
@@ -137,13 +131,7 @@ public class EditWorldFormIt : MudFormTestFixture<EditWorldForm, LearningWorldFo
         Mapper.Received(1).Map(worldToMap, FormDataContainer.FormModel);
         Mapper.ClearReceivedCalls();
 
-        var collapsables = systemUnderTest.FindComponents<Collapsable>();
-        collapsables[1].Find("div.toggler").Click();
-        collapsables[2].Find("div.toggler").Click();
-        collapsables[3].Find("div.toggler").Click();
-        collapsables[4].Find("div.toggler").Click();
-        collapsables[5].Find("div.toggler").Click();
-        collapsables[6].Find("div.toggler").Click();
+        UncollapseAllCollapsables(systemUnderTest);
         await systemUnderTest.InvokeAsync(() => systemUnderTest.Render());
         var mudInputs = systemUnderTest.FindComponents<MudTextField<string>>();
         await WorldFormStaticTestMethods.SetAllInputAndTextareaValueToExpected(mudInputs, Expected);
@@ -159,6 +147,15 @@ public class EditWorldFormIt : MudFormTestFixture<EditWorldForm, LearningWorldFo
             Expected, Expected, Expected,
             Expected);
         Mapper.Received(1).Map(worldToMap, FormDataContainer.FormModel);
+    }
+
+    private static void UncollapseAllCollapsables(IRenderedFragment systemUnderTest)
+    {
+        var collapsables = systemUnderTest.FindComponents<Collapsable>();
+        Assert.That(collapsables, Has.Count.EqualTo(4));
+        collapsables[1].Find("div.toggler").Click();
+        collapsables[2].Find("div.toggler").Click();
+        collapsables[3].Find("div.toggler").Click();
     }
 
     private void ConfigureValidatorAllMembersTest()

@@ -163,7 +163,7 @@ public class CollapsableUt
         
         var systemUnderTest = RenderComponent(initiallyCollapsed: collapsed, title: title);
         
-        Assert.That(() => systemUnderTest.Find("div.gap-2.my-2"), Throws.Nothing);
+        Assert.That(() => systemUnderTest.Find("div.gap-3.ml-2"), Throws.Nothing);
     }
     
     [Test]
@@ -175,7 +175,7 @@ public class CollapsableUt
         
         var systemUnderTest = RenderComponent(initiallyCollapsed: collapsed, title: title, verticalMargin: verticalMargin);
         
-        Assert.That(() => systemUnderTest.Find("div.gap-2.my-2"), Throws.Nothing);
+        Assert.That(() => systemUnderTest.Find("div.gap-3.my-2"), Throws.Nothing);
     }
 
     [Test]

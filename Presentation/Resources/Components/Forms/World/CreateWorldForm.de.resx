@@ -34,10 +34,10 @@
         <value>Sprache</value>
     </data>
     <data name="CreateWorldForm.Goals.Field.Description.Text" xml:space="preserve">
-        <value>Beschreibung für diese Lernwelt</value>
+        <value>Formulieren Sie eine Beschreibung für diese Lernwelt, um einen groben Überblick darüber zu geben, welche Inhalte behandelt werden.</value>
     </data>
     <data name="CreateWorldForm.Goals.Field.Goals.Text" xml:space="preserve">
-        <value>Lernziel(e) für diese Lernwelt</value>
+        <value>Definieren Sie Lernziele, die präzise beschreiben, welche überprüfbaren Fähigkeiten oder Kenntnisse nach Abschluss der Lernwelt erworben werden sollen.</value>
     </data>
     <data name="CreateWorldForm.Title.Text" xml:space="preserve">
         <value>Lernwelt erstellen</value>
@@ -52,10 +52,10 @@
         <value>* Erforderliche Angabe</value>
     </data>
     <data name="CreateWorldForm.General.Field.EnrolmentKey.Text" xml:space="preserve">
-        <value>Einschreibeschlüssel</value>
+        <value>Geben Sie einen Einschreibeschlüssel ein, um den Zugang zu dieser Lernwelt zu beschränken.</value>
     </data>
     <data name="CreateWorldForm.EnrolmentKey.Title" xml:space="preserve">
-        <value>Einschreibemethode</value>
+        <value>Einschreibeschlüssel</value>
     </data>
     <data name="CreateWorldForm.EnrolmentKey.Tooltip" xml:space="preserve">
         <value>Ein Einschreibeschlüssel erlaubt den Lernwelt-Zugriff nur für diejenigen Nutzer/innen, die den Einschreibeschlüssel kennen. &lt;br&gt; &lt;br&gt; Wenn das Feld leer bleibt, können sich alle Nutzer/innen in die Lernwelt einschreiben. &lt;br&gt; &lt;br&gt; Wenn ein Einschreibeschlüssel angegeben ist, müssen alle Nutzer/innen notwendigerweise bei der Lernwelteinschreibung den Einschreibeschlüssel eingeben. Beachten Sie, dass Nutzer/innen den Einschreibeschlüssel nur einmal bei der Lernwelteinschreibung eingeben müssen und danach dauerhaft eingeschriebene Lernweltteilnehmer/innen sind.</value>
@@ -67,7 +67,7 @@
         <value>Rahmenhandlung zur Story</value>
     </data>
     <data name="CreateWorldForm.Fields.Collapsable.Story.Field.Description.Text" xml:space="preserve">
-        <value>Formulieren Sie hier eine Einleitung und einen Schluss für Ihre Story, um die Lernwelt in eine Rahmenhandlung einzubetten.</value>
+        <value>Formulieren Sie eine Einleitung und einen Schluss für Ihre Story, um die Lernwelt in eine Rahmenhandlung einzubetten.</value>
     </data>
     <data name="CreateWorldForm.Fields.Collapsable.Story.Field.Start.Label" xml:space="preserve">
         <value>Einleitung</value>
@@ -85,27 +85,66 @@
         <value>Lernwelt-Theme</value>
     </data>
     <data name="CreateWorldForm.Theme.Field.Theme.Text" xml:space="preserve">
-        <value>Auswahl an Themes mit verschiedenen Themenwelten für die Lernwelt</value>
+        <value>Wählen Sie eines der verschiedenen Themes für die Lernwelt aus.</value>
     </data>
     <data name="CreateWorldForm.Finalization.Text" xml:space="preserve">
         <value>Link zum Lernweltabschluss</value>
     </data>
     <data name="CreateWorldForm.Finalization.Collapsable.Description.Text" xml:space="preserve">
-        <value>Sie können in diesem Abschntt einen Link zu einer eigens erstellten Online-Umfrage, zu Ihrem Hochschul-Moodle o.ä. angeben und zusätzlich einen Hinweistext formulieren.</value>
+        <value>Geben Sie einen Link an (z. B. zu einer Online-Umfrage oder zu Ihrem Hochschul-Moodle) und formulieren Sie zusätzlich einen Hinweistext.</value>
     </data>
     <data name="CreateWorldForm.Finalization.Tooltip" xml:space="preserve">
-        <value>Wenn Sie keinen Link und Hinweistext angeben, wird standardmäßig der Platzhaltertext in der 3D-Lernumgebung angezeigt.</value>
+        <value>Wenn Sie keinen Link und Hinweistext angeben, wird standardmäßig der Platzhaltertext im Hinweistextfeld in der 3D-Lernumgebung angezeigt.</value>
     </data>
     <data name="CreateWorldForm.Finalization.Field.EvaluationLinkText.Placeholder.Text" xml:space="preserve">
         <value>Sie haben alle Lernräume erfolgreich abgeschlossen und somit die Lernwelt bestanden, herzlichen Glückwunsch!</value>
     </data>
     <data name="CreateWorldForm.Finalization.Field.EvaluationLinkName.Placeholder.Text" xml:space="preserve">
-        <value>z.B. Online-Umfrage</value>
+        <value>z. B. Online-Umfrage</value>
     </data>
     <data name="CreateWorldForm.Finalization.Field.EvaluationLink.Placeholder.Text" xml:space="preserve">
-        <value>Link zum Lernweltabschluss</value>
+        <value>Link (https://www...)</value>
     </data>
     <data name="CreateWorldForm.Goals.Button" xml:space="preserve">
         <value>Lernziel-Formulierung</value>
+    </data>
+    <data name="CreateWorldForm.General.Subtitle" xml:space="preserve">
+        <value>Allgemeine Angaben</value>
+    </data>
+    <data name="CreateWorldForm.General.InfoText" xml:space="preserve">
+        <value>Geben Sie allgemeine Informationen zu dieser Lernwelt an.</value>
+    </data>
+    <data name="CreateWorldForm.Content.Text" xml:space="preserve">
+        <value>Inhalt &amp; Orientierung</value>
+    </data>
+    <data name="CreateWorldForm.General.Field.Name.Placeholder" xml:space="preserve">
+        <value>z. B. Einführung-in-die-Biologie</value>
+    </data>
+    <data name="CreateWorldForm.General.Field.Shortname.Placeholder" xml:space="preserve">
+        <value>z. B. EinfBio2025</value>
+    </data>
+    <data name="CreateWorldForm.General.Field.Authors.Placeholder" xml:space="preserve">
+        <value>z. B. Erika Musterfrau, Max Mustermann</value>
+    </data>
+    <data name="CreateWorldForm.General.Field.Language.Placeholder" xml:space="preserve">
+        <value>z. B. Deutsch, Englisch</value>
+    </data>
+    <data name="CreateWorldForm.Goals.Field.Description.Placeholder" xml:space="preserve">
+        <value>Diese Lernwelt behandelt folgendes Thema: ...</value>
+    </data>
+    <data name="CreateWorldForm.Collapsable.Design" xml:space="preserve">
+        <value>Gestaltung &amp; Darstellung</value>
+    </data>
+    <data name="CreateWorldForm.Collapsable.Interaction" xml:space="preserve">
+        <value>Interaktion &amp; Ablauf</value>
+    </data>
+    <data name="CreateWorldForm.Finalization.Field.EvaluationLinkText.Text" xml:space="preserve">
+        <value>Hinweistext</value>
+    </data>
+    <data name="CreateWorldForm.Finalization.Field.EvaluationLinkName.Text" xml:space="preserve">
+        <value>Art des Links</value>
+    </data>
+    <data name="EditElementForm.Fields.Collapsable.Goals.AdaptivityElement.Text" xml:space="preserve">
+        <value>Definieren Sie Lernziele, die präzise beschreiben, welche überprüfbaren Fähigkeiten oder Kenntnisse nach Abschluss des Adaptivitätselements erworben werden sollen.</value>
     </data>
 </root>

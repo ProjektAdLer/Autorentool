@@ -23,7 +23,7 @@
         </value>
     </resheader>
     <data name="LearningOutcomeItem.Button.Edit" xml:space="preserve">
-        <value>Edit learning outcome</value>
+        <value>Edit Learning Outcome</value>
     </data>
     <data name="LearningOutcomeItem.Button.Delete" xml:space="preserve">
         <value>Delete learning outcome</value>

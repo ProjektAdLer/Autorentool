@@ -30,10 +30,10 @@
         <value>Adaptivitätselement erstellt</value>
     </data>
     <data name="CreateAdaptivityElementForm.Fields.Collapsable.Tasks.Title" xml:space="preserve">
-        <value>Aufgaben</value>
+        <value>Aufgaben*</value>
     </data>
     <data name="CreateAdaptivityElementForm.Fields.Collapsable.Tasks.Text" xml:space="preserve">
-        <value>Aufgaben zu diesem Adaptivitätselement</value>
+        <value>Erstellen Sie Aufgaben in Form von Single-/Multiple-Choice-Fragen, damit Studierende ihren Wissensstand überprüfen können.</value>
     </data>
     <data name="CreateAdaptivityElementForm.Fields.Collapsable.Tasks.Button.Text" xml:space="preserve">
         <value>Aufgaben hinzufügen</value>
@@ -69,22 +69,22 @@
         <value>Keine Angabe</value>
     </data>
     <data name="CreateElementForm.Fields.Collapsable.LearningContent.Title" xml:space="preserve">
-        <value>Externes Lernmaterial</value>
+        <value>Externes Lernmaterial*</value>
     </data>
     <data name="CreateElementForm.Fields.Collapsable.Goals.Title" xml:space="preserve">
         <value>Lernziele</value>
     </data>
     <data name="CreateElementForm.Fields.Collapsable.Goals.Field.Description.Text" xml:space="preserve">
-        <value>Beschreibung zu diesem Element</value>
+        <value>Formulieren Sie eine Beschreibung für dieses Lernelement, um einen groben Überblick darüber zu geben, welche Inhalte behandelt werden.</value>
     </data>
     <data name="CreateElementForm.Fields.Collapsable.Goals.Field.Goals.Text" xml:space="preserve">
-        <value>Lernziel(e) zu diesem Element</value>
+        <value>Definieren Sie Lernziele, die präzise beschreiben, welche überprüfbaren Fähigkeiten oder Kenntnisse nach Abschluss des Lernelements erworben werden sollen.</value>
     </data>
     <data name="CreateElementForm.Fields.Collapsable.General.Field.Difficulty.Text" xml:space="preserve">
         <value>Schwierigkeit</value>
     </data>
     <data name="CreateElementForm.Fields.Collapsable.3DRepresentation.Title" xml:space="preserve">
-        <value>3D-Darstellung</value>
+        <value>Auswahl an Personen</value>
     </data>
     <data name="CreateElementForm.Fields.Collapsable.3DRepresentation.Field.3DRepresentation.Text" xml:space="preserve">
         <value>3D-Darstellung des Lernelements</value>
@@ -99,7 +99,7 @@
         <value>Typ</value>
     </data>
     <data name="CreateElementForm.Fields.Collapsable.LearningContent.Text" xml:space="preserve">
-        <value>Wählen Sie ein externes Lernmaterial aus*</value>
+        <value>Wählen Sie ein externes Lernmaterial aus.</value>
     </data>
     <data name="CreateElementForm.Text" xml:space="preserve">
         <value>* Erforderliche Angabe</value>
@@ -135,7 +135,7 @@
         <value>Storyelement erstellen</value>
     </data>
     <data name="CreateStoryElementForm.Fields.Collapsable.Story.Title" xml:space="preserve">
-        <value>Story</value>
+        <value>Story*</value>
     </data>
     <data name="CreateStoryElementForm.Fields.Collapsable.StoryText.Text" xml:space="preserve">
         <value>Story zu diesem Storyelement. Je Textblock können 400 Zeichen verwendet werden</value>
@@ -144,7 +144,7 @@
         <value>Titel des Storyelements</value>
     </data>
     <data name="CreateElementForm.Story.Tooltip" xml:space="preserve">
-        <value>Den Text, den Sie innerhalb eines Textblocks für Ihre Story formulieren, wird den Studierenden in der späteren 3D-Lernumgebung auf einer Slide dargestellt. &lt;br&gt; &lt;br&gt; Fügen Sie einen weiteren Textblock mit neuem Inhalt zu Ihrer Story hinzu, wird dieser Textblock in der 3D-Lernumgebung in einer nachfolgenden Slide angezeigt. &lt;br&gt; &lt;br&gt; Verwenden Sie also z.B. drei Textblöcke innerhalb eines Storyelements, wird der darin enthaltene Text den Studierenden in der 3D-Lernumgebung in drei aufeinanderfolgenden Slides angezeigt.</value>
+        <value>Den Text, den Sie innerhalb eines Textblocks für Ihre Story formulieren, wird den Studierenden in der späteren 3D-Lernumgebung auf einer Slide dargestellt. &lt;br&gt; &lt;br&gt; Fügen Sie einen weiteren Textblock mit neuem Inhalt zu Ihrer Story hinzu, wird dieser Textblock in der 3D-Lernumgebung in einer nachfolgenden Slide angezeigt. &lt;br&gt; &lt;br&gt; Verwenden Sie also z. B. drei Textblöcke innerhalb eines Storyelements, wird der darin enthaltene Text den Studierenden in der 3D-Lernumgebung in drei aufeinanderfolgenden Slides angezeigt.</value>
     </data>
     <data name="CreateElementForm.AddStoryText" xml:space="preserve">
         <value>Textblock hinzufügen</value>
@@ -217,9 +217,93 @@ Die dazugehörigen Slots sind in jedem Grundriss an der Position der Eingangs- u
         <value>Verhalten nach der Story</value>
     </data>
     <data name="CreateElementForm.Fields.Collapsable.3DRepresentation.Field.ExitAfterStorySequence.Stay" xml:space="preserve">
-        <value>bleibt im Raum</value>
+        <value>Bleibt im Raum</value>
     </data>
     <data name="CreateElementForm.Fields.Collapsable.3DRepresentation.Field.ExitAfterStorySequence.Leave" xml:space="preserve">
-        <value>verlässt den Raum</value>
+        <value>Verlässt den Raum</value>
+    </data>
+    <data name="CreateAdaptivityElementForm.Fields.Collapsable.Tasks.Subtitle" xml:space="preserve">
+        <value>Liste der im Adaptivitätselement enthaltenen Aufgaben:</value>
+    </data>
+    <data name="CreateAdaptivityElementForm.Fields.Collapsable.Tasks.Button.Task.One" xml:space="preserve">
+        <value>Aufgabe</value>
+    </data>
+    <data name="CreateAdaptivityElementForm.Fields.Collapsable.Tasks.Button.NoTask" xml:space="preserve">
+        <value>Noch keine Aufgabe hinzugefügt.</value>
+    </data>
+    <data name="CreateAdaptivityElementForm.Fields.Collapsable.Tasks.Button.Task.More" xml:space="preserve">
+        <value>Aufgaben</value>
+    </data>
+    <data name="CreateAdaptivityElementForm.Fields.Collapsable.Tasks.Button.Task.Mandatory" xml:space="preserve">
+        <value>verpflichtend</value>
+    </data>
+    <data name="CreateElementForm.Fields.Collapsable.General.Subtitle" xml:space="preserve">
+        <value>Allgemeine Angaben</value>
+    </data>
+    <data name="CreateElementForm.Fields.Collapsable.General.LearningElement.Text" xml:space="preserve">
+        <value>Geben Sie allgemeine Informationen zu diesem Lernelement.</value>
+    </data>
+    <data name="CreateElementForm.Fields.Collapsable.General.LearningElement.Placeholder" xml:space="preserve">
+        <value>z. B. Bedeutung der Biodiversität für das Ökosystem</value>
+    </data>
+    <data name="CreateElementForm.Fields.Collapsable.General.AdaptivityElement.Text" xml:space="preserve">
+        <value>Geben Sie allgemeine Informationen zu diesem Adaptivitätselement.</value>
+    </data>
+    <data name="CreateElementForm.Fields.Collapsable.General.Field.AdaptivityElement.Placeholder" xml:space="preserve">
+        <value>z. B. Quiz zum Ökosystem der Erde</value>
+    </data>
+    <data name="CreateElementForm.Fields.Collapsable.General.StoryElement.Text" xml:space="preserve">
+        <value>Vergeben Sie einen Namen für das Storyelement.</value>
+    </data>
+    <data name="CreateElementForm.Fields.Collapsable.General.Field.StoryElement.Placeholder" xml:space="preserve">
+        <value>z. B. Begegnung mit Rangerin Lizzy</value>
+    </data>
+    <data name="CreateElementForm.Fields.Collapsable.Content.Title" xml:space="preserve">
+        <value>Inhalt &amp; Orientierung</value>
+    </data>
+    <data name="CreateElementForm.Fields.Collapsable.Goals.Field.Goals.Placeholder" xml:space="preserve">
+        <value>Sie können...</value>
+    </data>
+    <data name="CreateElementForm.Fields.Collapsable.Goals.Field.Description.Placeholder" xml:space="preserve">
+        <value>Dieses Lernelement behandelt folgendes Thema: ...</value>
+    </data>
+    <data name="CreateElementForm.Fields.Collapsable.Goals.Field.Description.AdaptivityElement.Text" xml:space="preserve">
+        <value>Dieses Adaptivitätselement behandelt folgendes Thema: ...</value>
+    </data>
+    <data name="CreateStoryElementForm.Fields.Collapsable.Story.Placeholder" xml:space="preserve">
+        <value>z. B. Willkommen im Naturpark! Gut, dass du hier bist. Ich stehe vor einem großen Problem, Kannst du mir dabei helfen?</value>
+    </data>
+    <data name="CreateElementForm.Fields.Collapsable.Design.Title" xml:space="preserve">
+        <value>Gestaltung &amp; Darstellung</value>
+    </data>
+    <data name="CreateElementForm.Fields.Collapsable.Story.NPC.Text" xml:space="preserve">
+        <value>Wählen Sie eine Person für das Storyelement. Diese wird in der 3D-Lernumgebung angezeigt.</value>
+    </data>
+    <data name="CreateElementForm.Fields.Collapsable.Learning.Object.Text" xml:space="preserve">
+        <value>Wählen Sie einen Einrichtungsgegenstand für das Lernelement. Dieser wird in der 3D-Lernumgebung angezeigt.</value>
+    </data>
+    <data name="CreateElementForm.Fields.Collapsable.Adaptivity.Robot.Text" xml:space="preserve">
+        <value>Für das Adaptivitätselement wird standardmäßig der Roboter ausgewählt und in der 3D-Lernumgebung angezeigt.</value>
+    </data>
+    <data name="CreateElementForm.Fields.Collapsable.Interaction.Title" xml:space="preserve">
+        <value>Interaktion &amp; Ablauf</value>
+    </data>
+    <data name="CreateElementForm.Fields.Collapsable.3DRepresentation.Field.ExitAfterStorySequence.Text" xml:space="preserve">
+        <value>Legen Sie fest, ob die Person nach Übermittlung des Storytexts im Lernraum bleibt oder diesen verlässt.</value>
+    </data>
+    <data name="CreateElementForm.Fields.Collapsable.3DRepresentation.Field.NpcName.Placeholder" xml:space="preserve">
+        <value>z. B. Rangerin Lizzy</value>
+    </data>
+    <data name="CreateElementForm.Fields.Collapsable.Goals.AdaptivityElement.Text" xml:space="preserve">
+        <value>Definieren Sie Lernziele, die präzise beschreiben, welche überprüfbaren Fähigkeiten oder Kenntnisse nach Abschluss des Adaptivitätselements erworben werden sollen.</value>
+    </data>
+    <data name="CreateElementForm.Fields.Collapsable.Description.AdaptivityElement.Text" xml:space="preserve">
+        <value>Formulieren Sie eine Beschreibung für dieses Adaptivitätselement, um einen groben Überblick darüber zu geben, welche Inhalte behandelt werden.</value>
+    </data>
+    <data name="CreateElementForm.Fields.Collapsable.3DRepresentation.Robot.Title" xml:space="preserve">
+        <value>Roboter-Figur</value>
+    </data>
+    <data name="CreateElementForm.Fields.Collapsable.3DRepresentation.Furniture.Title" xml:space="preserve">
+        <value>Auswahl an Einrichtungsgegenständen</value>
     </data>
 </root>

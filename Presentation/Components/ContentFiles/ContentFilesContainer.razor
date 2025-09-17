@@ -1,10 +1,10 @@
-<MudPaper Class="relative w-full h-full shadow-none">
+<MudPaper Class="relative w-full h-full shadow-none overflow-hidden">
     <CascadingValue Value="@RerenderAsync" Name="RerenderContentContainer">
         <div class="flex flex-row w-full">
-            <div>
+            <div class="">
                 <ContentFilesAdd/>
             </div>
-            <div class="w-full h-full">
+            <div class="w-full h-full overflow-y-hidden overflow-x-scroll">
                 <ContentFilesView @ref="ContentFilesView"/>
             </div>
         </div>

@@ -15,9 +15,9 @@
         <value>Mood</value>
     </data>
     <data name="NpcMoodSelect.Header.Text" xml:space="preserve">
-        <value>Mood of the person</value>
+        <value>Mood of the Person</value>
     </data>
     <data name="NpcMoodSelect.Preview.Title" xml:space="preserve">
-        <value>Presentation in the 3D learning environment</value>
+        <value>Presentation in the 3D Learning Environment</value>
     </data>
 </root>

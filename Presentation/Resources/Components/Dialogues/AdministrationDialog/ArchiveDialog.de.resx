@@ -22,7 +22,7 @@
         <value>Lernwelt exportieren</value>
     </data>
     <data name="ExportArchive.Hover" xml:space="preserve">
-        <value>Lernwelt als ZIP-Datei exportieren (z.B. zu anderem Rechner senden oder für Sicherungskopie)</value>
+        <value>Lernwelt als ZIP-Datei exportieren (z. B. zu anderem Rechner senden oder für Sicherungskopie)</value>
     </data>
     <data name="DialogContent.LearningWorldArchive.Button" xml:space="preserve">
         <value>Als ZIP exportieren</value>

@@ -15,6 +15,6 @@
         <value>LearningSpaceViewModel does not match LearningSpacePresenter.LearningSpaceVm</value>
     </data>
     <data name="SpaceLayoutSelection.MudTooltip.CarouselText" xml:space="preserve">
-        <value>Presentation in the 3D learning environment</value>
+        <value>Presentation in the 3D Learning Environment</value>
     </data>
 </root>

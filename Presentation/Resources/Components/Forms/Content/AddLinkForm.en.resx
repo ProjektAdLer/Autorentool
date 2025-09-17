@@ -15,13 +15,13 @@
         <value>Video added as link</value>
     </data>
     <data name="AddLinkForm.Field.Name.Text" xml:space="preserve">
-        <value>Link name</value>
+        <value>Link Name</value>
     </data>
     <data name="AddLinkForm.Field.Link.Text" xml:space="preserve">
         <value>Link</value>
     </data>
     <data name="AddLinkForm.Info.Text" xml:space="preserve">
-        <value>Videos cannot be imported as a file. Yyou can alternatively add a link.</value>
+        <value>Videos cannot be imported as a file. You can alternatively add a link.</value>
     </data>
     <data name="AddLinkForm.Field.Link.ErrorMessage" xml:space="preserve">
         <value>Error while adding link</value>

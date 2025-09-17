@@ -6,7 +6,7 @@
 @using Presentation.PresentationLogic.LearningContent.AdaptivityContent
 @using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Question
 @using Shared.Adaptivity
-<p class="text-sm 2xl:text-base mx-6">@Localizer["AdaptivityContentDialog.Subtitle"]</p>
+<p class="text-sm 2xl:text-base mx-6 cursor-default">@Localizer["AdaptivityContentDialog.Subtitle"]</p>
 <MudTable @ref="@_table" Items="@MyContent.Tasks" Height="500px" Outlined="true" Class="rounded border-4 border-adlergrey-200 m-4"
           FixedHeader="true" r="false" CustomFooter="true" Bordered="true">
     <ColGroup>

@@ -52,11 +52,7 @@ public class CreateSpaceFormIt : MudFormTestFixture<CreateSpaceForm, LearningSpa
         var systemUnderTest = GetRenderedComponent();
 
         var mudForm = systemUnderTest.FindComponent<MudForm>();
-        var collapsables = systemUnderTest.FindComponents<Collapsable>();
-        foreach (var collapsable in collapsables.Skip(1))
-        {
-            collapsable.Find("div.toggler").Click();
-        }
+        UncollapseAllCollapsables(systemUnderTest);
 
         ConfigureValidatorAllMembersTestOr123OrCampus();
 
@@ -161,6 +157,15 @@ public class CreateSpaceFormIt : MudFormTestFixture<CreateSpaceForm, LearningSpa
         WorldPresenter.Received().CreateLearningSpace(Expected, Arg.Any<string>(),
             Arg.Any<LearningOutcomeCollectionViewModel>(),
             Arg.Any<int>(), Arg.Any<SpaceTheme>());
+    }
+
+    private static void UncollapseAllCollapsables(IRenderedFragment systemUnderTest)
+    {
+        var collapsables = systemUnderTest.FindComponents<Collapsable>();
+        Assert.That(collapsables, Has.Count.EqualTo(4));
+        collapsables[1].Find("div.toggler").Click();
+        collapsables[2].Find("div.toggler").Click();
+        collapsables[3].Find("div.toggler").Click();
     }
 
     private void ConfigureValidatorNameIsTest()

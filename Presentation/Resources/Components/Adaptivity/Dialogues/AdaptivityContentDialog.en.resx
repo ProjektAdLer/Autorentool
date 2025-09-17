@@ -22,13 +22,13 @@
         <value>Required Task</value>
     </data>
     <data name="AdaptivityContentDialog.Table.Header.Easy" xml:space="preserve">
-        <value>Easy question</value>
+        <value>Easy Question</value>
     </data>
     <data name="AdaptivityContentDialog.Table.Header.Medium" xml:space="preserve">
-        <value>Medium question</value>
+        <value>Medium Question</value>
     </data>
     <data name="AdaptivityContentDialog.Table.Header.Hard" xml:space="preserve">
-        <value>Hard question</value>
+        <value>Hard Question</value>
     </data>
     <data name="AdaptivityContentDialog.NewTask.Name" xml:space="preserve">
         <value>New task {0}</value>

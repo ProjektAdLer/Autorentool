@@ -2,6 +2,11 @@
 @using Microsoft.Extensions.Localization
 @using Presentation.PresentationLogic.API
 @using Presentation.PresentationLogic.AuthoringToolWorkspace
+@using Presentation.PresentationLogic.LearningContent
+@using Presentation.PresentationLogic.LearningContent.AdaptivityContent
+@using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Action
+@using Presentation.PresentationLogic.LearningContent.FileContent
+@using Presentation.PresentationLogic.LearningContent.LinkContent
 @using Presentation.PresentationLogic.LearningWorld
 @using Presentation.PresentationLogic.SelectedViewModels
 @using Shared.Exceptions
@@ -13,8 +18,8 @@
     <div class="flex flex-row gap-2 justify-center items-center mr-2">
         <!-- ZIP-Export -->
         <div class="flex flex-col items-center justify-between border rounded-xl p-3 shadow-md bg-white w-56 h-52">
-            <p class="text-sm 2xl:text-base font-bold text-center mb-2">@Localizer["ArchiveDialog.ZIP.Title"]</p>
-            <p class="text-sm text-center mb-4 text-adlertextgrey">@Localizer["ArchiveDialog.ZIP.Text"]
+            <p class="text-sm 2xl:text-base font-bold text-center mb-2 cursor-default">@Localizer["ArchiveDialog.ZIP.Title"]</p>
+            <p class="text-sm text-center mb-4 text-adlertextgrey cursor-default">@Localizer["ArchiveDialog.ZIP.Text"]
                 <MudTooltip Placement="Placement.Right"
                             Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed">
                     <TooltipContent>
@@ -40,8 +45,8 @@
 
         <!-- MBZ-Export -->
         <div class="flex flex-col items-center justify-between border rounded-xl p-3 shadow-md bg-white w-56 h-52">
-            <p class="text-sm 2xl:text-base font-bold text-center mb-2">@Localizer["ArchiveDialog.MBZ.Title"]</p>
-            <p class="text-sm text-center mb-4 text-adlertextgrey">@Localizer["ArchiveDialog.MBZ.Text"]
+            <p class="text-sm 2xl:text-base font-bold text-center mb-2 cursor-default">@Localizer["ArchiveDialog.MBZ.Title"]</p>
+            <p class="text-sm text-center mb-4 text-adlertextgrey cursor-default">@Localizer["ArchiveDialog.MBZ.Text"]
                 <MudTooltip Placement="Placement.Right"
                             Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed">
                     <TooltipContent>

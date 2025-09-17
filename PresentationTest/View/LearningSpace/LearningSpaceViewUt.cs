@@ -104,12 +104,12 @@ public class LearningSpaceViewUt
         var systemUnderTest = GetLearningSpaceViewForTesting();
 
         //TODO Use this for LmsLoginDialogUt
-        var spaceWorkload = systemUnderTest.Find("p.space-workload");
+        var spaceWorkload = systemUnderTest.Find("li.space-workload");
         spaceWorkload.MarkupMatches(
-            @"<p class=""text-xs 2xl:text-base text-adlerblue-600 space-workload""><span class=""text-adlergrey-600"">LearningSpace.SpaceWorkload.Text</span> 42<span class=""text-adlergrey-600"">LearningSpace.SpaceWorkload.Text.Additional</span></p>");
-        var spacePoints = systemUnderTest.Find("p.space-points");
+            @"<li class=""marker:text-adlergrey pl-1 text-xs 2xl:text-base text-adlerblue-600 space-workload""><span class=""text-adlergrey-600"">LearningSpace.SpaceWorkload.Text</span> 42<span class=""text-adlergrey-600"">LearningSpace.SpaceWorkload.Text.Additional</span></li>");
+        var spacePoints = systemUnderTest.Find("li.space-points");
         spacePoints.MarkupMatches(
-            @"<p class=""text-xs 2xl:text-base text-adlerblue-600 space-points""><span class=""text-adlergrey-600"">LearningSpace.SpacePoints.Text</span>8<span class=""text-adlergrey-600""> / </span>17<span class=""text-adlergrey-600"">LearningSpace.Condition.Text</span></p>");
+            @"<li class=""marker:text-adlergrey pl-1 text-xs 2xl:text-base text-adlerblue-600 space-points""><span class=""text-adlergrey-600"">LearningSpace.SpacePoints.Text</span>8<span class=""text-adlergrey-600""> / </span>17<span class=""text-adlergrey-600"">LearningSpace.Condition.Text</span></li>");
     }
 
     [Test]
@@ -122,9 +122,9 @@ public class LearningSpaceViewUt
 
         var systemUnderTest = GetLearningSpaceViewForTesting();
 
-        var elementName = systemUnderTest.Find("p.space-theme");
+        var elementName = systemUnderTest.Find("li.space-theme");
         elementName.MarkupMatches(
-            @"<p class=""text-xs 2xl:text-base text-adlerblue-600 space-theme""><span class=""text-adlergrey-600"">LearningSpace.SpaceTheme.Text</span>Enum.SpaceTheme.LearningArea.CampusAschaffenburg</p>");
+            @"<li class=""marker:text-adlergrey pl-1 text-xs 2xl:text-base text-adlerblue-600 space-theme""><span class=""text-adlergrey-600"">LearningSpace.SpaceTheme.Text</span>Enum.SpaceTheme.LearningArea.CampusAschaffenburg</li>");
     }
 
     [Test]
@@ -150,9 +150,8 @@ public class LearningSpaceViewUt
     private IRenderedComponent<LearningSpaceView> GetLearningSpaceViewForTesting(RenderFragment? childContent = null)
     {
         childContent ??= delegate { };
-        return _ctx.RenderComponent<LearningSpaceView>(
-            parameters => parameters
-                .Add(p => p.ChildContent, childContent)
+        return _ctx.RenderComponent<LearningSpaceView>(parameters => parameters
+            .Add(p => p.ChildContent, childContent)
         );
     }
 }
