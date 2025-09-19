@@ -9,7 +9,7 @@ public class ValidateH5pViewModel : IValidateH5pViewModel
     {
         OnChange = null;
         IsCompletable = false;
-        ActiveH5PState = H5pState.Unknown;
+        ActiveH5PState = H5pState.NotValidated;
     }
     
     private bool _isCompletable;

@@ -1,0 +1,104 @@
+﻿@using System.ComponentModel.DataAnnotations
+@using System.Diagnostics.CodeAnalysis
+@using Presentation.Components.ContentFiles
+@using Presentation.PresentationLogic.API
+@using Presentation.PresentationLogic.LearningContent.FileContent
+@using Shared.H5P
+
+@inject NavigationManager Navigation
+
+@switch (FileContentVm.H5PState)
+{
+    case H5PContentState.NotValidated:
+        <MudTooltip Text="H5P-Validator öffnen">
+            <div class="flex flex-row items-center justify-start gap-1">
+                <button type="button" class="p-0 bg-transparent border-0" @onclick="() => ShowH5PContent()">
+                    @((MarkupString)InlineSvg(Svg.Unchecked))
+                </button>
+<p class="text-xs text-adlergrey">ungeprüft</p>
+            </div>
+        </MudTooltip>
+    break;
+    case H5PContentState.Primitive:
+    case H5PContentState.Completable:
+        <MudTooltip Text="H5P-Validator öffnen">
+            <div class="flex flex-row items-center justify-start gap-1">
+                <button type="button" class="p-0 bg-transparent border-0" @onclick="() => ShowH5PContent()">
+                    @((MarkupString)InlineSvg(Svg.Lockable))
+                </button>
+                <p class="text-xs text-adlergrey">nutzbar</p>
+            </div>
+        </MudTooltip>
+        break;
+case H5PContentState.NotUsable:
+        <MudTooltip Text="H5P-Validator öffnen">
+            <div class="flex flex-row items-center justify-start gap-1">
+                <button type="button" class="p-0 bg-transparent border-0" @onclick="() => ShowH5PContent()">
+                    @((MarkupString)InlineSvg(Svg.NotLockable))
+                </button>
+                <p class="text-xs text-adlergrey" style="white-space: nowrap;">nicht nutzbar</p>
+            </div>
+        </MudTooltip>
+        break;
+}
+
+
+@code {
+
+    [Parameter, Required] public required IFileContentViewModel FileContentVm { get; set; }
+    
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
+    internal  IH5PPlayerPluginManager H5PPlayerPluginManager { get; set; }
+    
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
+    internal IPresentationLogic PresentationLogic { get; set; }
+    private async Task ShowH5PContent()
+    {
+        if (FileContentVm.Type == "h5p")
+        {
+            var startH5PPlayerTO = new StartH5PPlayerTO();
+            startH5PPlayerTO.FileContentVm = FileContentVm;
+            startH5PPlayerTO.NavigationManager = Navigation;
+            await H5PPlayerPluginManager.StartH5pPlayerToValidateAsync(startH5PPlayerTO);
+        }
+    }
+
+    public static class Svg
+    {
+        public static readonly string Lockable = @"<?xml version=""1.0"" encoding=""UTF-8""?>
+<svg id=""uuid-2ade099e-6ea8-451b-9830-6b3100eeeb7e"" data-name=""R-Lockable"" xmlns=""http://www.w3.org/2000/svg"" viewBox=""0 0 2000 2000"">
+  <path d=""M1819.26,679.85c39.2,99.44,60.74,207.78,60.74,321.15,0,483.8-392.2,876-876,876S128,1484.8,128,1001,520.2,125,1004,125c175.78,0,339.47,51.78,476.65,140.91"" style=""fill: none; fill-rule: evenodd; stroke: #66c166; stroke-miterlimit: 10; stroke-width: 220px;""/>
+  <polyline points=""537.4 951.67 991.4 1460.67 1867 149"" style=""fill: none; fill-rule: evenodd; stroke: #66c166; stroke-linecap: round; stroke-linejoin: round; stroke-width: 220px;""/>
+</svg>";
+        public static readonly string NotLockable = @"<?xml version=""1.0"" encoding=""UTF-8""?>
+<svg id=""uuid-78b1e168-2a2d-4642-b432-e54c1200487e"" data-name=""R-NotLockable"" xmlns=""http://www.w3.org/2000/svg"" viewBox=""0 0 2000 2000"">
+  <circle cx=""1004"" cy=""1001"" r=""876"" style=""fill: none; stroke: #f44336; stroke-miterlimit: 10; stroke-width: 220px;""/>
+  <line x1=""451"" y1=""1632"" x2=""1554"" y2=""370"" style=""fill: none; stroke: #f44336; stroke-linecap: round; stroke-linejoin: round; stroke-width: 220px;""/>
+</svg>";
+        public static readonly string Unchecked = @"<?xml version=""1.0"" encoding=""UTF-8""?>
+<svg id=""uuid-39f00979-81a1-48d3-a56b-45a5408612dc"" data-name=""R-NotLockable"" xmlns=""http://www.w3.org/2000/svg"" viewBox=""0 0 2000 2000"">
+  <circle cx=""1004"" cy=""1001"" r=""878"" style=""fill: none; stroke: #999; stroke-miterlimit: 10; stroke-width: 220px;""/>
+  <path d=""M885.66,1276.65c1.16-68.88,8.97-123.3,23.47-163.24,14.49-39.93,44.06-84.23,88.69-132.88l113.92-117.23c48.69-54.86,73.04-113.77,73.04-176.72s-15.95-108.14-47.83-142.52c-31.88-34.35-78.26-51.55-139.12-51.55s-106.66,15.61-142.6,46.78c-35.94,31.17-53.91,73.04-53.91,125.58h-160.85c1.16-93.91,34.63-169.7,100.41-227.37,65.78-57.67,151.45-86.52,256.95-86.52s194.92,29.39,256.07,88.13c61.15,58.76,91.74,139.38,91.74,241.84s-46.95,201.15-140.86,299.57l-94.77,93.78c-42.34,46.89-63.49,114.35-63.49,202.33h-160.85ZM878.71,1552.82c0-26.3,7.97-48.37,23.9-66.19,15.93-17.82,39.57-26.75,70.87-26.75s55.07,8.93,71.3,26.75c16.23,17.82,24.35,39.89,24.35,66.19s-8.12,48.09-24.35,65.33c-16.23,17.22-40,25.85-71.3,25.85s-54.94-8.63-70.87-25.85c-15.93-17.24-23.9-39.01-23.9-65.33Z"" style=""fill: gray;""/>
+</svg>";
+    }
+
+    public static string InlineSvg(string raw, string cssClass = "w-4 h-4")
+    {
+        if (string.IsNullOrWhiteSpace(raw)) return string.Empty;
+        // Insert CSS class on root <svg> (first occurrence)
+        var idx = raw.IndexOf("<svg");
+        if (idx >= 0)
+        {
+            var endTag = raw.IndexOf(">", idx);
+            if (endTag > idx)
+            {
+                // inject class attribute after <svg
+                var before = raw.Substring(0, endTag);
+                var after = raw.Substring(endTag);
+                if (!before.Contains("class="))
+                    before += $" class=\"{cssClass}\"";
+                return before + after;
+            }
+        }
+        return raw;
+    }}

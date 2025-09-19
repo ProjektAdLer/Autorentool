@@ -16,7 +16,7 @@ public class StartH5pPlayerUC : IStartH5pPlayerUCInputPort
     internal StartH5pPlayerUC(
         IValidateH5pUc validateH5PUc, 
         IFileSystemDataAccess dataAccess,
-        IDisplayH5pUC displayH5PUc,
+        IDisplayH5pUc displayH5PUc,
         IStartH5pPlayerUCOutputPort startH5PPlayerUcOutputPort)
     {
         ValidateH5PUc = validateH5PUc;
@@ -124,7 +124,7 @@ public class StartH5pPlayerUC : IStartH5pPlayerUCInputPort
 
     private IValidateH5pUc ValidateH5PUc { get; }
     private IFileSystemDataAccess FileSystemDataAccess { get; }
-    private IDisplayH5pUC DisplayH5pUC { get; }
+    private IDisplayH5pUc DisplayH5pUC { get; }
     internal H5pEntity? H5pEntity { get; private set; }
     private IStartH5pPlayerUCOutputPort StartH5pPlayerUcOutputPort { get;  }
     private TemporaryH5psInWwwrootManager TemporaryH5pManager { get; set; }

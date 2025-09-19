@@ -32,6 +32,7 @@ public class ContentFilesContainerUt
         _errorService = Substitute.For<IErrorService>();
         _snackbar = Substitute.For<ISnackbar>();
         _selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        _h5PPlayerPluginManager = Substitute.For<IH5PPlayerPluginManager>();
 
         _testContext.Services.AddSingleton(_presentationLogic);
         _testContext.Services.AddSingleton(_dialogService);
@@ -41,6 +42,7 @@ public class ContentFilesContainerUt
         _testContext.Services.AddSingleton(_errorService);
         _testContext.Services.AddSingleton(_snackbar);
         _testContext.Services.AddSingleton(_selectedViewModelsProvider);
+        _testContext.Services.AddSingleton(_h5PPlayerPluginManager);
 
         _testContext.ComponentFactories.AddStub<ContentFilesAdd>();
         _contentFilesViewSubstitute = Substitute.For<ContentFilesView>();
@@ -64,6 +66,7 @@ public class ContentFilesContainerUt
     private IErrorService _errorService;
     private ISnackbar _snackbar;
     private ISelectedViewModelsProvider _selectedViewModelsProvider;
+    private IH5PPlayerPluginManager _h5PPlayerPluginManager;
 
     [Test]
     public void Constructor_SetsAllPropertiesAndRendersCorrectly()

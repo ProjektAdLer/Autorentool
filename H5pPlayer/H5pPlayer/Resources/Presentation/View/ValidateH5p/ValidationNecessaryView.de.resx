@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+            
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="Message.KeepOpenWarning" xml:space="preserve">
+        <value>Dieses Fenster muss offen bleiben, bis die Validierung abgeschlossen ist!</value>
+    </data>
+    <data name="Tooltip.ValidationExplanation" xml:space="preserve">
+        <value>H5Ps müssen zunächst auf ihre Funktion hin überprüft werden, bevor sie in einer Lernwelt erfolgreich verwendet werden können. Dabei wird überprüft, ob innerhalb des H5Ps Punkte durch das Beantworten von Fragen erzielt werden können und das H5P somit abschließbar ist oder ob es sich um ein nicht abschließbares H5P handelt, bei dem lediglich das Durchklicken der einzelnen Folien entscheidend ist. Auch ist es möglich, dass ein H5P fehlerhaft ist oder gar nicht erst angezeigt.</value>
+    </data>
+</root>

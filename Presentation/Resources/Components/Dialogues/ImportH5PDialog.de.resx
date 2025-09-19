@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+    <data name="Dialog.Heading" xml:space="preserve">
+    <value>Hinzugefügtes Lernmaterial</value>
+  </data>
+  <data name="Dialog.Description" xml:space="preserve">
+    <value>Sie haben ein oder mehrere H5Ps als externes Lernmaterial hinzugefügt. H5Ps müssen zunächst auf ihre Funktion hin überprüft werden, bevor sie in einer Lernwelt erfolgreich verwendet werden können. Dabei wird überprüft, ob innerhalb des H5Ps Punkte durch das Beantworten von Fragen erzielt werden können (z.B. H5P - Interactive Video) und das H5P somit abschließbar ist oder ob es sich um ein nicht abschließbares H5P handelt, bei dem lediglich das Durchklicken der einzelnen Folien zum Tragen kommt und entscheidend ist (z.B. H5P - Image Slider). Auch ist es möglich, dass ein H5P fehlerhaft ist oder gar nicht erst angezeigt wird. 
+Grundsätzlich wird zwischen drei Zuständen eines H5Ps unterschieden:
+[[ICON_LIST]]
+Mehr dazu erfahren Sie &lt;a href="https://projektadler.github.io/Documentation/manualauthoringfeatures-auf-einen-blick.html" target="_blank" class="text-adlerblue-700"&gt;hier&lt;/a&gt;.</value>
+  </data>
+  <data name="Dialog.Instruction" xml:space="preserve">
+    <value>Lernwelten mit ungeprüften H5Ps können nicht hochgeladen werden. Sie können das H5P jetzt oder im späteren Verlauf überprüfen.</value>
+  </data>
+    <data name="Dialog.UnvalidatedFilesHeading" xml:space="preserve">
+    <value>Hinzugefügte, noch ungeprüfte H5Ps:</value>
+  </data>
+    <data name="Dialog.CancelButton" xml:space="preserve">
+    <value>Abbrechen</value>
+  </data>
+    <data name="Dialog.BeginValidationButton" xml:space="preserve">
+    <value>Beginne Validierung</value>
+  </data>
+    <data name="Dialog.NoUnvalidatedH5Ps" xml:space="preserve">
+    <value>Es gibt keine ungeprüften H5Ps.</value>
+  </data>
+  <data name="Dialog.OkButton" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="Dialog.ValidateLaterButton" xml:space="preserve">
+    <value>Später validieren</value>
+  </data>
+  <data name="Dialog.H5P.StateUsable" xml:space="preserve">
+    <value>nutzbar</value>
+  </data>
+  <data name="Dialog.H5P.StateNotUsable" xml:space="preserve">
+    <value>nicht nutzbar</value>
+  </data>
+  <data name="Dialog.H5P.StateUnchecked" xml:space="preserve">
+    <value>ungeprüft</value>
+  </data>
+</root>

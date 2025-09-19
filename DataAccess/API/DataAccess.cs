@@ -248,6 +248,12 @@ public class DataAccess : IDataAccess
         FileSystem.File.Delete(savePath);
     }
 
+    public void EditH5PFileContent(IFileContent fileContent)
+    {
+        var fileContentPe = Mapper.Map<FileContentPe>(fileContent);
+        ContentFileHandler.EditH5PFileContent(fileContentPe);   
+    }
+
     /// <summary>
     /// For a given world, contains all referenced content files into <paramref name="contentFolder"/>.
     /// </summary>

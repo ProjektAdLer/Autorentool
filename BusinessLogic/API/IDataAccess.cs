@@ -1,6 +1,7 @@
 ﻿using System.IO.Abstractions;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent;
+using BusinessLogic.Entities.LearningContent.FileContent;
 using BusinessLogic.Entities.LearningContent.LinkContent;
 using BusinessLogic.ErrorManagement.DataAccess;
 using Shared.Configuration;
@@ -105,4 +106,6 @@ public interface IDataAccess
     /// </summary>
     /// <param name="savePath">The file to be deleted.</param>
     void DeleteFileByPath(string savePath);
+
+    void EditH5PFileContent(IFileContent fileContent);
 }

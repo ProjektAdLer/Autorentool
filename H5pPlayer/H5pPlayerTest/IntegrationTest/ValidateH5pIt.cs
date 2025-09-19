@@ -1,9 +1,11 @@
-﻿using H5pPlayer.BusinessLogic.Api.JavaScript;
+﻿using H5pPlayer.BusinessLogic.Api.FileSystemDataAccess;
+using H5pPlayer.BusinessLogic.Api.JavaScript;
 using H5pPlayer.BusinessLogic.Entities;
+using H5pPlayer.BusinessLogic.UseCases.TerminateH5pPlayer;
 using H5pPlayer.BusinessLogic.UseCases.ValidateH5p;
 using H5pPlayer.Main;
 using H5pPlayer.Presentation.PresentationLogic.ValidateH5p;
-using H5pPlayer.Presentation.View;
+using Microsoft.Extensions.Logging;
 using NSubstitute;
 using TestContext = Bunit.TestContext;
 
@@ -36,7 +38,17 @@ public class ValidateH5pIt
         Assert.That(_validateH5pVm!.IsCompletable, Is.True);
     }
 
-    
+    [Test]
+    // ANF-ID: [HSE8]
+    public void TerminateValidateH5p()
+    {
+        _validateH5pController!.TerminateValidateH5p();
+
+        Assert.That(_wasOnH5pPlayerFinishedCalled, Is.True, "Expected OnH5pPlayerFinished to be called.");
+        Assert.That(_receivedResult, Is.Not.Null);
+        Assert.That(_receivedResult!.Value.ActiveH5pState, Is.EqualTo(H5pState.NotValidated.ToString()));
+    }
+
 
 
     [Test]
@@ -54,6 +66,14 @@ public class ValidateH5pIt
 
         Assert.That(_validateH5pVm!.ActiveH5PState, Is.EqualTo(H5pState.Primitive));
     }
+    
+    [Test]
+    public void SetActiveH5pStateToCompletable()
+    {
+        _validateH5pController!.SetActiveH5pStateToCompletable();
+
+        Assert.That(_validateH5pVm!.ActiveH5PState, Is.EqualTo(H5pState.Completable));
+    }
 
 
     private string _basePath;
@@ -62,7 +82,10 @@ public class ValidateH5pIt
     private IValidateH5pViewModel? _validateH5pVm;
     private IValidateH5pController? _validateH5pController;
     private IValidateH5pPresenter? _validateH5pPresenter;
+    private ILoggerFactory? _loggerFactory;
     private IValidateH5pFactory? _validateH5pFactory;
+    private bool _wasOnH5pPlayerFinishedCalled;
+    private H5pPlayerResultTO? _receivedResult;
 
     [SetUp]
     public void Setup()
@@ -70,12 +93,18 @@ public class ValidateH5pIt
         _basePath = OperatingSystem.IsWindows() ? "C:" : "/";
         _testContext = new TestContext();
         var fakeJavaScriptAdapter = Substitute.For<ICallJavaScriptAdapter>();
+
+
+        var fakeTerminateH5pPlayerUc = CreateFakeTerminateH5pPlayerUc(
+            fakeJavaScriptAdapter,
+            null,
+            InitializeOnPlayerFinished()
+        );
         _validateH5pFactory = new ValidateH5pFactory();
-        _validateH5pFactory.CreateValidateH5pStructure(fakeJavaScriptAdapter);
+        _loggerFactory = Substitute.For<ILoggerFactory>();
+        _validateH5pFactory.CreateValidateH5pStructure(fakeJavaScriptAdapter,fakeTerminateH5pPlayerUc,_loggerFactory);
         _validateH5pUc = _validateH5pFactory.ValidateH5pUc;
-        var unzippedH5psPath = Path.Combine(_basePath, "ValidPath1.h5p");
-        var h5pZipSourcePath = @Path.Combine(_basePath, "ValidPath2.h5p");
-        var h5pEntity = CreateH5pEntity(unzippedH5psPath, h5pZipSourcePath);
+        var h5pEntity = CreateH5pEntity();
         _validateH5pUc!.H5pEntity = h5pEntity;
         _validateH5pVm = _validateH5pFactory.ValidateH5pVm;
         Action fakeAction = () => { };
@@ -84,12 +113,38 @@ public class ValidateH5pIt
         _validateH5pPresenter = _validateH5pFactory.ValidateH5pPresenter;
     }
 
-    private static H5pEntity CreateH5pEntity(
-        string unzippedH5psPath, string h5pZipSourcePath)
+    private Action<H5pPlayerResultTO> InitializeOnPlayerFinished()
+    {
+        Action<H5pPlayerResultTO> onH5pPlayerFinished = result =>
+        {
+            _wasOnH5pPlayerFinishedCalled = true;
+            _receivedResult = result;
+        };
+        return onH5pPlayerFinished;
+    }
+
+
+    private static TerminateH5pPlayerUc CreateFakeTerminateH5pPlayerUc(
+        ICallJavaScriptAdapter? callJavaScriptAdapter = null,
+        IFileSystemDataAccess? fileSystemDataAccess = null,
+        Action<H5pPlayerResultTO>? onH5pPlayerFinished = null)
+    {
+        callJavaScriptAdapter ??= Substitute.For<ICallJavaScriptAdapter>();
+        fileSystemDataAccess ??= Substitute.For<IFileSystemDataAccess>();
+        onH5pPlayerFinished ??= _ => { }; // Fake Lambda
+
+        return new TerminateH5pPlayerUc(
+            callJavaScriptAdapter,
+            fileSystemDataAccess,
+            onH5pPlayerFinished
+        );
+    }
+
+    private  H5pEntity CreateH5pEntity()
     {
         var h5pEntity = new H5pEntity();
-        h5pEntity.UnzippedH5psPath = unzippedH5psPath;
-        h5pEntity.H5pZipSourcePath = h5pZipSourcePath;
+        h5pEntity.UnzippedH5psPath = Path.Combine(_basePath, "ValidPath1.h5p");
+        h5pEntity.H5pZipSourcePath = @Path.Combine(_basePath, "ValidPath2.h5p");
         return h5pEntity;
     }
     
@@ -97,5 +152,8 @@ public class ValidateH5pIt
     public void TearDown()
     {
         _testContext.Dispose();
+        _wasOnH5pPlayerFinishedCalled = false;
+        _receivedResult = null;
+        _loggerFactory?.Dispose();
     } 
 }

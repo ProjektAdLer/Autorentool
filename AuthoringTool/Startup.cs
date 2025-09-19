@@ -34,6 +34,7 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Localization;
 using MudBlazor.Services;
+using Presentation.Components.ContentFiles;
 using Presentation.Components.Culture;
 using Presentation.Components.Forms;
 using Presentation.Components.Forms.Element;
@@ -60,6 +61,7 @@ using HttpClientFactory = Shared.Networking.HttpClientFactory;
 using IHttpClientFactory = Shared.Networking.IHttpClientFactory;
 
 namespace AuthoringTool;
+
 // ReSharper disable InconsistentNaming
 public class Startup
 {
@@ -192,6 +194,7 @@ public class Startup
     {
         services.AddScoped<IAuthoringToolWorkspacePresenter, AuthoringToolWorkspacePresenter>();
         services.AddScoped<IPresentationLogic, PresentationLogic>();
+        services.AddScoped<Func<IPresentationLogic>>(sp => sp.GetRequiredService<IPresentationLogic>);
         services.AddScoped<ILearningWorldPresenter, LearningWorldPresenter>();
         services.AddScoped(p =>
             (ILearningWorldPresenterOverviewInterface)p.GetService(typeof(ILearningWorldPresenter))!);
@@ -202,6 +205,7 @@ public class Startup
         services.AddTransient(typeof(IFormDataContainer<,>), typeof(FormDataContainer<,>));
         services.AddSingleton<IElementModelHandler, ElementModelHandler>();
         services.AddScoped<INavigationManagerWrapper, NavigationManagerWrapper>();
+        services.AddScoped<IH5PPlayerPluginManager, H5PPlayerPluginManager>();
     }
 
     internal static void ConfigureBusinessLogic(IServiceCollection services)

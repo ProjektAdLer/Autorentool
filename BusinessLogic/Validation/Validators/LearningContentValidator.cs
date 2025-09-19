@@ -10,6 +10,7 @@ public class LearningContentValidator : AbstractValidator<ILearningContent>
     public LearningContentValidator()
     {
         RuleFor(x => x.Name)
-            .NotEmpty();
+            .NotEmpty()
+            .WithMessage("Name cannot be empty");
     }
 }

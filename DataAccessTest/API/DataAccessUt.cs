@@ -13,6 +13,7 @@ using DataAccess.Extensions;
 using DataAccess.Persistence;
 using DataAccessTest.Resources;
 using NSubstitute;
+using NSubstitute.ReceivedExtensions;
 using NUnit.Framework;
 using PersistEntities;
 using PersistEntities.LearningContent;
@@ -449,6 +450,28 @@ public class DataAccessUt
 
         filesystem.File.Received().Delete("foo");
     }
+
+    
+
+    [Test]
+    // ANF-ID: [ASE7]
+    public void EditH5PFileContent_CallsContentFileHandlerAndMapper()
+    {
+        var mockContentFileHandler = Substitute.For<IContentFileHandler>();
+        var mockMapper = Substitute.For<IMapper>();
+        var stubFileContent = Substitute.For<IFileContent>();
+        var stubFileContentPe = PersistEntityProvider.GetFileContent();
+        mockMapper.Map<FileContentPe>(stubFileContent).Returns(stubFileContentPe);
+        var systemUnderTest = CreateTestableDataAccess(
+            contentHandler: mockContentFileHandler,
+            mapper: mockMapper);
+        
+        systemUnderTest.EditH5PFileContent(stubFileContent);
+
+        mockContentFileHandler.Received().EditH5PFileContent(stubFileContentPe);
+        mockMapper.Received().Map<FileContentPe>(stubFileContent);
+    }
+    
 
     private class FindSuitableNewSavePathTestCases : IEnumerable
     {

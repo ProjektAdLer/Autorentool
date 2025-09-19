@@ -1,10 +1,19 @@
 @using System.Diagnostics.CodeAnalysis
 @using AutoMapper
 @using Microsoft.Extensions.Localization
+@using Presentation.Components.ContentFiles
 @using Presentation.Components.Forms.Models
 @using Presentation.PresentationLogic.LearningWorld
+@using Shared.H5P
+@using Presentation.H5P
+@using Presentation.PresentationLogic.API
+@using Presentation.PresentationLogic.LearningContent.FileContent
+
+
+@using Presentation.PresentationLogic.LearningContent
 @inherits MudBaseInput<ILearningContentFormModel>
 
+@inject NavigationManager Navigation
 
 <p class="text-sm px-6 cursor-default">@Localizer["LearningContentDialog.LearningMaterial.Dialog.Subtitle"]</p>
 <div class="rounded border-4 border-adlergrey-200 m-4">
@@ -13,7 +22,8 @@
             <MudTextField @bind-Value="_searchString"
                           Immediate="true"
                           Adornment="Adornment.Start"
-                          AdornmentIcon="@Icons.Material.Outlined.Search"/>
+                          AdornmentIcon="@Icons.Material.Outlined.Search"
+                          Placeholder="@Localizer["LearningContentDialog.Search.Placeholder"]"/>
         </div>
     </MudContainer>
 
@@ -25,78 +35,167 @@
               RowClass="cursor-pointer"
               OnRowClick="RowClickEvent"
               Filter="Filter"
-              RowClassFunc="@SelectedRowClassFunc" 
-              FixedHeader="true" 
+              RowClassFunc="@SelectedRowClassFunc"
+              FixedHeader="true"
               Elevation="0"
               HeaderClass="cursor-default">
-    
+
         <HeaderContent>
             <MudTh Class="bg-adlerbgbright pa-1"></MudTh>
-            <MudTh Class="bg-adlerbgbright text-adlerdarkblue-800 font-bold pa-1">Name</MudTh>
-            <MudTh Class="bg-adlerbgbright text-adlerdarkblue-800 font-bold pa-1">@Localizer["LearningContentDialog.LearningMaterial.Type"]</MudTh>
+            <MudTh Class="bg-adlerbgbright text-adlerdarkblue-800 font-bold pa-1">
+                @Localizer["LearningContentDialog.LearningMaterial.Name"]
+            </MudTh>
+            <MudTh Class="bg-adlerbgbright text-adlerdarkblue-800 font-bold pa-1">
+                @Localizer["LearningContentDialog.LearningMaterial.Type"]
+            </MudTh>
+            <MudTh Class="bg-adlerbgbright text-adlerdarkblue-800 font-bold pa-1" Style="width: 25%;">
+                <MudTableSortLabel SortBy="new Func<ILearningContentFormModel, object>(SortByH5pState)">
+                    @Localizer["LearningContentDialog.LearningMaterial.State"]
+                </MudTableSortLabel>
+            </MudTh>
         </HeaderContent>
+
         <RowTemplate>
             <MudTd Class="py-0 px-2">
                 <MudIconButton Icon="@Icons.Material.Filled.RemoveRedEye"
                                Class="show-content-preview"
+                               OnClick="() => ShowLearningContent(context)"
                                title="@Localizer["LearningContentDialog.LearningMaterial.Preview"]"/>
             </MudTd>
-            <MudTd Class="p-0 w-full" DataLabel="Name">
-                <MudTooltip Text="@context.Name"
-                            Arrow="true"
-                            Placement="Placement.Right"
-                            Class="bg-adlergrey-200 shadow-xl text-adlergrey-800"
-                            Duration="Double.Epsilon">
-                    <p class="pt-2 cursor-pointer max-w-full">@context.Name</p>
-                </MudTooltip>
+
+            <MudTd Class="p-0 w-full" DataLabel='@Localizer["LearningContentDialog.LearningMaterial.Name"]'>
+                <div style="cursor:@(IsNameDisabled(context) ? "not-allowed" : "pointer")">
+                    <MudTooltip Text="@context.Name"
+                                Arrow="true"
+                                Placement="Placement.Right"
+                                Class="bg-adlergrey-200 shadow-xl text-adlergrey-800"
+                                Duration="Double.Epsilon">
+                        <p style="color:@(IsNameDisabled(context) ? "#a0a0a0" : "inherit");"
+                           class="pt-2 max-w-[98%] overflow-hidden text-ellipsis">
+                            @context.Name
+                        </p>
+                    </MudTooltip>
+                </div>
             </MudTd>
-            <MudTd Class="p-0 cursor-default" DataLabel="Type">
+
+            <MudTd Class="p-0 cursor-default" DataLabel='@Localizer["LearningContentDialog.LearningMaterial.Type"]'>
                 @if (context is FileContentFormModel fileContentContext)
                 {
-                    @fileContentContext.Type
+                    <div class="flex flex-row items-center justify-start">
+                        <span class="w-12 text-sm">@fileContentContext.Type</span>
+                    </div>
                 }
                 else
                 {
-                    <span>Link</span>
+                    <div class="flex flex-row items-center justify-start">
+                        <span class="w-12 text-sm">@Localizer["LearningContentDialog.Type.Video"]</span>
+                    </div>
+                }
+            </MudTd>
+
+            <MudTd Class="p-0 cursor-default" DataLabel='@Localizer["LearningContentDialog.LearningMaterial.State"]'>
+                @if (context is FileContentFormModel fileContentContext2)
+                {
+                    if (fileContentContext2.Type == "h5p")
+                    {
+                        <H5PStateIcon FileContentVm="@FileContentFormModelToViewModel((FileContentFormModel)context)"/>
+                    }
+                    else
+                    {
+                        <MudTooltip Text='@Localizer["LearningContentDialog.State.Usable"]'>
+                            <div class="flex flex-row items-center justify-start gap-1"
+                                 aria-label='@Localizer["LearningContentDialog.State.Usable"]'>
+                                @((MarkupString)H5PStateIcon.InlineSvg(H5PStateIcon.Svg.Lockable))
+                                <p class="text-xs text-adlergrey">@Localizer["LearningContentDialog.State.Usable"]</p>
+                            </div>
+                        </MudTooltip>
+                    }
+                }
+                else
+                {
+                    <div class="flex flex-row items-center justify-start">
+                        <MudTooltip Text='@Localizer["LearningContentDialog.State.Usable"]'>
+                            <div class="flex flex-row items-center justify-start gap-1"
+                                 aria-label='@Localizer["LearningContentDialog.State.Usable"]'>
+                                @((MarkupString)H5PStateIcon.InlineSvg(H5PStateIcon.Svg.Lockable))
+                                <p class="text-xs text-adlergrey">@Localizer["LearningContentDialog.State.Usable"]</p>
+                            </div>
+                        </MudTooltip>
+                    </div>
                 }
             </MudTd>
         </RowTemplate>
     </MudTable>
 </div>
 
-
 @code {
     [CascadingParameter] public IMudDialogInstance? MudDialog { get; set; }
 
     [Parameter, EditorRequired] public ILearningContentFormModel? LearningContent { get; set; }
-    
-    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
-    internal IStringLocalizer<LearningContentDialog> Localizer { get; set; }
 
+    [Inject, AllowNull] internal IStringLocalizer<LearningContentDialog> Localizer { get; set; }
     [Inject, AllowNull] internal ILearningWorldPresenter WorldPresenter { get; set; }
-
     [Inject, AllowNull] internal IMapper Mapper { get; set; }
 
     private string? _searchString;
 
-    private void RowClickEvent(TableRowClickEventArgs<ILearningContentFormModel> tableRowClickEventArgs)
+    private bool IsNameDisabled(ILearningContentFormModel item)
     {
-        MudDialog?.Close(DialogResult.Ok(tableRowClickEventArgs.Item));
+        if (item is FileContentFormModel file)
+            return file.Type == "h5p" && !(file.H5PState == H5PContentState.Completable || file.H5PState == H5PContentState.Primitive);
+        return false;
+    }
+
+    private void RowClickEvent(TableRowClickEventArgs<ILearningContentFormModel> e)
+    {
+        if (e.Item is FileContentFormModel fileContent)
+        {
+            if (fileContent.Type == "h5p" &&
+                (fileContent.H5PState == H5PContentState.Completable || fileContent.H5PState == H5PContentState.Primitive))
+                MudDialog?.Close(DialogResult.Ok(e.Item));
+            else if (fileContent.Type != "h5p")
+                MudDialog?.Close(DialogResult.Ok(e.Item));
+        }
+        else MudDialog?.Close(DialogResult.Ok(e.Item));
     }
 
     private string SelectedRowClassFunc(ILearningContentFormModel element, int rowNumber)
+        => element.Equals(LearningContent) ? "bg-adlerblue-200" : string.Empty;
+
+    private bool Filter(ILearningContentFormModel element) => FilterInternal(element, _searchString);
+    private bool FilterInternal(ILearningContentFormModel element, string? s) => FilterInternal(ILearningContentFormModel.GetSearchableStrings(element), s);
+
+    private bool FilterInternal(IEnumerable<string> strings, string? s)
+        => string.IsNullOrWhiteSpace(s) || strings.Any(str => str.ToLowerInvariant().Contains(s.ToLower()));
+
+    [Inject, AllowNull] internal IH5PPlayerPluginManager H5PPlayerPluginManager { get; set; }
+    [Inject, AllowNull] internal IPresentationLogic PresentationLogic { get; set; }
+
+    private async Task ShowLearningContent(ILearningContentFormModel context)
     {
-        return element.Equals(LearningContent) ? "bg-adlerblue-200" : string.Empty;
+        if (context is FileContentFormModel fileContentFm && fileContentFm.Type == "h5p")
+        {
+            var fileContentVm = FileContentFormModelToViewModel(fileContentFm);
+            var startH5PPlayerTO = new StartH5PPlayerTO { FileContentVm = fileContentVm, NavigationManager = Navigation };
+            await H5PPlayerPluginManager.StartH5pPlayerToValidateAsync(startH5PPlayerTO);
+        }
+        else
+        {
+            await PresentationLogic.ShowLearningContentAsync(context);
+        }
     }
 
-    private bool Filter(ILearningContentFormModel element) =>
-        FilterInternal(element, _searchString);
-
-    private bool FilterInternal(ILearningContentFormModel element, string? searchString) => FilterInternal(ILearningContentFormModel.GetSearchableStrings(element), searchString);
-
-    private bool FilterInternal(IEnumerable<string> searchableStrings, string? searchString)
+    private IFileContentViewModel FileContentFormModelToViewModel(FileContentFormModel fileContentFm)
     {
-        return string.IsNullOrWhiteSpace(searchString) || searchableStrings.Any(str => str.ToLowerInvariant().Contains(searchString.ToLower()));
+        var vm = new FileContentViewModel(fileContentFm.Name, fileContentFm.Type, fileContentFm.Filepath)
+        {
+            H5PState = fileContentFm.H5PState,
+            IsH5P = true
+        };
+        return vm;
     }
+
+    private object SortByH5pState(ILearningContentFormModel context)
+        => (context is FileContentFormModel f && f.Type == "h5p") ? f.H5PState : H5PContentState.Completable;
 
 }

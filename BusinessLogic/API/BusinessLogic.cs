@@ -4,6 +4,7 @@ using BusinessLogic.Commands;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.BackendAccess;
 using BusinessLogic.Entities.LearningContent;
+using BusinessLogic.Entities.LearningContent.FileContent;
 using BusinessLogic.Entities.LearningContent.LinkContent;
 using BusinessLogic.ErrorManagement;
 using BusinessLogic.ErrorManagement.BackendAccess;
@@ -268,6 +269,11 @@ public class BusinessLogic : IBusinessLogic
         DataAccess.DeleteFileByPath(savePath);
     }
 
+    public void EditH5PFileContent(IFileContent fileContent)
+    {
+        DataAccess.EditH5PFileContent(fileContent);
+    }
+    
     #region BackendAccess
 
     //TODO: Move this away from here
@@ -406,4 +412,6 @@ public class BusinessLogic : IBusinessLogic
     }
     
     #endregion
+
+   
 }

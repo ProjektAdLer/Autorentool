@@ -1,4 +1,4 @@
-﻿namespace H5pPlayer.Api;
+﻿namespace H5pPlayer.BusinessLogic.UseCases.TerminateH5pPlayer;
 
 public struct H5pPlayerResultTO
 {

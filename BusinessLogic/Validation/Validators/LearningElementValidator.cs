@@ -24,7 +24,7 @@ public class LearningElementValidator : AbstractValidator<LearningElement>
             .Must((element, name) => IsUniqueName(element.Id, name))
             .WithMessage(localizer["LearningElementValidator.Name.Duplicate"]);
         RuleFor(x => x.LearningContent)
-            //.SetValidator(learningContentValidator)
+            .SetValidator(learningContentValidator)
             .SetInheritanceValidator(v =>
             {
                 v.Add(storyContentValidator);

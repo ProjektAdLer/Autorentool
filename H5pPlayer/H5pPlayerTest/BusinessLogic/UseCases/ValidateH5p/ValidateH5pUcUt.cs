@@ -1,7 +1,9 @@
 ﻿using H5pPlayer.BusinessLogic.Api.JavaScript;
 using H5pPlayer.BusinessLogic.Entities;
 using H5pPlayer.BusinessLogic.UseCases.DisplayH5p;
+using H5pPlayer.BusinessLogic.UseCases.TerminateH5pPlayer;
 using H5pPlayer.BusinessLogic.UseCases.ValidateH5p;
+using Microsoft.Extensions.Logging;
 using NSubstitute;
 
 namespace H5pPlayerTest.BusinessLogic.UseCases.ValidateH5p;
@@ -95,7 +97,7 @@ public class ValidateH5pUcUt
     }
 
     [Test]
-    public async Task SetActiveH5pStateToNotUsable()
+    public void SetActiveH5pStateToNotUsable()
     {
         var mockValidateH5pUcOutputPort = Substitute.For<IValidateH5pUcOutputPort>();
         var systemUnderTest = CreateValidateH5PUc(mockValidateH5pUcOutputPort);
@@ -111,7 +113,7 @@ public class ValidateH5pUcUt
     }
     
     [Test]
-    public async Task SetActiveH5pStateToPrimitive()
+    public void SetActiveH5pStateToPrimitive()
     {
         var mockValidateH5pUcOutputPort = Substitute.For<IValidateH5pUcOutputPort>();
         var systemUnderTest = CreateValidateH5PUc(mockValidateH5pUcOutputPort);
@@ -127,18 +129,40 @@ public class ValidateH5pUcUt
     }
     
 
-
+    [Test]
+    public void SetActiveH5pStateToCompletable()
+    {
+        var mockValidateH5pUcOutputPort = Substitute.For<IValidateH5pUcOutputPort>();
+        var systemUnderTest = CreateValidateH5PUc(mockValidateH5pUcOutputPort);
+        var unzippedH5psPath = Path.Combine(_basePath, "ValidPath1.h5p");
+        var h5pZipSourcePath = @Path.Combine(_basePath, "ValidPath2.h5p");
+        var h5pEntity = CreateH5pEntity(unzippedH5psPath, h5pZipSourcePath);
+        systemUnderTest.H5pEntity = h5pEntity;
+        
+        systemUnderTest.SetActiveH5pStateToCompletable();
+        
+        Assert.That(systemUnderTest.H5pEntity.ActiveH5pState, Is.EqualTo(H5pState.Completable)); 
+        mockValidateH5pUcOutputPort.Received().SetH5pActiveStateToCompletable();
+    }
 
 
 
 
     private static ValidateH5pUc CreateValidateH5PUc(
-        IValidateH5pUcOutputPort? mockValidateH5PUcOutputPort = null,
-        ICallJavaScriptAdapter? mockJavaScriptAdapter = null)
+        IValidateH5pUcOutputPort? fakeValidateH5PUcOutputPort = null,
+        ICallJavaScriptAdapter? fakeJavaScriptAdapter = null,
+        ITerminateH5pPlayerUcPort? fakeTerminateH5pPlayerUc = null,
+        ILogger<ValidateH5pUc>? fakeLogger= null)
     {
-        mockValidateH5PUcOutputPort ??= Substitute.For<IValidateH5pUcOutputPort>();
-        mockJavaScriptAdapter ??= Substitute.For<ICallJavaScriptAdapter>();
-        return new ValidateH5pUc(mockValidateH5PUcOutputPort, mockJavaScriptAdapter);
+        fakeValidateH5PUcOutputPort ??= Substitute.For<IValidateH5pUcOutputPort>();
+        fakeJavaScriptAdapter ??= Substitute.For<ICallJavaScriptAdapter>();
+        fakeTerminateH5pPlayerUc ??= Substitute.For<ITerminateH5pPlayerUcPort>();
+        fakeLogger ??= Substitute.For<ILogger<ValidateH5pUc>>();
+        return new ValidateH5pUc(
+            fakeValidateH5PUcOutputPort, 
+            fakeJavaScriptAdapter,
+            fakeTerminateH5pPlayerUc,
+            fakeLogger);
     }
 
 

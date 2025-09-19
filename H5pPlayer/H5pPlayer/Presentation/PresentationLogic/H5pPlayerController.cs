@@ -6,10 +6,6 @@ namespace H5pPlayer.Presentation.PresentationLogic;
 
 public class H5pPlayerController
 {
- 
-
-   
-   
     public H5pPlayerController(
         IStartH5pPlayerUCInputPort startH5pPlayerUc,
         H5pPlayerPresenter h5pPlayerPresenter)
@@ -17,8 +13,6 @@ public class H5pPlayerController
         StartH5pPlayerUc = startH5pPlayerUc;
         H5pPlayerPresenter = h5pPlayerPresenter;
     }
-
-
     
     /// <summary>
     /// Testable Constructor

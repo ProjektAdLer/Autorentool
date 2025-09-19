@@ -1,0 +1,35 @@
+﻿@using H5pPlayer.Presentation.PresentationLogic.ValidateH5p
+@using Microsoft.Extensions.Localization
+@using MudBlazor
+@inject IStringLocalizer<NotUsableH5pButton> Localizer
+
+<button @onclick="MarkAsNotUsable"
+        class="flex flex-row gap-2 items-center justify-center btn-standard bg-formerrordark hover:bg-formerror uppercase shadow-lg"
+        aria-label="@Localizer["Button.NotUsableAria"]">
+    <p>@Localizer["Button.NotUsable"]</p>
+
+    <MudTooltip Placement="Placement.Right"
+                Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed">
+        <TooltipContent>
+            <MudText Class="cursor-default text-xs">
+                @Localizer["Tooltip.NotUsableDescription"]
+            </MudText>
+        </TooltipContent>
+        <ChildContent>
+            <MudIcon Size="Size.Small"
+                     Icon="@Icons.Material.Filled.Info"
+                     Class="text-adlergrey-500 hover:text-adlerdarkblue"/>
+        </ChildContent>
+    </MudTooltip>
+</button>
+
+@code {
+    [Parameter, EditorRequired] public required IValidateH5pController ValidateH5pController { get; set; }
+
+    private void MarkAsNotUsable()
+    {
+        ValidateH5pController.SetActiveH5pStateToNotUsable();
+        ValidateH5pController.TerminateValidateH5p();
+    }
+
+}

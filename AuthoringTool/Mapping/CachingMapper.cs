@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using BusinessLogic.Commands;
 using BusinessLogic.Entities;
+using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
+using Presentation.PresentationLogic.LearningContent.FileContent;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
@@ -18,12 +20,17 @@ public class CachingMapper : ICachingMapper
     private readonly ILogger<CachingMapper> _logger;
 
     private readonly IMapper _mapper;
+    private readonly Func<IPresentationLogic> _presentationLogicFactory;
+    private IPresentationLogic? _presentationLogic;
 
-    public CachingMapper(IMapper mapper, ICommandStateManager commandStateManager, ILogger<CachingMapper> logger)
+    public CachingMapper(IMapper mapper, ICommandStateManager commandStateManager,
+        ILogger<CachingMapper> logger,
+        Func<IPresentationLogic> presentationLogicFactory)
     {
         _mapper = mapper;
         commandStateManager.RemovedCommandsFromStacks += OnRemovedCommandsFromStacks;
         _logger = logger;
+        _presentationLogicFactory = presentationLogicFactory;
         _cache = new Dictionary<Guid, object>();
     }
 
@@ -37,10 +44,16 @@ public class CachingMapper : ICachingMapper
             case (AuthoringToolWorkspace s, IAuthoringToolWorkspaceViewModel d):
                 CacheAuthoringToolWorkspaceContent(d);
                 MapInternal(s, d);
+                foreach (var learningWorld in d.LearningWorlds)
+                {
+                    ReplaceContentsInLearningElements(learningWorld.AllLearningElements);
+                }
+
                 break;
             case (LearningWorld s, ILearningWorldViewModel d):
                 CacheLearningWorldContent(d);
                 MapInternal(s, d);
+                ReplaceContentsInLearningElements(d.AllLearningElements);
                 break;
             case (Topic s, TopicViewModel d):
                 MapInternal(s, d);
@@ -48,6 +61,11 @@ public class CachingMapper : ICachingMapper
             case (LearningSpace s, ILearningSpaceViewModel d):
                 CacheLearningSpaceContent(d);
                 MapInternal(s, d);
+                ReplaceContentsInLearningElements(d.ContainedLearningElements);
+                break;
+            case (LearningElement, ILearningElementViewModel d):
+                _mapper.Map(entity, viewModel);
+                ReplaceContentsInLearningElements([d]);
                 break;
             default:
                 _mapper.Map(entity, viewModel);
@@ -375,5 +393,25 @@ public class CachingMapper : ICachingMapper
                 _ => throw new ArgumentException("Object is neither a World, Topic, Space, Condition or an Element")
             };
         });
+    }
+
+    private void ReplaceContentsInLearningElements(IEnumerable<ILearningElementViewModel> elements)
+    {
+        _presentationLogic ??= _presentationLogicFactory();
+        var contents = _presentationLogic.GetAllContent().ToList();
+        foreach (var ele in elements)
+        {
+            if (ele.LearningContent is IFileContentViewModel)
+            {
+                var contentToReplace = contents.FirstOrDefault(c => c is IFileContentViewModel &&
+                                                                    ((FileContentViewModel)c).Filepath ==
+                                                                    ((FileContentViewModel)ele.LearningContent)
+                                                                    .Filepath);
+                if (contentToReplace != null)
+                {
+                    ele.LearningContent = contentToReplace;
+                }
+            }
+        }
     }
 }

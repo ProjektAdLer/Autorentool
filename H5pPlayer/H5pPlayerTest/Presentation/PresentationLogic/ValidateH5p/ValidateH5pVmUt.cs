@@ -17,7 +17,7 @@ public class ValidateH5pVmUt
     public void Constructor()
     {
         Assert.That(_systemUnderTest.IsCompletable,Is.False);
-        Assert.That(_systemUnderTest.ActiveH5PState, Is.EqualTo(H5pState.Unknown));
+        Assert.That(_systemUnderTest.ActiveH5PState, Is.EqualTo(H5pState.NotValidated));
     }
     
     [Test]
@@ -68,7 +68,7 @@ public class ValidateH5pVmUt
         Action action = () => { eventTriggered = true; };
         _systemUnderTest.OnChange += action;
         
-        _systemUnderTest.ActiveH5PState = H5pState.Unknown;
+        _systemUnderTest.ActiveH5PState = H5pState.NotValidated;
 
 
         Assert.That(eventTriggered, Is.False);

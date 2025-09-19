@@ -24,6 +24,9 @@ public class ValidateH5pPresenter : IValidateH5pPresenter, IValidateH5pUcOutputP
     public void SetH5pActiveStateToPrimitive()
     {
         ValidateH5pVm.ActiveH5PState = H5pState.Primitive;
-
+    }
+    public void SetH5pActiveStateToCompletable()
+    {
+        ValidateH5pVm.ActiveH5PState = H5pState.Completable;
     }
 }

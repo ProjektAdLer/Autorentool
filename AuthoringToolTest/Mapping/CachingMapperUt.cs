@@ -5,7 +5,9 @@ using BusinessLogic.Entities;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
+using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
+using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningContent.LinkContent;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
@@ -25,7 +27,9 @@ public class CachingMapperUt
         var mapper = Substitute.For<IMapper>();
         var logger = Substitute.For<ILogger<CachingMapper>>();
         var commandStateManager = Substitute.For<ICommandStateManager>();
-        var systemUnderTest = CreateTestableCachingMapper(mapper, commandStateManager, logger);
+        var presentationLogicFactory = Substitute.For<Func<IPresentationLogic>>();
+        var systemUnderTest =
+            CreateTestableCachingMapper(mapper, commandStateManager, logger, presentationLogicFactory);
 
         systemUnderTest.Map(entity, mockViewModel);
 
@@ -675,8 +679,88 @@ public class CachingMapperUt
         });
     }
 
+    [Test]
+    public void ElementWithFileContent_CallsPresentationLogicFactory()
+    {
+        var fileContentViewModel = ViewModelProvider.GetFileContent();
+        var elementViewModel = ViewModelProvider.GetLearningElement(content: fileContentViewModel);
+        var config = new MapperConfiguration(cfg =>
+        {
+            ViewModelEntityMappingProfile.Configure(cfg);
+            cfg.AddCollectionMappersOnce();
+        });
+        var mapper = config.CreateMapper();
+        var presentationLogicFactory = Substitute.For<Func<IPresentationLogic>>();
+
+        var systemUnderTest =
+            CreateTestableCachingMapper(mapper: mapper, presentationLogicFactory: presentationLogicFactory);
+
+        var elementEntity = mapper.Map<ILearningElement>(elementViewModel);
+
+        systemUnderTest.Map(elementEntity, elementViewModel);
+
+        presentationLogicFactory.Received(1).Invoke();
+    }
+
+    [Test]
+    public void ElementWithFileContent_CallsPresentationLogic()
+    {
+        var fileContentViewModel = ViewModelProvider.GetFileContent();
+        var elementViewModel = ViewModelProvider.GetLearningElement(content: fileContentViewModel);
+        var config = new MapperConfiguration(cfg =>
+        {
+            ViewModelEntityMappingProfile.Configure(cfg);
+            cfg.AddCollectionMappersOnce();
+        });
+        var mapper = config.CreateMapper();
+        var presentationLogicFactory = Substitute.For<Func<IPresentationLogic>>();
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        presentationLogicFactory.Invoke().Returns(presentationLogic);
+
+        var systemUnderTest =
+            CreateTestableCachingMapper(mapper: mapper, presentationLogicFactory: presentationLogicFactory);
+
+        var elementEntity = mapper.Map<ILearningElement>(elementViewModel);
+
+        systemUnderTest.Map(elementEntity, elementViewModel);
+
+        presentationLogicFactory.Received(1).Invoke();
+        presentationLogic.Received(1).GetAllContent();
+    }
+
+    [Test]
+    public void ElementWithFileContent_ReplacesFileContentWithFileContentFromPresentationLogic()
+    {
+        var fileContentViewModel = ViewModelProvider.GetFileContent(name: "old name");
+        var newFileContentViewModel = ViewModelProvider.GetFileContent(name: "new name");
+        var elementViewModel = ViewModelProvider.GetLearningElement(content: fileContentViewModel);
+        var config = new MapperConfiguration(cfg =>
+        {
+            ViewModelEntityMappingProfile.Configure(cfg);
+            cfg.AddCollectionMappersOnce();
+        });
+        var mapper = config.CreateMapper();
+        var presentationLogicFactory = Substitute.For<Func<IPresentationLogic>>();
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        presentationLogicFactory.Invoke().Returns(presentationLogic);
+        presentationLogic.GetAllContent().Returns(new List<ILearningContentViewModel> { newFileContentViewModel });
+
+        var systemUnderTest =
+            CreateTestableCachingMapper(mapper: mapper, presentationLogicFactory: presentationLogicFactory);
+
+        var elementEntity = mapper.Map<ILearningElement>(elementViewModel);
+
+        Assert.That(elementViewModel.LearningContent, Is.EqualTo(fileContentViewModel));
+        systemUnderTest.Map(elementEntity, elementViewModel);
+
+        presentationLogicFactory.Received(1).Invoke();
+        presentationLogic.Received(1).GetAllContent();
+        Assert.That(elementViewModel.LearningContent, Is.EqualTo(newFileContentViewModel));
+    }
+
     private static CachingMapper CreateTestableCachingMapper(
-        IMapper? mapper = null, ICommandStateManager? commandStateManager = null, ILogger<CachingMapper>? logger = null)
+        IMapper? mapper = null, ICommandStateManager? commandStateManager = null, ILogger<CachingMapper>? logger = null,
+        Func<IPresentationLogic>? presentationLogicFactory = null)
     {
         var config = new MapperConfiguration(cfg =>
         {
@@ -686,7 +770,8 @@ public class CachingMapperUt
         mapper ??= config.CreateMapper();
         commandStateManager ??= Substitute.For<ICommandStateManager>();
         logger ??= Substitute.For<ILogger<CachingMapper>>();
+        presentationLogicFactory ??= () => Substitute.For<IPresentationLogic>();
 
-        return new CachingMapper(mapper, commandStateManager, logger);
+        return new CachingMapper(mapper, commandStateManager, logger, presentationLogicFactory);
     }
 }
