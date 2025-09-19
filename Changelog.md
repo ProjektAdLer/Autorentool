@@ -7,12 +7,7 @@
 
 ### Added
 
-- Added title and description to the evaluation link.
-- Added exit or stay after story sequence option in story element.
-
 ### Changed
-
-- Use learning outcome generator for learning world like in learning space.
 
 ### Deprecated
 
@@ -23,6 +18,66 @@
 ### Security
 
 </details>
+
+## [3.0.0] - 2025-09-19
+
+### Added
+
+- Added title and description to the evaluation link.
+- Added exit or stay after story sequence option in story element.
+- Added H5P content as a domain object with validation and state management.
+- Added H5P state icons and validation dialog.
+- Added ImportH5PDialog for better H5P file management.
+- Added new color schemes and styling for various UI components.
+- Added new icons for different learning materials (PDF, etc.).
+- Added media type support for H5P content.
+- Added logging for H5P validation and display processes.
+- Added localization for H5P validation buttons and dialogs.
+- Added sorting of content files by H5P state.
+- Added new color variables for UI theming.
+
+### Changed
+
+- Use learning outcome generator for learning world like in learning space.
+- Changed design of the H5P validator and improved its user interface.
+- Updated styling of learning content dialog and content files view.
+- Improved layout and styling of the left sidebar and header bar.
+- Changed cursor style for disabled name fields.
+- Updated floor plan selection styling and hover effects.
+- Modified border styles and colors in various dialogs.
+- Optimized layout of the learning material dialog.
+- Improved error messages in reference dialogs.
+- Enhanced styling of unplaced elements dropzone.
+- Updated validation process for H5P content.
+- Changed text colors and margins in various dialogs.
+- Improved layout of the learning space editor and right sidebar.
+- Updated styling of the administration and LMS login dialogs.
+- Modified behavior section and mood styling for NPCs.
+
+### Deprecated
+
+### Removed
+
+- Removed IsPrimitivH5p flag as it's no longer needed.
+- Removed unused components and simplified code structure.
+
+### Fixed
+
+- Fixed file upload issues with primitive H5P content.
+- Fixed tests related to content files and H5P validation.
+- Fixed validation for evaluation links in learning world dialogs.
+- Fixed layout issues in various dialogs and forms.
+- Fixed state management for H5P content validation.
+- Fixed localization issues in H5P player.
+- Fixed validation for H5P content in learning elements.
+- Fixed issues with H5P content persistence.
+- Fixed styling issues in the help dialog and other UI components.
+- Fixed validation for learning content in dialogs.
+
+### Security
+
+- Added validation for H5P content to ensure security.
+- Improved error handling for file operations.
 
 ## [2.3.2] - 2025-07-08
 
