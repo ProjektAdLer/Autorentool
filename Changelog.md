@@ -7,12 +7,7 @@
 
 ### Added
 
-- Added title and description to the evaluation link.
-- Added exit or stay after story sequence option in story element.
-
 ### Changed
-
-- Use learning outcome generator for learning world like in learning space.
 
 ### Deprecated
 
@@ -23,6 +18,54 @@
 ### Security
 
 </details>
+
+## [2.4.0] - 2025-09-22
+
+### Added
+
+- Added title and description to the evaluation link
+- Added exit or stay after story sequence option in story elements
+- Added localization to edit and create dialogs
+- Added new NPC (Non-Player Character) mood and behavior customization
+- Added learning outcome generator for learning worlds
+- Added support for evaluation link customization
+- Added new world themes with images
+- Added overview to adaptivity elements
+- Added validation for evaluation links
+
+### Changed
+
+- Updated package dependencies to their latest stable versions
+- Improved UI/UX with better styling and layout
+- Optimized styling of forms, dialogs, and UI components
+- Reorganized learning space editor and right sidebar
+- Improved validation and error messages
+- Enhanced localization support throughout the application
+- Updated NPC mood and behavior section styling
+- Improved layout of adaptivity element tasks
+- Optimized content files view
+
+### Deprecated
+
+- Removed IsPrimitiveH5P flag as it's no longer needed
+
+### Removed
+
+- Removed redundant LearningOutcomesOverview components (consolidated into one)
+
+### Fixed
+
+- Fixed validation for links in create and edit learning world dialogs
+- Fixed crash related to localization
+- Fixed various test cases
+- Fixed validation in create and edit element forms
+- Fixed tree structure display for better element visibility
+- Fixed slot numbering in floor plans
+- Fixed cursor display issues
+
+### Security
+
+- Enhanced validation for user inputs
 
 ## [2.3.2] - 2025-07-08
 
