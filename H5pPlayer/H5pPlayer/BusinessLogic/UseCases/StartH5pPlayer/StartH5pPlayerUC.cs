@@ -37,6 +37,10 @@ public class StartH5pPlayerUC : IStartH5pPlayerUCInputPort
     /// </summary>
     public async Task StartH5pPlayer(StartH5pPlayerInputTO displayH5PInputTo)
     {
+        if (!TemporaryH5pManager.EnsureWritePermissions())
+        {
+            return;
+        }
         TemporaryH5pManager.CleanDirectoryForTemporaryH5psInWwwroot();
         MapTOtoEntity(displayH5PInputTo);
         ExtractZippedSourceH5pToTemporaryFolder();
