@@ -25,7 +25,7 @@ public class TemporaryH5psInWwwrootManager : ICleanupH5pPlayerPort
 
     public bool EnsureWritePermissions()
     {
-        if (IsTestEnvironment() || IsBrowserEnvironment())
+        if (IsTestEnvironment())
         {
             return true;
         }
@@ -91,15 +91,6 @@ public class TemporaryH5psInWwwrootManager : ICleanupH5pPlayerPort
             entryAssembly == null || 
             entryAssembly.FullName?.ToUpper().Contains("TEST") == true ||
             executingAssembly.FullName?.ToUpper().Contains("TEST") == true;
-    }
-
-    private static bool IsBrowserEnvironment()
-    {
-        // Check if we're running in a browser
-        return 
-            RuntimeInformation.IsOSPlatform(OSPlatform.Create("BROWSER")) ||
-            AppDomain.CurrentDomain.GetAssemblies()
-                .Any(a => a.FullName?.ToUpper().Contains("WEBASSEMBLY") == true);
     }
 
 
