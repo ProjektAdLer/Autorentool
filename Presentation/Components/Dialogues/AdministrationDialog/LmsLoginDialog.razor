@@ -4,7 +4,6 @@
 @using Presentation.PresentationLogic
 @using Presentation.PresentationLogic.API
 @using Presentation.PresentationLogic.AuthoringToolWorkspace
-@using Presentation.PresentationLogic.SelectedViewModels
 @using Shared.Configuration
 @using Shared.Exceptions
 @using Size = MudBlazor.Size
@@ -137,6 +136,12 @@ else
                                   OnKeyUp="OnKeyPress"
                                   Required="true"
                                   RequiredError="@Localizer["DialogContent.Field.BackendUrl.Required"]"/>
+                    @if (!HasProtocol())
+                    {
+                    <MudText Color="Color.Info" Typo="Typo.subtitle2">
+                        @Localizer["DialogContent.Field.BackendUrl.Info.Protocol"]
+                        </MudText>
+                    }
                     @if (_errorInvalidUrlMessage != "")
                     {
                         <MudText Color="Color.Error" Typo="Typo.subtitle2">@_errorInvalidUrlMessage</MudText>
@@ -310,8 +315,7 @@ else
 
         if (!HasProtocol())
         {
-            _errorInvalidUrlMessage = Localizer["DialogContent.Error.ProtocolMissing"];
-            return;
+            BackendUrl = "https://" + BackendUrl.Trim();
         }
 
         try
@@ -451,5 +455,5 @@ else
         fieldToFocus?.FocusAsync();
     }
 
-    private bool HasProtocol() => BackendUrl.StartsWith("http://") || BackendUrl.StartsWith("https://");
+    private bool HasProtocol() => BackendUrl.Trim().StartsWith("http://") || BackendUrl.Trim().StartsWith("https://");
 }

@@ -216,4 +216,7 @@ Mit dieser ausgeführten Aktion des Löschens werden die Kurse unwiderruflich au
     <data name="DialogContent.Header" xml:space="preserve">
         <value>Administration</value>
     </data>
+    <data name="DialogContent.Field.BackendUrl.Info.Protocol" xml:space="preserve">
+        <value>Es wird ein Protokoll (https:// oder http://) benötigt. Wenn keines angegeben wird, wird automatisch https:// verwendet.</value>
+    </data>
 </root>

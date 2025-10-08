@@ -204,4 +204,7 @@ This deletion action also irrevocably removes the courses from Moodle.</value>
     <data name="ErrorString.TaskReferencesNonexistantElement.Message" xml:space="preserve">
         <value>Element &lt;b&gt;{0}&lt;/b&gt; contains a reference to a non-existant element. Plase check the element references you have set in this element.</value>
     </data>
+    <data name="DialogContent.Field.BackendUrl.Info.Protocol" xml:space="preserve">
+        <value>A protocol (https:// or http://) is required. If none is specified, https:// is used automatically.</value>
+    </data>
 </root>
