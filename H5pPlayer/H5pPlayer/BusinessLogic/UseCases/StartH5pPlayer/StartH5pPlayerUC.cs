@@ -24,7 +24,7 @@ public class StartH5pPlayerUC : IStartH5pPlayerUCInputPort
         DisplayH5pUC = displayH5PUc;
         StartH5pPlayerUcOutputPort = startH5PPlayerUcOutputPort;
         H5pEntity = null;
-        TemporaryH5pManager = new TemporaryH5psInWwwrootManager(dataAccess);
+        TemporaryH5pManager = new TemporaryH5psManager(dataAccess);
     }
 
     /// <summary>
@@ -37,7 +37,7 @@ public class StartH5pPlayerUC : IStartH5pPlayerUCInputPort
     /// </summary>
     public async Task StartH5pPlayer(StartH5pPlayerInputTO displayH5PInputTo)
     {
-        TemporaryH5pManager.CleanDirectoryForTemporaryH5psInWwwroot();
+        TemporaryH5pManager.CleanDirectoryForTemporaryUnzippedH5ps();
         MapTOtoEntity(displayH5PInputTo);
         ExtractZippedSourceH5pToTemporaryFolder();
         await IfUserWantsToValidateH5pStartToValidateElseStartToDisplay();
@@ -110,7 +110,7 @@ public class StartH5pPlayerUC : IStartH5pPlayerUCInputPort
     
     private string BuildTemporaryDirectoryFullNameForOneH5p()
     {
-        return TemporaryH5pManager.BuildTemporaryDirectoryFullNameForOneH5p(
+        return TemporaryH5pManager.BuildTemporaryDirectoryFullNameForCurrentH5p(
             Path.GetFileNameWithoutExtension(H5pEntity!.H5pZipSourcePath));
     }
     
@@ -127,6 +127,6 @@ public class StartH5pPlayerUC : IStartH5pPlayerUCInputPort
     private IDisplayH5pUc DisplayH5pUC { get; }
     internal H5pEntity? H5pEntity { get; private set; }
     private IStartH5pPlayerUCOutputPort StartH5pPlayerUcOutputPort { get;  }
-    private TemporaryH5psInWwwrootManager TemporaryH5pManager { get; set; }
+    private TemporaryH5psManager TemporaryH5pManager { get; set; }
 
 }

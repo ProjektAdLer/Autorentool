@@ -320,7 +320,21 @@ public class Startup
         }
 
         app.UseHttpsRedirection();
- 
+        
+        
+        var provider = new FileExtensionContentTypeProvider();
+        provider.Mappings[".h5p"] = "application/zip";
+
+        var appDataH5pPath = Path.Combine(ApplicationPaths.RootAppDataFolder, "h5p-folder");
+        Directory.CreateDirectory(appDataH5pPath);
+
+        // 1) AppData-H5P zuerst (eigener RequestPath)
+        app.UseStaticFiles(new StaticFileOptions
+        {
+            FileProvider = new PhysicalFileProvider(appDataH5pPath),
+            RequestPath = "/h5p-folder",
+            ContentTypeProvider = provider
+        });
         app.UseStaticFiles();
 
         // Add localization cultures
@@ -360,7 +374,7 @@ public class Startup
     {
         var cleanupH5pPlayerPortFactory = new CleanupH5pPlayerPortFactory();
         var cleanupH5pPlayerPort = cleanupH5pPlayerPortFactory.CreateCleanupH5pPlayerPort();
-        cleanupH5pPlayerPort.CleanDirectoryForTemporaryH5psInWwwroot();
+        cleanupH5pPlayerPort.CleanDirectoryForTemporaryUnzippedH5ps();
     }
     // ReSharper restore InconsistentNaming
 }

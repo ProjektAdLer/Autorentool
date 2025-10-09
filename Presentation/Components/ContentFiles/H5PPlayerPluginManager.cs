@@ -58,7 +58,7 @@ public class H5PPlayerPluginManager : IH5PPlayerPluginManager
         FileContentVm = parseH5pFileTO.FileContentVm;
         H5PZipSourcePath = Path.Combine(ApplicationPaths.ContentFolder , FileContentVm!.Name);
         BaseUri = new Uri(parseH5pFileTO.NavigationManager!.BaseUri); 
-        UnzippedH5PsPath = new Uri(BaseUri, "H5pStandalone/h5p-folder/").AbsoluteUri;
+        UnzippedH5PsPath = new Uri(BaseUri, "h5p-folder/").AbsoluteUri;
     }
 
     private void ProcessH5PPlayerResult(H5pPlayerResultTO? h5PPlayerResult)

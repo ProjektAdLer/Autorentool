@@ -6,6 +6,6 @@ public class CleanupH5pPlayerPortFactory: ICleanupH5pPlayerPortFactory
 {
     public ICleanupH5pPlayerPort CreateCleanupH5pPlayerPort()
     {
-        return new TemporaryH5psInWwwrootManager(new DataAccess.FileSystem.FileSystemDataAccess());
+        return new TemporaryH5psManager(new DataAccess.FileSystem.FileSystemDataAccess());
     }
 }

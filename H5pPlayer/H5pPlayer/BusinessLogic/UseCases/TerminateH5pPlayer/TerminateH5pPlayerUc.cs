@@ -14,13 +14,13 @@ public class TerminateH5pPlayerUc : ITerminateH5pPlayerUcPort
         Action<H5pPlayerResultTO> onH5pPlayerFinished)
     {
         ICallJavaScriptAdapter = iCallJavaScriptAdapter;
-        TemporaryH5pManager = new TemporaryH5psInWwwrootManager(dataAccess);
+        TemporaryH5pManager = new TemporaryH5psManager(dataAccess);
         OnH5pPlayerFinished = onH5pPlayerFinished; 
     }
 
     public async Task TerminateH5pPlayer(H5pState activeH5pState)
     {
-        TemporaryH5pManager.CleanDirectoryForTemporaryH5psInWwwroot();
+        TemporaryH5pManager.CleanDirectoryForTemporaryUnzippedH5ps();
         await ICallJavaScriptAdapter.TerminateH5pJavaScriptPlayer();
         SendResultToCallerSystem(activeH5pState);
     }
@@ -32,7 +32,7 @@ public class TerminateH5pPlayerUc : ITerminateH5pPlayerUcPort
         OnH5pPlayerFinished?.Invoke(result);
     }
     
-    private TemporaryH5psInWwwrootManager TemporaryH5pManager { get; }
+    private TemporaryH5psManager TemporaryH5pManager { get; }
     private ICallJavaScriptAdapter ICallJavaScriptAdapter { get; }
     private Action<H5pPlayerResultTO>? OnH5pPlayerFinished { get; set; }
 }

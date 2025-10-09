@@ -9,11 +9,15 @@ namespace H5pPlayerTest.BusinessLogic.UseCases.TerminateH5pPlayer;
 [TestFixture]
 public class TerminateH5pPlayerUcUt
 {
+    /// <summary>
+    /// Documentation for UnzippedH5psPath:
+    /// <see cref="H5pEntity.UnzippedH5psPath"/>
+    /// </summary>
     [Test]
     // ANF-ID: [HSE9]
-    public async Task  CleanH5pFolderInWwwroot()
+    public async Task  CleanDirectoryForTemporaryUnzippedH5ps()
     {
-        var directoryForCleaning = Path.Combine("wwwroot", "H5pStandalone", "h5p-folder");
+        var directoryForCleaning = Path.Combine( "h5p-folder");
         var mockFileSystemDataAccess = Substitute.For<IFileSystemDataAccess>();
         mockFileSystemDataAccess.DirectoryExists(
             Arg.Is<string>(path => path.Contains(directoryForCleaning))).Returns(true);

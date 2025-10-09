@@ -2,5 +2,5 @@
 
 public interface ICleanupH5pPlayerPort
 {
-    void CleanDirectoryForTemporaryH5psInWwwroot();
+    void CleanDirectoryForTemporaryUnzippedH5ps();
 }

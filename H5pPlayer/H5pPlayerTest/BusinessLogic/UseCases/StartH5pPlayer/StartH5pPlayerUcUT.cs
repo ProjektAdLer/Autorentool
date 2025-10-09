@@ -19,11 +19,15 @@ public class StartH5pPlayerUcUT
         RootPathDueToOperatingSystem = OperatingSystem.IsWindows() ? "C:" : "/";
     }
 
+    /// <summary>
+    /// Documentation for UnzippedH5psPath:
+    /// <see cref="H5pEntity.UnzippedH5psPath"/>
+    /// </summary>
     [Test]
     // ANF-ID: [HSE9]
-    public async Task CleanH5pFolderInWwwroot()
+    public async Task CleanDirectoryForTemporaryUnzippedH5ps()
     {
-        var directoryForCleaning = Path.Combine("wwwroot", "H5pStandalone", "h5p-folder");
+        var directoryForCleaning = Path.Combine("h5p-folder");
         var mockFileSystemDataAccess = Substitute.For<IFileSystemDataAccess>();
         mockFileSystemDataAccess.DirectoryExists(
             Arg.Is<string>(path => path.Contains(directoryForCleaning))).Returns(true);
@@ -256,10 +260,14 @@ public class StartH5pPlayerUcUT
     /// Since we are verifying the call to ExtractedZipFile,
     /// we also ensure that the directory for temporary
     /// zip files is created if it does not already exist
+    /// 
+    /// Documentation for UnzippedH5psPath:
+    /// <see cref="H5pEntity.UnzippedH5psPath"/>
     /// </summary>
+    /// 
     [Test]
     // ANF-ID: [HSE7]
-    public async Task ExtractZippedH5pToDirectoryForTemporaryH5ps()
+    public async Task ExtractZippedH5pToUnzippedH5psPath()
     {
         var mockFileSystemDataAccess = Substitute.For<IFileSystemDataAccess>();
         var systemUnderTest = CreateStandardSystemUnderTest(
@@ -270,7 +278,7 @@ public class StartH5pPlayerUcUT
 
         mockFileSystemDataAccess.Received().ExtractZipFile(
             systemUnderTest.H5pEntity!.H5pZipSourcePath,
-            Arg.Is<string>(path => path.Contains(Path.Combine("wwwroot", "H5pStandalone", "h5p-folder"))));
+            Arg.Is<string>(path => path.Contains("h5p-folder")));
     }
 
     [Test]
