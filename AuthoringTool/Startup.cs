@@ -31,7 +31,9 @@ using Generator.WorldExport;
 using H5pPlayer.BusinessLogic.Api.CleanupH5pPlayer;
 using H5pPlayer.Main;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Localization;
 using MudBlazor.Services;
 using Presentation.Components.ContentFiles;
@@ -68,11 +70,11 @@ public class Startup
     public Startup(IConfiguration configuration, IWebHostEnvironment environment)
     {
         Configuration = configuration;
-        Environment = environment;
+        WebHostEnvironment = environment;
     }
 
     public IConfiguration Configuration { get; }
-    public IWebHostEnvironment Environment { get; }
+    public IWebHostEnvironment WebHostEnvironment { get; }
 
     public void ConfigureServices(IServiceCollection services)
     {
@@ -88,7 +90,7 @@ public class Startup
         //localization
         services.AddLocalization(options => options.ResourcesPath = "Resources");
 
-        var logFileName = Environment.IsDevelopment() ? "log-dev.txt" : "log.txt";
+        var logFileName = WebHostEnvironment.IsDevelopment() ? "log-dev.txt" : "log.txt";
         var logFilePath = Path.Combine(ApplicationPaths.LogsFolder, logFileName);
         try
         {
@@ -318,6 +320,7 @@ public class Startup
         }
 
         app.UseHttpsRedirection();
+ 
         app.UseStaticFiles();
 
         // Add localization cultures
