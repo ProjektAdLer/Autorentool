@@ -11,6 +11,7 @@ using BusinessLogic.ErrorManagement;
 using BusinessLogic.ErrorManagement.BackendAccess;
 using BusinessLogic.Validation.Validators;
 using Microsoft.Extensions.Logging;
+using Microsoft.Testing.Platform.Extensions.Messages;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using NUnit.Framework;
@@ -687,6 +688,28 @@ public class BusinessLogicUt
 
         dataAccess.Received().FindSuitableNewSavePath("foo", "bar", "baz", out _);
     }
+    
+    
+    
+
+    
+    
+    [Test]
+    // ANF-ID: [ASE7]
+    public void EditH5PFileContent_CallsDataAccessAnd()
+    {
+        var mockDataAccess = Substitute.For<IDataAccess>();
+        var stubFileContent = Substitute.For<IFileContent>();
+        var systemUnderTest = CreateStandardBusinessLogic(fakeDataAccess: mockDataAccess);
+        
+        systemUnderTest.EditH5PFileContent(stubFileContent);
+
+        mockDataAccess.Received().EditH5PFileContent(stubFileContent);
+    }
+
+
+    
+    
 
     [Test]
     // ANF-ID: [AHO21]

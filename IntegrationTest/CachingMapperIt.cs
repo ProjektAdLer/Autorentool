@@ -48,7 +48,8 @@ public class CachingMapperIt
         var config = new MapperConfiguration(ViewModelEntityMappingProfile.Configure);
         var mapper = config.CreateMapper();
         var cachingLogger = Substitute.For<ILogger<CachingMapper>>();
-        var cachingMapper = new CachingMapper(mapper, commandStateManager, cachingLogger);
+        var presentationLogicFactory = Substitute.For<Func<IPresentationLogic>>();
+        var cachingMapper = new CachingMapper(mapper, commandStateManager, cachingLogger, presentationLogicFactory);
         var systemUnderTest = CreateTestablePresentationLogic(null, businessLogic, mapper, cachingMapper,
             worldCommandFactory: new WorldCommandFactory(new NullLoggerFactory(),
                 Substitute.For<IUnsavedChangesResetHelper>()));
@@ -91,7 +92,8 @@ public class CachingMapperIt
         var config = new MapperConfiguration(ViewModelEntityMappingProfile.Configure);
         var mapper = config.CreateMapper();
         var cachingLogger = Substitute.For<ILogger<CachingMapper>>();
-        var cachingMapper = new CachingMapper(mapper, commandStateManager, cachingLogger);
+        var presentationLogicFactory = Substitute.For<Func<IPresentationLogic>>();
+        var cachingMapper = new CachingMapper(mapper, commandStateManager, cachingLogger, presentationLogicFactory);
         var systemUnderTest = CreateTestablePresentationLogic(null, businessLogic, mapper, cachingMapper,
             worldCommandFactory: new WorldCommandFactory(new NullLoggerFactory(),
                 Substitute.For<IUnsavedChangesResetHelper>()),
@@ -155,7 +157,8 @@ public class CachingMapperIt
         var config = new MapperConfiguration(ViewModelEntityMappingProfile.Configure);
         var mapper = config.CreateMapper();
         var cachingLogger = Substitute.For<ILogger<CachingMapper>>();
-        var cachingMapper = new CachingMapper(mapper, commandStateManager, cachingLogger);
+        var presentationLogicFactory = Substitute.For<Func<IPresentationLogic>>();
+        var cachingMapper = new CachingMapper(mapper, commandStateManager, cachingLogger, presentationLogicFactory);
         var systemUnderTest = CreateTestablePresentationLogic(null, businessLogic, mapper, cachingMapper,
             worldCommandFactory: new WorldCommandFactory(new NullLoggerFactory(),
                 Substitute.For<IUnsavedChangesResetHelper>()),

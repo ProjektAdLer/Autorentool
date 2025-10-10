@@ -6,9 +6,12 @@ public interface IValidateH5pUc
 {
     Task StartToValidateH5p(H5pEntity h5pEntity);
     void ValidateH5p(ValidateH5pTO validateH5pTO);
+    void TerminateValidateH5p();
 
+    
     void SetActiveH5pStateToNotUsable();
     void SetActiveH5pStateToPrimitive();
+    void SetActiveH5pStateToCompletable();
     
-    H5pEntity H5pEntity { get; set; }
+    H5pEntity? H5pEntity { get; set; }
 }

@@ -31,9 +31,12 @@ using Generator.WorldExport;
 using H5pPlayer.BusinessLogic.Api.CleanupH5pPlayer;
 using H5pPlayer.Main;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Localization;
 using MudBlazor.Services;
+using Presentation.Components.ContentFiles;
 using Presentation.Components.Culture;
 using Presentation.Components.Forms;
 using Presentation.Components.Forms.Element;
@@ -60,17 +63,18 @@ using HttpClientFactory = Shared.Networking.HttpClientFactory;
 using IHttpClientFactory = Shared.Networking.IHttpClientFactory;
 
 namespace AuthoringTool;
+
 // ReSharper disable InconsistentNaming
 public class Startup
 {
     public Startup(IConfiguration configuration, IWebHostEnvironment environment)
     {
         Configuration = configuration;
-        Environment = environment;
+        WebHostEnvironment = environment;
     }
 
     public IConfiguration Configuration { get; }
-    public IWebHostEnvironment Environment { get; }
+    public IWebHostEnvironment WebHostEnvironment { get; }
 
     public void ConfigureServices(IServiceCollection services)
     {
@@ -86,7 +90,7 @@ public class Startup
         //localization
         services.AddLocalization(options => options.ResourcesPath = "Resources");
 
-        var logFileName = Environment.IsDevelopment() ? "log-dev.txt" : "log.txt";
+        var logFileName = WebHostEnvironment.IsDevelopment() ? "log-dev.txt" : "log.txt";
         var logFilePath = Path.Combine(ApplicationPaths.LogsFolder, logFileName);
         try
         {
@@ -192,6 +196,7 @@ public class Startup
     {
         services.AddScoped<IAuthoringToolWorkspacePresenter, AuthoringToolWorkspacePresenter>();
         services.AddScoped<IPresentationLogic, PresentationLogic>();
+        services.AddScoped<Func<IPresentationLogic>>(sp => sp.GetRequiredService<IPresentationLogic>);
         services.AddScoped<ILearningWorldPresenter, LearningWorldPresenter>();
         services.AddScoped(p =>
             (ILearningWorldPresenterOverviewInterface)p.GetService(typeof(ILearningWorldPresenter))!);
@@ -202,6 +207,7 @@ public class Startup
         services.AddTransient(typeof(IFormDataContainer<,>), typeof(FormDataContainer<,>));
         services.AddSingleton<IElementModelHandler, ElementModelHandler>();
         services.AddScoped<INavigationManagerWrapper, NavigationManagerWrapper>();
+        services.AddScoped<IH5PPlayerPluginManager, H5PPlayerPluginManager>();
     }
 
     internal static void ConfigureBusinessLogic(IServiceCollection services)
@@ -314,6 +320,21 @@ public class Startup
         }
 
         app.UseHttpsRedirection();
+        
+        
+        var provider = new FileExtensionContentTypeProvider();
+        provider.Mappings[".h5p"] = "application/zip";
+
+        var appDataH5pPath = Path.Combine(ApplicationPaths.RootAppDataFolder, "h5p-folder");
+        Directory.CreateDirectory(appDataH5pPath);
+
+        // 1) AppData-H5P zuerst (eigener RequestPath)
+        app.UseStaticFiles(new StaticFileOptions
+        {
+            FileProvider = new PhysicalFileProvider(appDataH5pPath),
+            RequestPath = "/h5p-folder",
+            ContentTypeProvider = provider
+        });
         app.UseStaticFiles();
 
         // Add localization cultures
@@ -353,7 +374,7 @@ public class Startup
     {
         var cleanupH5pPlayerPortFactory = new CleanupH5pPlayerPortFactory();
         var cleanupH5pPlayerPort = cleanupH5pPlayerPortFactory.CreateCleanupH5pPlayerPort();
-        cleanupH5pPlayerPort.CleanDirectoryForTemporaryH5psInWwwroot();
+        cleanupH5pPlayerPort.CleanDirectoryForTemporaryUnzippedH5ps();
     }
     // ReSharper restore InconsistentNaming
 }

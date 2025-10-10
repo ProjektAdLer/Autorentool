@@ -23,6 +23,7 @@ using BusinessLogic.Entities.LearningContent.Adaptivity;
 using BusinessLogic.Entities.LearningContent.Adaptivity.Action;
 using BusinessLogic.Entities.LearningContent.Adaptivity.Question;
 using BusinessLogic.Entities.LearningContent.Adaptivity.Trigger;
+using BusinessLogic.Entities.LearningContent.FileContent;
 using BusinessLogic.Entities.LearningContent.LinkContent;
 using BusinessLogic.Entities.LearningOutcome;
 using ElectronWrapper;
@@ -893,6 +894,12 @@ public class PresentationLogic : IPresentationLogic
 
         return Mapper.Map<ILearningContentViewModel>(entity);
     }
+    
+    public void EditH5PFileContent(IFileContentViewModel fileContentVm)
+    {
+        var fileContent = Mapper.Map<IFileContent>(fileContentVm);
+        BusinessLogic.EditH5PFileContent(fileContent);
+    }
 
     /// <inheritdoc cref="IPresentationLogic.CreateAdaptivityTask"/>
     public void CreateAdaptivityTask(AdaptivityContentFormModel adaptivityContentFm, string name)
@@ -1381,4 +1388,5 @@ public class PresentationLogic : IPresentationLogic
     }
 
 #endif
+  
 }

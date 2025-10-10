@@ -6,7 +6,9 @@ namespace H5pPlayer.Presentation.PresentationLogic.ValidateH5p;
 public interface IValidateH5pController
 {
     IValidateH5pUc ValidateH5pUc { get; }
-    IValidateH5pPresenter ValidateH5PPresenter { get; }
+    IValidateH5pPresenter ValidateH5pPresenter { get; }
     void SetActiveH5pStateToNotUsable();
     void SetActiveH5pStateToPrimitive();
+    void SetActiveH5pStateToCompletable();
+    void TerminateValidateH5p();
 }

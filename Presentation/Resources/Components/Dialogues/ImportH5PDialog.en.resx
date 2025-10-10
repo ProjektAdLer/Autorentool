@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+    <data name="Dialog.Heading" xml:space="preserve">
+    <value>Added Learning Material</value>
+  </data>
+  <data name="Dialog.Description" xml:space="preserve">
+    <value>You have added one or more H5Ps as external learning material. H5Ps must first be checked for functionality before they can be used successfully in a learning world. This involves checking whether points can be earned within the H5P by answering questions (e.g., H5P - Interactive Video) and whether the H5P can therefore be completed, or whether it is a non-completable H5P in which simply clicking through the individual slides is decisive (e.g., H5P - Image Slider). It is also possible that an H5P is faulty or does not display at all. 
+A basic distinction is made between three states of an H5P:
+[[ICON_LIST]]
+You can find out more &lt;a href="https://projektadler.github.io/Documentation/manualauthoringfeatures-auf-einen-blick.html" target="_blank" class="text-adlerblue-700"&gt;here&lt;/a&gt;.</value>
+  </data>
+  <data name="Dialog.Instruction" xml:space="preserve">
+    <value>Learning worlds with unchecked or unusable H5Ps cannot be uploaded. You can check the H5P now or later.</value>
+  </data>
+    <data name="Dialog.UnvalidatedFilesHeading" xml:space="preserve">
+    <value>Added, unvalidated H5Ps:</value>
+  </data>
+    <data name="Dialog.CancelButton" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+    <data name="Dialog.BeginValidationButton" xml:space="preserve">
+    <value>Start Validation</value>
+  </data>
+    <data name="Dialog.NoUnvalidatedH5Ps" xml:space="preserve">
+    <value>There are no unvalidated H5Ps.</value>
+  </data>
+    <data name="Dialog.OkButton" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="Dialog.ValidateLaterButton" xml:space="preserve">
+    <value>Validate later</value>
+  </data>
+  <data name="Dialog.H5P.StateUsable" xml:space="preserve">
+    <value>useable</value>
+  </data>
+  <data name="Dialog.H5P.StateNotUsable" xml:space="preserve">
+    <value>not useable</value>
+  </data>
+  <data name="Dialog.H5P.StateUnchecked" xml:space="preserve">
+    <value>unchecked</value>
+  </data>
+</root>

@@ -3,6 +3,7 @@ using BusinessLogic.Commands;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.BackendAccess;
 using BusinessLogic.Entities.LearningContent;
+using BusinessLogic.Entities.LearningContent.FileContent;
 using BusinessLogic.Entities.LearningContent.LinkContent;
 using BusinessLogic.ErrorManagement.DataAccess;
 using Shared;
@@ -109,6 +110,7 @@ public interface IBusinessLogic
     Task<LearningWorld> ImportLearningWorldFromArchiveAsync(string pathToFile);
     IFileInfo GetFileInfoForPath(string savePath);
     void DeleteFileByPath(string savePath);
+    void EditH5PFileContent(IFileContent fileContent);
 
     #region BackendAccess
 

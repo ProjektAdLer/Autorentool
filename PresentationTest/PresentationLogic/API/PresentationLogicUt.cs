@@ -32,6 +32,7 @@ using BusinessLogic.Entities.LearningContent.Adaptivity;
 using BusinessLogic.Entities.LearningContent.Adaptivity.Action;
 using BusinessLogic.Entities.LearningContent.Adaptivity.Question;
 using BusinessLogic.Entities.LearningContent.Adaptivity.Trigger;
+using BusinessLogic.Entities.LearningContent.FileContent;
 using BusinessLogic.Entities.LearningOutcome;
 using ElectronWrapper;
 using FluentAssertions;
@@ -40,6 +41,7 @@ using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using NUnit.Framework;
+using PersistEntities.LearningContent;
 using Presentation.Components.Adaptivity.Forms.Models;
 using Presentation.Components.Forms.Models;
 using Presentation.PresentationLogic;
@@ -1822,6 +1824,26 @@ public class PresentationLogicUt
         Assert.That(ex, Is.Not.Null);
         Assert.That(ex?.Message, Is.EqualTo("Exception"));
     }
+    
+    [Test]
+    // ANF-ID: [ASE7]
+    public void EditH5PFileContent_CallsBusinessLogicAndMapper()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var mockMapper = Substitute.For<IMapper>();
+        var stubFileContent = EntityProvider.GetFileContent();
+        var stubFileContentVm = Substitute.For<IFileContentViewModel>();
+        mockMapper.Map<IFileContent>(stubFileContentVm).Returns(stubFileContent);
+        var systemUnderTest = CreateTestablePresentationLogic(
+            businessLogic: mockBusinessLogic,
+            mapper: mockMapper);
+        
+        systemUnderTest.EditH5PFileContent(stubFileContentVm);
+
+        mockBusinessLogic.Received().EditH5PFileContent(stubFileContent);
+        mockMapper.Received().Map<IFileContent>(stubFileContentVm);
+    }
+
 
     [Test]
     // ANF-ID: [AWA0005]

@@ -388,28 +388,6 @@
                             </div>
                         </div>
 
-
-                        @if (FormModel.LearningContent is FileContentFormModel { Type: "h5p" } fc)
-                        {
-                            <div class="flex flex-row items-center justify-start px-3">
-                                <MudCheckBox @bind-Value="@(fc.PrimitiveH5P)">
-                                    <p class="text-adlertextgrey text-xs 2xl:text-sm cursor-default">
-                                        @Localizer["EditElementForm.Fields.Collapsable.LearningContent.PrimitiveH5P.Text"]
-                                        <MudTooltip Class="bg-adlerdarkblue-200 shadow-xl">
-                                            <ChildContent>
-                                                <MudIconButton Size="Size.Small" Icon="@Icons.Material.Filled.Info"
-                                                               Class="text-adlergrey-200 hover:text-adlerdarkblue"
-                                                               OnClick="ShowH5PInfoDialog"/>
-                                            </ChildContent>
-                                            <TooltipContent>
-                                                @Localizer["EditElementForm.Fields.Collapsable.LearningContent.PrimitiveH5P.Tooltip.Text"]
-                                            </TooltipContent>
-                                        </MudTooltip>
-                                    </p>
-                                </MudCheckBox>
-                            </div>
-                        }
-
                         break;
 
                     case ElementMode.Adaptivity:

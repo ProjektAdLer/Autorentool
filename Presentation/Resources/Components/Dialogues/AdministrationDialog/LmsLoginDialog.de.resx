@@ -90,7 +90,7 @@
         <value>Ja</value>
     </data>
     <data name="ConfirmDeleteLmsWorld.Title" xml:space="preserve">
-        <value>Lernwelt aus LMS löschen</value>
+        <value>Lernwelt aus Moodle löschen</value>
     </data>
     <data name="LmsLoginDialog.Title.Tooltip" xml:space="preserve">
         <value>Die hier aufgeführten Moodle-Kurse sind all jene Kurse, die Sie bereits erstellt und veröffentlicht haben. 
@@ -124,10 +124,10 @@ Mit dieser ausgeführten Aktion des Löschens werden die Kurse unwiderruflich au
         <value>Es muss ein Benutzername angegeben werden.</value>
     </data>
     <data name="DialogContent.AdLerServer.ErrorMessage.Delete" xml:space="preserve">
-        <value>Fehler beim Versuch, die LMS-Welt zu löschen</value>
+        <value>Fehler beim Versuch, die Lernwelt aus Moodle zu löschen</value>
     </data>
     <data name="DialogContent.AdLerServer.ErrorMessage.Refresh" xml:space="preserve">
-        <value>Fehler beim Versuch, die Liste der LMS-Welten abzurufen</value>
+        <value>Fehler beim Versuch, die Liste der Lernwelten aus Moodle abzurufen</value>
     </data>
     <data name="DialogContent.Error.MoodleUnreachable" xml:space="preserve">
         <value>Moodle ist nicht erreichbar.</value>

@@ -1,0 +1,34 @@
+﻿@using H5pPlayer.Presentation.PresentationLogic.ValidateH5p
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CompletableH5pButton> Localizer
+
+<button @onclick="MarkAsCompletable"
+        class="@GetButtonClass()"
+        disabled="@(!IsEnabled)">
+    @Localizer["Button.Completable"]
+</button>
+
+@code {
+    [Parameter] public bool IsEnabled { get; set; }
+
+    [Parameter, EditorRequired] public required IValidateH5pController ValidateH5pController { get; set; }
+
+    private void MarkAsCompletable()
+    {
+        ValidateH5pController.SetActiveH5pStateToCompletable();
+        ValidateH5pController.TerminateValidateH5p();
+    }
+
+    private string GetButtonClass()
+    {
+        var baseClasses = "btn-standard uppercase shadow-lg";
+
+        if (IsEnabled)
+        {
+            return $"{baseClasses} bg-adlergreenlight hover:bg-adlergreendark text-adlerdarkblue hover:text-white";
+        }
+
+        return $"{baseClasses} btn-standard";
+    }
+
+}

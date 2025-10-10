@@ -64,7 +64,7 @@
         <value>Learning world is not valid</value>
     </data>
     <data name="Dialog.NotLoggedIn.Message" xml:space="preserve">
-        <value>You are not connected to a LMS. Please login to upload your learning worlds to the backend.</value>
+        <value>You are not currently signed in. Please sign in to upload learning worlds.</value>
     </data>
     <data name="DialogService.NotLoggedIn.Title" xml:space="preserve">
         <value>You are not logged in</value>

@@ -2,5 +2,5 @@
 
 public interface IDisplayH5pController
 {
-    
+    void TerminateDisplayH5p();
 }

@@ -79,7 +79,7 @@
         <value>Lernwelt veröffentlichen</value>
     </data>
     <data name="Dialog.NotLoggedIn.Message" xml:space="preserve">
-        <value>Du bist nicht mit einem LMS verbunden. Bitte melde dich an, um Lernwelten in das Backend hochzuladen.</value>
+        <value>Sie sind derzeit nicht angemeldet. Bitte melden Sie sich an, um Lernwelten hochzuladen.</value>
     </data>
     <data name="SaveWorld.Success.Snackbar.Message" xml:space="preserve">
         <value>Lernwelt {0} erfolgreich gespeichert</value>

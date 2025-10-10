@@ -1,10 +1,12 @@
 using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
+using System.Runtime.Serialization;
 using System.Security.Cryptography;
 using BusinessLogic.ErrorManagement.DataAccess;
 using DataAccess.Persistence;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 using NUnit.Framework;
 using PersistEntities.LearningContent;
 using TestHelpers;
@@ -72,14 +74,7 @@ public class ContentFileHandlerUt
         LoadContentAsync_WithFilepath_DuplicateFileNameWithDifferentContent_CopiesAndReturnsCorrectObject()
     {
         const string filepath = "foobar.png";
-        var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
-        {
-            { filepath, new MockFileData(new byte[] { 0x42, 0x24, 0x53, 0x54 }) },
-            {
-                Path.Join(ContentFilesFolderPath, "foobar.png"),
-                new MockFileData(new byte[] { 0x00, 0x53, 0x00, 0x53, })
-            },
-        });
+        var fileSystem = CreateFileSystemWithByteFileData(filepath);
 
         var systemUnderTest = CreateTestableContentFileHandler(fileSystem: fileSystem);
 
@@ -95,6 +90,19 @@ public class ContentFileHandlerUt
             Assert.That(fileSystem.File.Exists(Path.Join(ContentFilesFolderPath, "foobar(1).png")), Is.True);
             Assert.That(fileSystem.Directory.EnumerateFiles(ContentFilesFolderPath).Count(), Is.EqualTo(4));
         });
+    }
+
+    private MockFileSystem CreateFileSystemWithByteFileData(string filepath)
+    {
+        var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+        {
+            { filepath, new MockFileData(new byte[] { 0x42, 0x24, 0x53, 0x54 }) },
+            {
+                Path.Join(ContentFilesFolderPath, "foobar.png"),
+                new MockFileData(new byte[] { 0x00, 0x53, 0x00, 0x53, })
+            },
+        });
+        return fileSystem;
     }
 
     [Test]
@@ -117,6 +125,20 @@ public class ContentFileHandlerUt
                 .And.InnerException.Message.EqualTo("The given stream is empty."),
             async () => await systemUnderTest.LoadContentAsync(filepath));
     }
+    
+    [Test]
+    // ANF-ID: [ASE7]
+    public async Task LoadContentAsync_WithFilePath_GeneratePersistFileForFileContent()
+    {
+        const string filepath = "foobar.png";
+        var mockFileSystem = CreateFileSystemWithByteFileData(filepath);
+        var systemUnderTest = CreateTestableContentFileHandler(fileSystem: mockFileSystem);
+
+        await systemUnderTest.LoadContentAsync(filepath);
+        
+        systemUnderTest.XmlFileHandlerFileContent!.Received().SaveToDisk(Arg.Any<FileContentPe>(), Arg.Any<string>());
+    }
+
 
 
     [Test]
@@ -182,6 +204,23 @@ public class ContentFileHandlerUt
                 .And.Message.EqualTo("The given stream is empty."),
             async () => await systemUnderTest.LoadContentAsync("foo", stream));
     }
+    
+    [Test]
+    // ANF-ID: [ASE7]
+    public async Task LoadContentAsync_WithStream_GeneratePersistFileForFileContent()
+    {
+        var stream = new MemoryStream(new byte[] { 0x42, 0x24, 0x53, 0x54 });
+        const string filepath = "foobar.png";
+        var mockFileSystem = CreateFileSystemWithByteFileData(filepath);
+        var systemUnderTest = CreateTestableContentFileHandler(fileSystem: mockFileSystem);
+
+        await systemUnderTest.LoadContentAsync(filepath, stream);
+        
+        systemUnderTest.XmlFileHandlerFileContent!.Received().SaveToDisk(Arg.Any<FileContentPe>(), Arg.Any<string>());
+    }
+
+    
+    
 
     [Test]
     public async Task GetFilePathOfExistingCopyAndHashAsync_WithExactSameFile_ReturnsPath()
@@ -225,6 +264,24 @@ public class ContentFileHandlerUt
             Assert.That(fileSystem.File.Exists(Path.Join(ContentFilesFolderPath, "foobar.png")), Is.True);
         });
     }
+    
+    
+    [Test]
+    // ANF-ID: [ASE7]
+    public async Task LoadContentAsync_WithByteArray_GeneratePersistFileForFileContent()
+    {
+        var byteArray = new byte[] { 0x42, 0x24, 0x53, 0x54 };
+        const string filepath = "foobar.png";
+        var mockFileSystem = CreateFileSystemWithByteFileData(filepath);
+        var systemUnderTest = CreateTestableContentFileHandler(fileSystem: mockFileSystem);
+
+        await systemUnderTest.LoadContentAsync(filepath, byteArray);
+        
+        systemUnderTest.XmlFileHandlerFileContent!.Received().SaveToDisk(Arg.Any<FileContentPe>(), Arg.Any<string>());
+    }
+
+
+
 
     [Test]
     // ANF-ID: [AWA0036]
@@ -447,7 +504,7 @@ public class ContentFileHandlerUt
     }
 
     [Test]
-    // ANF-ID: [AWA0048,AWA0049]
+    // ANF-ID: [AWA0048,AWA0049,ASN0028]
     public void GetAllContent_ReturnsAllContentFilesInContentFilesFolder()
     {
         var fileSystem = new MockFileSystem();
@@ -466,6 +523,64 @@ public class ContentFileHandlerUt
         Assert.That(actual, Has.Exactly(1).Matches<FileContentPe>(f => f.Name == "b.txt"));
         Assert.That(actual, Has.Exactly(1).Matches<FileContentPe>(f => f.Name == "c.txt"));
     }
+    
+    [Test]
+    // ANF-ID: [ASN0028]
+    public void GetAllContent_LoadH5PsFromXmlPersistence()
+    {
+        var fileNames = new[] { "a.h5p", "a.xml", "b.txt", "c.h5p", "c.xml", "c.h5p.hash", ".foobar" };
+        var fileSystem = CreateFakeFileSystem(ContentFilesFolderPath, fileNames);
+        var systemUnderTest = CreateTestableContentFileHandler(
+            fileSystem: fileSystem);
+
+        systemUnderTest.GetAllContent();
+        
+        systemUnderTest.XmlFileHandlerFileContent!.Received(2).LoadFromDisk( Arg.Any<string>());
+    }
+
+
+    [Test]
+    // ANF-ID: [ASN0028]
+    public void GetAllContent_LoadH5PsFromXmlPersistence_XmlFileNotFound_GeneratesXmlFile()
+    {
+        var fileNames = new[] { "a.h5p", "b.txt", "c.h5p", "c.h5p.hash", ".foobar" };
+        var fileSystem = CreateFakeFileSystem(ContentFilesFolderPath, fileNames);
+        var mockXmlFileHandlerFileContent = CreateFakeXmlFileHandlerFileContentWithLoadFromDisk();
+        var systemUnderTest = CreateTestableContentFileHandler(
+            fileSystem: fileSystem,
+            xmlFileHandlerFileContent: mockXmlFileHandlerFileContent);
+       
+        var result = systemUnderTest.GetAllContent();
+        systemUnderTest.XmlFileHandlerFileContent!.Received().SaveToDisk(Arg.Any<FileContentPe>(), Arg.Any<string>());
+        Assert.That(result.Count(), Is.EqualTo(2));
+    }
+
+    private static IXmlFileHandler<FileContentPe> CreateFakeXmlFileHandlerFileContentWithLoadFromDisk()
+    {
+        var mockXmlFileHandlerFileContent = Substitute.For<IXmlFileHandler<FileContentPe>>();
+        var fakeFileContentPe = PersistEntityProvider.GetFileContent();
+        mockXmlFileHandlerFileContent.LoadFromDisk(Arg.Any<string>()).Returns(fakeFileContentPe);
+        return mockXmlFileHandlerFileContent;
+    }
+
+
+    private static MockFileSystem CreateFakeFileSystem(string baseFolder, IEnumerable<string> fileNames)
+    {
+        var fileSystem = new MockFileSystem();
+        var dummyContent = new byte[] { 0x42, 0x24, 0x53, 0x54 };
+
+        foreach (var fileName in fileNames)
+        {
+            var fullPath = Path.Combine(baseFolder, fileName);
+            fileSystem.AddFile(fullPath, new MockFileData(dummyContent));
+        }
+
+        return fileSystem;
+    }
+
+
+
+    
 
     [Test]
     // ANF-ID: [AWA0037,AWA0043]
@@ -497,13 +612,32 @@ public class ContentFileHandlerUt
         
         xmlFileHandlerLink.Received().SaveToDisk(Arg.Is<List<LinkContentPe>>(li => !li.Contains(link)), Arg.Any<string>());
     }
+    [Test]
+    // ANF-ID: [ASE7]
+    public void EditH5PFileContent_GeneratePersistFileForFileContent()
+    {
+        var stubFileContentPe = Substitute.For<IFileContentPe>();
+        var systemUnderTest = CreateTestableContentFileHandler();
 
-    private ContentFileHandler CreateTestableContentFileHandler(ILogger<ContentFileHandler>? logger = null,
-        IFileSystem? fileSystem = null, IXmlFileHandler<List<LinkContentPe>>? xmlFileHandler = null)
+        systemUnderTest.EditH5PFileContent(stubFileContentPe);
+        
+        systemUnderTest.XmlFileHandlerFileContent!.Received().SaveToDisk(Arg.Any<FileContentPe>(), Arg.Any<string>());
+    }
+
+
+    
+    
+
+    private ContentFileHandler CreateTestableContentFileHandler(
+        ILogger<ContentFileHandler>? logger = null,
+        IFileSystem? fileSystem = null, 
+        IXmlFileHandler<List<LinkContentPe>>? xmlFileHandler = null,
+        IXmlFileHandler<FileContentPe>? xmlFileHandlerFileContent = null)
     {
         logger ??= Substitute.For<ILogger<ContentFileHandler>>();
         fileSystem ??= new MockFileSystem();
         xmlFileHandler ??= Substitute.For<IXmlFileHandler<List<LinkContentPe>>>();
-        return new ContentFileHandler(logger, fileSystem, xmlFileHandler);
+        xmlFileHandlerFileContent ??= Substitute.For<IXmlFileHandler<FileContentPe>>();
+        return new ContentFileHandler(logger, fileSystem, xmlFileHandler, xmlFileHandlerFileContent);
     }
 }

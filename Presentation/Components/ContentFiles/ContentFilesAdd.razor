@@ -1,20 +1,16 @@
-@using Presentation.PresentationLogic.API
-@using Presentation.PresentationLogic.AuthoringToolWorkspace
-@using Shared
-@using Microsoft.Extensions.Localization
-@using Presentation.Components.Forms
-@using Presentation.Components.Forms.Content
 @using System.Diagnostics.CodeAnalysis
 @using System.IO.Compression
 @using BusinessLogic.Entities.LearningContent
 @using BusinessLogic.ErrorManagement.DataAccess
-@using H5pPlayer.Api
-@using H5pPlayer.BusinessLogic.Api.JavaScript
-@using H5pPlayer.BusinessLogic.Entities
 @using H5pPlayer.BusinessLogic.UseCases.TerminateH5pPlayer
-@using H5pPlayer.DataAccess.FileSystem
+@using Microsoft.Extensions.Localization
 @using Presentation.Components.Dialogues
-@using Shared.Configuration
+@using Presentation.Components.Forms
+@using Presentation.Components.Forms.Content
+@using Presentation.PresentationLogic.API
+@using Presentation.PresentationLogic.AuthoringToolWorkspace
+@using Presentation.PresentationLogic.LearningContent.FileContent
+@using Shared
 @inject IJSRuntime JsRuntime
 @inject NavigationManager Navigation
 @inject ISnackbar Snackbar
@@ -25,12 +21,15 @@
     </header>
     <div class="flex flex-col relative px-4">
         <div class="flex justify-end">
-            <MudTooltip Placement="Placement.Right" Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed">
+            <MudTooltip Placement="Placement.Right"
+                        Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed">
                 <TooltipContent>
-                    <MudText Class="cursor-default text-xs">@Localizer["FileUpload.ButtonTemplate.Text2", AllowedFileEndings.EndingsCommaSeparatedNicely]</MudText>
+                    <MudText
+                        Class="cursor-default text-xs">@Localizer["FileUpload.ButtonTemplate.Text2", AllowedFileEndings.EndingsCommaSeparatedNicely]</MudText>
                 </TooltipContent>
                 <ChildContent>
-                    <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info" Class="text-adlergrey-500 hover:text-adlerdarkblue"></MudIcon>
+                    <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info"
+                             Class="text-adlergrey-500 hover:text-adlerdarkblue"></MudIcon>
                 </ChildContent>
             </MudTooltip>
         </div>
@@ -88,16 +87,22 @@
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal IErrorService ErrorService { get; set; }
 
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
+    internal IH5PPlayerPluginManager H5PPlayerPluginManager { get; set; }
+
+
     [CascadingParameter(Name = "RerenderContentContainer")]
     public Func<Task>? RerenderContentFilesContainer { get; set; }
-    
+
     private string PaperClasses => $"h-28 relative border-4 border-dotted border-adlerbggradientfrom bg-adlerbggradientto m-0 {DragClass} {HoverClass}";
     private string DragClass { get; set; } = "";
     private string HoverClass { get; set; } = "";
-    
+
     private bool Working { get; set; } = false;
+    private H5pPlayerResultTO? h5PPlayerResultTo { get; set; }
 
     private MudFileUpload<IReadOnlyList<IBrowserFile>> _fileUpload = null!;
+    private IFileContentViewModel? _fileContentVm;
 
     /// <summary>
     /// Iterates all files, copies them into a new stream and passes said stream to presentation logic
@@ -130,22 +135,10 @@
                     await InvokeAsync(async () => await DialogService.ShowMessageBox(@Localizer["Invocation.MessageBox.Title"], Localizer["Invocation.MessageBox.Message", file.Name]));
                     continue;
                 }
+
                 await HandleFileAsync(file);
-                
-#if DEBUG
-                 if (fileEnding.ToLowerInvariant()  == ".h5p")
-                 {
-                     var h5pZipSourcePath = Path.Combine(ApplicationPaths.ContentFolder , file.Name);
-                     var baseUri = new Uri(Navigation.BaseUri); 
-                     var unzippedH5ps= new Uri(baseUri, "H5pStandalone/h5p-folder/"); 
-                     
-                     Logger.LogTrace("Start H5P-Player with: " + 
-                                     "h5pZipSourcePath: " + h5pZipSourcePath + Environment.NewLine +
-                                      "unzippedH5psPath: " + unzippedH5ps.AbsoluteUri );
-                      
-                      OpenH5pPlayerDialog(h5pZipSourcePath, unzippedH5ps.AbsoluteUri,H5pDisplayMode.Validate);
-                 }
-#endif
+
+                await HandleH5PImport();
             }
 
             Logger.LogTrace("Rerendering ContentFilesContainer");
@@ -159,9 +152,42 @@
             ClearDragClass();
             await _fileUpload.ResetAsync();
         }
-
     }
-   
+
+    private async Task HandleH5PImport()
+    {
+        if (_fileContentVm is null || IsNotH5PFile(_fileContentVm!))
+            return;
+
+        // fileContentVm is written in HandleFileAsync !!!!!!!
+        var startH5pPlayerTO = new StartH5PPlayerTO
+        {
+            FileContentVm = _fileContentVm!,
+            NavigationManager = Navigation
+        };
+
+
+        var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
+
+        var dialog = await DialogService.ShowAsync<ImportH5PDialog>("H5P Import", options);
+        var result = await dialog.Result;
+
+        if (result != null)
+        {
+            if (!result.Canceled)
+            {
+                await H5PPlayerPluginManager.StartH5pPlayerToValidateAsync(startH5pPlayerTO);
+            }
+        }
+    }
+
+    private bool IsNotH5PFile(IFileContentViewModel fileContentVm)
+    {
+        var fileEnding = fileContentVm.Name.Split(".").Last();
+        return fileEnding != "h5p";
+    }
+
+
     private async Task HandleZipFileAsync(IBrowserFile zipFile)
     {
         var zipStream = zipFile.OpenReadStream(1_000_000_000);
@@ -175,28 +201,27 @@
         {
             Snackbar.Add(@Localizer["ContentFilesAdd.EmptyFile.Snackbar"], Severity.Error);
             await InvokeAsync(() => DialogService.ShowMessageBox(@Localizer["ContentFilesAdd.EmptyFile.Title"], @Localizer["ContentFilesAdd.EmptyFile.Text"]));
-            return; 
+            return;
         }
-        
+
         var successfulFiles = new List<string>();
         var unsupportedFiles = new List<string>();
         var errorFiles = new List<string>();
         var duplicateFiles = new List<string>();
-       
+
         foreach (var entry in archive.Entries)
         {
             if (entry.Length == 0) continue;
-            var fileName = PathHelper.TrimFileName(entry.Name);
+            var fileName = PathHelper.ReplaceSpaceWithUnderscoreIn(entry.Name);
             var fileEnding = string.Concat(entry.Name.Split(".").Skip(1).Last().Prepend('.'));
             fileEnding = fileEnding.Trim().ToLowerInvariant();
             if (!AllowedFileEndings.Endings.Contains(fileEnding))
             {
-                
                 unsupportedFiles.Add(entry.FullName);
                 continue;
             }
-   
-                
+
+
             using var memoryStream = new MemoryStream();
             await entry.Open().CopyToAsync(memoryStream);
             memoryStream.Position = 0;
@@ -218,12 +243,12 @@
                 duplicateFiles.Add(entry.FullName);
             }
         }
-        
+
         if (unsupportedFiles.Count > 0)
         {
             Snackbar.Add(@Localizer["ContentFilesAdd.UnsupportedFileEnding.Snackbar"], Severity.Error);
         }
-        
+
         if (successfulFiles.Count > 0)
         {
             Snackbar.Add(@Localizer["ContentFilesAdd.AddedMaterial.Success"]);
@@ -279,12 +304,13 @@
         await stream.CopyToAsync(memoryStream);
         await stream.DisposeAsync();
 
-        var fileName = PathHelper.TrimFileName(file.Name);
+        var fileName = PathHelper.ReplaceSpaceWithUnderscoreIn(file.Name);
 
         Logger.LogTrace("Calling LoadLearningContentViewModel");
         try
         {
-            await PresentationLogic.LoadLearningContentViewModelAsync(fileName, memoryStream);
+            var learningContentVm = await PresentationLogic.LoadLearningContentViewModelAsync(fileName, memoryStream);
+            _fileContentVm = learningContentVm as IFileContentViewModel;
             Snackbar.Add(@Localizer["ContentFilesAdd.AddedMaterial.Success"]);
         }
         catch (IOException e)
@@ -293,76 +319,14 @@
         }
         catch (HashExistsException)
         {
-            await InvokeAsync(() => { DialogService.ShowMessageBox(Localizer["DialogService.MessageBox.Duplicate.Title"], Localizer["DialogService.MessageBox.Duplicate.Text", file.Name]);});
+            await InvokeAsync(() => { DialogService.ShowMessageBox(Localizer["DialogService.MessageBox.Duplicate.Title"], Localizer["DialogService.MessageBox.Duplicate.Text", file.Name]); });
             Snackbar.Add(@Localizer["ContentFilesAdd.DuplicatedFile.Snackbar"], Severity.Warning);
         }
-        
+
         Logger.LogTrace("LoadLearningContentViewModel returned");
     }
 
-    private async void OpenH5pPlayerDialog(
-        string h5pZipSourcePath, 
-        string unzippedH5psPath, 
-        H5pDisplayMode displayMode)
-    {
-        
-        H5pPlayerResultTO? finalResult = null;
 
-        var parameters = new DialogParameters
-        {
-            { "H5pZipSourcePath", h5pZipSourcePath },
-            { "UnzippedH5psPath", unzippedH5psPath },
-            { "DisplayMode", displayMode },
-            { "OnPlayerFinished", new Action<H5pPlayerResultTO>(result =>
-                {
-                    finalResult = result;
-                    Logger.LogInformation("Ergebnis erhalten vom Player: {@result}", result);
-                })
-            }
-        };
-        var options = new DialogOptions
-        {
-            BackdropClick = true,
-            MaxWidth = MaxWidth.Large,
-            FullWidth = true,
-            CloseButton = true,
-        };
-    
-        
-        var dialog = await DialogService.ShowAsync<PlayerH5p>("H5P-Player", parameters, options);
-
-        var result = await dialog.Result;
-        
-        var javaScriptAdapter = new CallJavaScriptAdapter(JsRuntime);
-        var dataAccess = new FileSystemDataAccess();
-        ITerminateH5pPlayerUcPort terminateH5pPlayer = new TerminateH5pPlayerUc(javaScriptAdapter, dataAccess);
-        await terminateH5pPlayer.TerminateH5pPlayer();
-        
-        try
-        {
-            await JsRuntime.InvokeVoidAsync("terminateH5pStandalone");
-
-        }
-        catch (JSException ex)
-        {
-            Logger.LogError("JSException: Could not call 'terminateH5pStandalone': {Message}", ex.Message);
-        }
-        
-        
-        if (result?.Canceled == true)
-        {
-            Logger.LogInformation("Dialog wurde abgebrochen.");
-        }
-        else if (result != null)
-        {
-            Logger.LogInformation("Dialog wurde mit Ergebnis geschlossen: {@Data}", result.Data);
-        }
-        
-        await InvokeAsync(StateHasChanged);
-    }
-    
-
-    
     private void ToggleSpinner()
     {
         Working = !Working;
@@ -373,7 +337,7 @@
     {
         DragClass = "bg-adlerblue-200 border-4 border-dotted border-adlerblue-500";
     }
-    
+
     private void ClearDragClass()
     {
         DragClass = "";
@@ -383,10 +347,11 @@
     {
         HoverClass = "bg-adlerblue-200 border-4 border-dotted border-adlerblue-500";
     }
-    
+
     private void ClearHoverClass()
     {
         HoverClass = "";
     }
+
 
 }

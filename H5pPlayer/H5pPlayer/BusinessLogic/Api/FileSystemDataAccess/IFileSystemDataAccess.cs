@@ -18,9 +18,6 @@ public interface IFileSystemDataAccess
     /// <exception cref="FileNotFoundException">
     /// Thrown if the specified ZIP archive file does not exist.
     /// </exception>
-    /// <exception cref="DirectoryNotFoundException">
-    /// Thrown if the specified destination directory path is invalid.
-    /// </exception>
     /// <exception cref="UnauthorizedAccessException">
     /// Thrown if the caller does not have the required permission to access the file or directory.
     /// </exception>

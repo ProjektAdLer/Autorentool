@@ -6,6 +6,7 @@ using BusinessLogic.Entities.LearningContent.FileContent;
 using BusinessLogic.Entities.LearningContent.LinkContent;
 using Microsoft.Extensions.Localization;
 using Shared;
+using Shared.H5P;
 
 namespace BusinessLogic.Validation.Validators;
 
@@ -94,7 +95,7 @@ public class LearningWorldStructureValidator : ILearningWorldStructureValidator
 
         ValidateLearningSpaceCount(world, result);
         ValidateLearningSpaces(world, result);
-
+        
         return result;
     }
 
@@ -124,9 +125,25 @@ public class LearningWorldStructureValidator : ILearningWorldStructureValidator
                 result.Errors.Add($"<li>{_localizer["ErrorString.Insufficient.Points.Message", space.Name]}</li>");
             }
 
-            foreach (var element in space.ContainedLearningElements)
+            IfH5PHasStateNotUsableOrNotValidatedReturnError(world, result, space);
+            
+            
+            
+        }
+    }
+
+    private void IfH5PHasStateNotUsableOrNotValidatedReturnError(ILearningWorld world, ValidationResult result,
+        ILearningSpace space)
+    {
+        foreach (var element in space.ContainedLearningElements)
+        {
+            ValidateAdaptivityRules(element, world, result);
+            if (element.LearningContent is IFileContent fileContent && fileContent.IsH5P)
             {
-                ValidateAdaptivityRules(element, world, result);
+                if (fileContent.H5PState is H5PContentState.NotUsable or H5PContentState.NotValidated)
+                {
+                    result.Errors.Add("<li>All H5P-File-Contents must be usable!</li>");
+                }
             }
         }
     }

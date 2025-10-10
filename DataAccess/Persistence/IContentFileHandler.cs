@@ -71,5 +71,14 @@ public interface IContentFileHandler
     /// </summary>
     /// <param name="links">The links to add.</param>
     void SaveLinks(IEnumerable<LinkContentPe> links);
-
+    
+    /// <summary>
+    /// Edits the ONLY H5P-Files in ContentFiles-Folder
+    /// The H5P persistence in SavedWorlds is NOT considered!
+    /// </summary>
+    /// <remarks>
+    ///  ToDo: We should update all Worlds in persisted Worlds.
+    ///  see: <see cref="LearningWorldSavePathsHandler"/>
+    /// </remarks>
+    void EditH5PFileContent(IFileContentPe fileContentPe);
 }

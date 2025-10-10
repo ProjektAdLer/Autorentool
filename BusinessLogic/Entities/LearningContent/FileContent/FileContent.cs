@@ -1,4 +1,5 @@
 using JetBrains.Annotations;
+using Shared.H5P;
 
 namespace BusinessLogic.Entities.LearningContent.FileContent;
 
@@ -10,7 +11,8 @@ public class FileContent : IFileContent
         Type = type;
         Filepath = filepath;
         UnsavedChanges = true;
-        PrimitiveH5P = false;
+        IsH5P = false;
+        H5PState = H5PContentState.NotValidated;
     }
 
     /// <summary>
@@ -23,14 +25,16 @@ public class FileContent : IFileContent
         Type = "";
         Filepath = "";
         UnsavedChanges = false;
-        PrimitiveH5P = false;
+        IsH5P = false;
+        H5PState = H5PContentState.NotValidated;
     }
 
     public string Name { get; set; }
     public bool UnsavedChanges { get; set; }
     public string Type { get; set; }
     public string Filepath { get; set; }
-    public bool PrimitiveH5P { get; set; }
+    public bool IsH5P { get; set; }
+    public H5PContentState H5PState { get; set; }
 
     public bool Equals(ILearningContent? other)
     {
