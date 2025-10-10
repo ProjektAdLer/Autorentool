@@ -4,7 +4,6 @@
 @using Presentation.PresentationLogic
 @using Presentation.PresentationLogic.API
 @using Presentation.PresentationLogic.AuthoringToolWorkspace
-@using Presentation.PresentationLogic.SelectedViewModels
 @using Shared.Configuration
 @using Shared.Exceptions
 @using Size = MudBlazor.Size
@@ -33,7 +32,8 @@
             </div>
 
             <div class="logged-in-container flex flex-col justify-center gap-2 py-2">
-                <div id="LmsLoginDialog.LoggedInContainer.Div" class="flex flex-row gap-1 justify-start items-center bg-adlergrey-100 rounded p-4">
+                <div id="LmsLoginDialog.LoggedInContainer.Div"
+                     class="flex flex-row gap-1 justify-start items-center bg-adlergrey-100 rounded p-4">
                     <p id="LmsLoginDialog.LoggedInMessage.Text"
                        class="cursor-default text-sm text-adlergrey-700 w-28">@Localizer["DialogContent.LoggedIn.Message"]</p>
                     <p id="LmsLoginDialog.LoggedInUserName.Text"
@@ -131,18 +131,29 @@ else
             <MudForm>
                 <div class="flex flex-col">
                     <MudTextField id="LmsLoginDialog.BackendUrl.TextField" @bind-Value="BackendUrl"
+                                  @ref="_backendUrlField"
                                   Label=@Localizer["DialogContent.Field.BackendUrl"]
+                                  OnKeyUp="OnKeyPress"
                                   Required="true"
                                   RequiredError="@Localizer["DialogContent.Field.BackendUrl.Required"]"/>
+                    @if (!HasProtocol())
+                    {
+                    <MudText Color="Color.Info" Typo="Typo.subtitle2">
+                        @Localizer["DialogContent.Field.BackendUrl.Info.Protocol"]
+                        </MudText>
+                    }
                     @if (_errorInvalidUrlMessage != "")
                     {
                         <MudText Color="Color.Error" Typo="Typo.subtitle2">@_errorInvalidUrlMessage</MudText>
                     }
                     <MudTextField id="LmsLoginDialog.Username.TextField" @bind-Value="Username"
+                                  @ref="_usernameField"
                                   Label=@Localizer["DialogContent.Field.Username"]
+                                  OnKeyUp="OnKeyPress"
                                   Required="true"
                                   RequiredError="@Localizer["DialogContent.Field.Username.Required"]"/>
                     <MudTextField id="LmsLoginDialog.Password.TextField" @bind-Value="_password"
+                                  @ref="_passwordField"
                                   Label=@Localizer["DialogContent.Field.Password"]
                                   OnKeyUp="OnKeyPress"
                                   InputType=@PasswordInputType Adornment="Adornment.End"
@@ -247,6 +258,10 @@ else
     private LmsWorldViewModel? _deleteWorld = null;
     // ReSharper restore RedundantDefaultMemberInitializer
 
+    private MudTextField<string> _backendUrlField = null!;
+    private MudTextField<string> _usernameField = null!;
+    private MudTextField<string> _passwordField = null!;
+
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
@@ -292,11 +307,15 @@ else
     private async void SubmitForm()
     {
         //TODO: redo form as MudForm with proper validation
-        if (BackendUrl == "" || Username == "" || _password == "") return;
-        if (!BackendUrl.StartsWith("http://") && !BackendUrl.StartsWith("https://"))
+        if (IsAnyFieldEmpty())
         {
-            _errorInvalidUrlMessage = Localizer["DialogContent.Error.ProtocolMissing"];
+            FocusFirstEmptyField();
             return;
+        }
+
+        if (!HasProtocol())
+        {
+            BackendUrl = "https://" + BackendUrl.Trim();
         }
 
         try
@@ -411,9 +430,30 @@ else
     {
         if (eventArgs.Key == "Enter")
         {
+            if (IsAnyFieldEmpty())
+            {
+                FocusFirstEmptyField();
+                return;
+            }
+
             SubmitForm();
         }
     }
 
+    private bool IsAnyFieldEmpty() => BackendUrl == "" || Username == "" || _password == "";
 
+    private void FocusFirstEmptyField()
+    {
+        var fieldToFocus = (BackendUrl, Username, _password) switch
+        {
+            ("", _, _) => _backendUrlField,
+            (_, "", _) => _usernameField,
+            (_, _, "") => _passwordField,
+            _ => null
+        };
+        fieldToFocus?.Validate();
+        fieldToFocus?.FocusAsync();
+    }
+
+    private bool HasProtocol() => BackendUrl.Trim().StartsWith("http://") || BackendUrl.Trim().StartsWith("https://");
 }
