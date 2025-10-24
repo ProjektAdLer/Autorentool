@@ -147,7 +147,7 @@ public class ReadAtfUt
 
         var learningWorldJson = new LearningWorldJson("world", "",
             topicsList, new List<ILearningSpaceJson>(),
-            new List<IElementJson>(), "", new[] { "" });
+            new List<IElementJson>(), "", []);
 
         var rootJson = new DocumentRootJson("0.3", "0.3.2", "marvin", "de", learningWorldJson);
 

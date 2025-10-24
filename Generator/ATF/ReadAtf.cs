@@ -181,7 +181,7 @@ public class ReadAtf : IReadAtf
     private void GetWorldAttributes(IDocumentRootJson documentRootJson)
     {
         // World Attributes like Description & Goals are added to the label-list, as they are represented as Labels in Moodle
-        if (documentRootJson.World.WorldDescription == "" && documentRootJson.World.WorldGoals[0] == "")
+        if (documentRootJson.World.WorldDescription == "" && (documentRootJson.World.WorldGoals.Length == 0 || documentRootJson.World.WorldGoals[0] == ""))
         {
             _logger.LogTrace("No world description and goals found");
             return;
