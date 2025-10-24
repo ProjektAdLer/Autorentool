@@ -19,6 +19,22 @@
 
 </details>
 
+## [3.0.1] - 2025-10-24
+
+### Added
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+- Fixed upload of learning worlds without goals set.
+
+### Security
+
 ## [3.0.0] - 2025-10-10
 
 ### Added
