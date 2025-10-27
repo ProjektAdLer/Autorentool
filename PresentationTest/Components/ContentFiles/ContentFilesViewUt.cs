@@ -122,14 +122,12 @@ public class ContentFilesViewUt
                 var nameTd = tableRows[i].Children
                     .FirstOrDefault(child => child.Attributes["data-label"]?.Value == "Name");
                 Assert.That(nameTd, Is.Not.Null);
-                var name = nameTd!.Children.First(child => child.Matches("div")).Children
-                    .First(child => child.Matches("p"))
-                    .GetInnerText();
+                var name = nameTd.GetInnerText().Trim();
                 Assert.That(name, Is.EqualTo(item.Name));
 
                 var typeTd = tableRows[i].Children
                     .FirstOrDefault(child => child.Attributes["data-label"]?.Value == "Type");
-                var type = typeTd.GetInnerText();
+                var type = typeTd.GetInnerText().Trim();
                 Assert.That(type, Is.EqualTo(item is FileContentViewModel fc ? fc.Type : "video"));
 
                 var pathTd = tableRows[i].Children

@@ -1,5 +1,6 @@
 @using System.Diagnostics.CodeAnalysis
 @using Microsoft.Extensions.Localization
+@using Presentation.Components.ContentFiles
 @using Presentation.Components.Forms
 @using Presentation.PresentationLogic.API
 @using Presentation.PresentationLogic.LearningContent
@@ -16,7 +17,8 @@
 <div class="relative w-[800px] h-[520px] flex flex-col mx-4">
     <MudText Class="px-2 mb-1 text-sm cursor-default">@Localizer["Reference.Text"]</MudText>
     <div class="border-adlergrey-200 border-4 rounded m-2">
-        <MudText Class="font-bold text-adlertitledarkblue text-sm cursor-default px-3 py-1 pt-2">@Localizer["Note.Label.Text"]</MudText>
+        <MudText
+            Class="font-bold text-adlertitledarkblue text-sm cursor-default px-3 py-1 pt-2">@Localizer["Note.Label.Text"]</MudText>
         <div class="border-4 border-adlergrey-100 rounded-lg mx-1.5">
             <MudTextField Variant="Variant.Outlined"
                           Class="shadow-none m-0"
@@ -33,14 +35,20 @@
                 <MudForm Class="bg-white border-t-2 border-adlergrey-200" @ref="_form">
                     <div class="p-2">
                         <div class="flex flex-row justify-between items-center gap-1">
-                            <MudText Class="cursor-default font-bold text-sm text-adlertitledarkblue p-1">@Localizer["Reference.Element.Label.Text"]
-                                <MudTooltip Placement="Placement.Right" Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed cursor-default" Text="@Localizer["Reference.Element.Info.Text"]">
-                                    <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info" Class="text-adlergrey-300 hover:text-adlerdarkblue"></MudIcon>
+                            <MudText
+                                Class="cursor-default font-bold text-sm text-adlertitledarkblue p-1">@Localizer["Reference.Element.Label.Text"]
+                                <MudTooltip Placement="Placement.Right"
+                                            Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed cursor-default"
+                                            Text="@Localizer["Reference.Element.Info.Text"]">
+                                    <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info"
+                                             Class="text-adlergrey-300 hover:text-adlerdarkblue"></MudIcon>
                                 </MudTooltip>
                             </MudText>
                             <div class="flex flex-row gap-1 w-72 cursor-default">
-                                <MudText Class="text-sm">@Localizer["Reference.Material.Element.Text.Selected"]</MudText>
-                                <MudText Class="text-sm font-bold truncate text-ellipsis"> @LearningElement?.Name </MudText>
+                                <MudText
+                                    Class="text-sm">@Localizer["Reference.Material.Element.Text.Selected"]</MudText>
+                                <MudText
+                                    Class="text-sm font-bold truncate text-ellipsis"> @LearningElement?.Name </MudText>
                             </div>
                         </div>
                         <GridSelect T="ILearningElementViewModel"
@@ -65,47 +73,34 @@
                 <MudForm Class="bg-white border-t-2 border-adlergrey-100" @ref="_form">
                     <div class="p-2">
                         <div class="flex flex-row justify-between items-center gap-1">
-                            <MudText Class="font-bold text-sm p-1 cursor-default text-adlertitledarkblue">@Localizer["Reference.Content.Label.Text"]
-                                <MudTooltip Placement="Placement.Right" Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed cursor-default" Text="@Localizer["Reference.Content.Info.Text"]">
-                                    <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info" Class="text-adlergrey-300 hover:text-adlerdarkblue"></MudIcon>
+                            <MudText
+                                Class="font-bold text-sm p-1 cursor-default text-adlertitledarkblue">@Localizer["Reference.Content.Label.Text"]
+                                <MudTooltip Placement="Placement.Right"
+                                            Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed cursor-default"
+                                            Text="@Localizer["Reference.Content.Info.Text"]">
+                                    <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info"
+                                             Class="text-adlergrey-300 hover:text-adlerdarkblue"></MudIcon>
                                 </MudTooltip>
                             </MudText>
                             <div class="flex flex-row gap-1 w-72 cursor-default">
-                                <MudText Class="text-sm">@Localizer["Reference.Material.Element.Text.Selected"]</MudText>
-                                <MudText Class="text-sm font-bold truncate text-ellipsis"> @LearningContent?.Name </MudText>
+                                <MudText
+                                    Class="text-sm">@Localizer["Reference.Material.Element.Text.Selected"]</MudText>
+                                <MudText
+                                    Class="text-sm font-bold truncate text-ellipsis"> @LearningContent?.Name </MudText>
                             </div>
                         </div>
-                        
-                        <TableSelect
-                            T="ILearningContentViewModel"
-                            @bind-Value="LearningContent"
-                            Required="true"
-                            RequiredError="@Localizer["Content.RequiredError.Text"]"
-                            Typo="Typo.body2" 
-                            Margin="Margin.None"
-                            AllowDeselect="false"
-                            Elements="LearningContents.OrderBy(x => x.Name, StringComparer.OrdinalIgnoreCase)"
-                            FilterFuncSearchableStrings="ILearningContentViewModel.GetSearchableStrings">
-                            <HeaderContent>
-                            </HeaderContent>
-                            <RowTemplate>
-                                <MudTd Class="px-1.5 py-0 h-6">
-                                    <MudIconButton Icon="@Icons.Material.Filled.RemoveRedEye"
-                                                   OnClick="() => PresentationLogic.ShowLearningContentAsync(context)"/>
-                                </MudTd>
-                                <MudTd Class="cursor-pointer p-0 max-w-[20rem] truncate h-6" DataLabel="Name">@context.Name</MudTd>
-                                <MudTd Class="cursor-pointer py-0 pl-1 h-6" DataLabel="Type">
-                                    @if (context is FileContentViewModel fileContentContext)
-                                    {
-                                        @fileContentContext.Type
-                                    }
-                                    else
-                                    {
-                                        <span>Link</span>
-                                    }
-                                </MudTd>
-                            </RowTemplate>
-                        </TableSelect>
+
+                        <ContentFilesView @bind-SelectedLearningContent="LearningContent"
+                                          ShowHeadRow="false"
+                                          ShowContentState="false"
+                                          TableHeight="150px"
+                                          SurroundingDivClass="rounded border-2 border-adlergrey-100"
+                                          MultipleSelection="false"
+                                          ShowPager="false"
+                                          DeleteButtonVisible="false"
+                                          ShowPreviewButton="true"
+                                          ShowHoverMenu="false"
+                                          FocusSearch="true"></ContentFilesView>
                     </div>
                 </MudForm>
             </MudTabPanel>
@@ -129,9 +124,9 @@
     [Inject, AllowNull] internal IStringLocalizer<CreateEditReferenceActionDialog> Localizer { get; set; }
 
     [Parameter] public bool? IsSelected { get; set; }
-    
+
     [Parameter] public IAdaptivityActionViewModel? ExistingAction { get; set; }
-    
+
     [Parameter] public IAdaptivityRuleViewModel? ExistingRule { get; set; }
 
     [Parameter, EditorRequired, AllowNull] public IAdaptivityQuestionViewModel Question { get; set; }
@@ -149,6 +144,7 @@
     private MudTabPanel _contentPanel = null!;
     private MudTabPanel _elementPanel = null!;
     private ILearningContentViewModel? _learningContent;
+
     internal ILearningContentViewModel? LearningContent
     {
         get => _learningContent;
@@ -159,8 +155,9 @@
             {
                 _learningElement = null;
             }
-        } 
+        }
     }
+
     private ILearningElementViewModel? _learningElement;
 
     private ILearningElementViewModel? LearningElement
@@ -175,22 +172,25 @@
             }
         }
     }
+
     internal string Comment = "";
-    
+
     private bool _initialized;
-    
+
     private string GetTabPanelClass(MudTabPanel panel)
     {
         var isSelected = _tabs.ActivePanel == panel;
-        
-        @if(panel == _elementPanel)
+
+        @if (panel == _elementPanel)
         {
             return isSelected ? "text-adlertextgrey bg-adlergrey-200 hover:bg-adlergrey-300 font-bold panel-element" : "text-adlergrey-300 bg-adlergrey-100 panel-element";
         }
-        @if(panel == _contentPanel)
+
+        @if (panel == _contentPanel)
         {
             return isSelected ? "text-adlertextgrey bg-adlergrey-200 hover:bg-adlergrey-300 font-bold rounded-tr panel-content" : "text-adlergrey-300 bg-adlergrey-100 rounded-tr panel-content";
         }
+
         return "border-2 flex rounded-lg";
     }
 
@@ -210,6 +210,7 @@
                 Comment = eravm.Comment;
                 break;
         }
+
         _initialized = true;
     }
 
@@ -237,16 +238,16 @@
 
     private async Task SubmitAsync()
     {
-        if(!(_tabs.ActivePanel == _elementPanel && LearningContent != null || _tabs.ActivePanel == _contentPanel && LearningElement != null))
+        if (!(_tabs.ActivePanel == _elementPanel && LearningContent != null || _tabs.ActivePanel == _contentPanel && LearningElement != null))
         {
             await _form.Validate();
             if (!_form.IsValid) return;
         }
-        
+
         try
         {
             switch (ExistingAction)
-            { 
+            {
                 case ContentReferenceActionViewModel when LearningContent == null:
                     PresentationLogic.ReplaceContentReferenceActionByElementReferenceAction(Question, ExistingRule!,
                         new ElementReferenceActionViewModel(LearningElement!.Id, Comment),
@@ -297,6 +298,7 @@
         {
             throw new InvalidOperationException("Either LearningElement or LearningContent must be set");
         }
+
         PresentationLogic.CreateAdaptivityRule(
             Question,
             new CorrectnessTriggerViewModel(AnswerResult.Incorrect),
