@@ -19,6 +19,22 @@
 
 </details>
 
+## [3.0.2] - 2025-10-29
+
+### Added
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+- Fixed a bug where story elements could not be created or edited.
+
+### Security
+
 ## [3.0.1] - 2025-10-24
 
 ### Added

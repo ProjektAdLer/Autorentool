@@ -9,7 +9,7 @@ public class StoryContentFormModel : ILearningContentFormModel
     /// </summary>
     public StoryContentFormModel()
     {
-        Name = "";
+        Name = "StoryContent";
         StoryText = new List<string>();
         NpcName = "";
         NpcMood = NpcMood.Welcome;

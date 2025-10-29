@@ -44,6 +44,7 @@ public class ViewModelFormModelMappingProfile : Profile
         CreateMap<FileContentViewModel, FileContentFormModel>()
             .ReverseMap();
         CreateMap<StoryContentViewModel, StoryContentFormModel>()
+            .ForMember(x => x.Name, opt => opt.MapFrom(_ => "StoryContent"))
             .ReverseMap();
 
         CreateMap<ILearningContentViewModel, ILearningContentFormModel>()
