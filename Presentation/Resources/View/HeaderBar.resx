@@ -20,4 +20,13 @@
     <data name="LMS.Login.Hover" xml:space="preserve">
         <value />
     </data>
+    <data name="Dialog.LoginButton" xml:space="preserve">
+        <value />
+    </data>
+    <data name="Dialog.BackendInvalidToken.Message" xml:space="preserve">
+        <value />
+    </data>
+    <data name="DialogService.BackendInvalidToken.Title" xml:space="preserve">
+        <value />
+    </data>
 </root>

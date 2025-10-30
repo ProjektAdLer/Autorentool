@@ -19,9 +19,11 @@
 
 </details>
 
-## [3.0.2] - 2025-10-29
+## [3.0.2] - 2025-10-30
 
 ### Added
+
+- Added link to login to dialogues if not logged in or invalid token when uploading a learning world.
 
 ### Changed
 
@@ -32,6 +34,7 @@
 ### Fixed
 
 - Fixed a bug where story elements could not be created or edited.
+- Fixed a crash that occurred when uploading a learning world with an invalid token.
 
 ### Security
 
