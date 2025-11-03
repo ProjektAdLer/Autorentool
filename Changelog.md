@@ -19,13 +19,15 @@
 
 </details>
 
-## [3.0.2] - 2025-10-30
+## [3.0.2] - 2025-11-03
 
 ### Added
 
 - Added link to login to dialogues if not logged in or invalid token when uploading a learning world.
 
 ### Changed
+
+- Enabled Company theme and disabled Suburb theme.
 
 ### Deprecated
 
