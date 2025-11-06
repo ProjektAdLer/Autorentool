@@ -228,6 +228,16 @@
             ErrorService.SetError("An error occurred while checking the LMS connection", e.Message);
             return;
         }
+        catch (BackendInvalidTokenException)
+        {
+            await ShowBackendInvalidTokenDialog();
+            return;
+        }
+        catch (Exception e)
+        {
+            ErrorService.SetError("An unknown error occurred while checking the LMS connection", e.Message);
+            return;
+        }
 
         //present "Upload/Cancel" dialog
         var parameters = new DialogParameters
@@ -375,15 +385,11 @@
 
     private async Task ShowNotLoggedInDialog()
     {
-        //present Info dialog
         var parameters = new DialogParameters
         {
-            { "OkButtonText", Localizer["ShowNotLoggedInDialog.OkButtonText"].ToString() },
-            { "OkButtonColor", Color.Info },
-            {
-                "DialogText",
-                (MarkupString)Localizer["Dialog.NotLoggedIn.Message"].ToString()
-            },
+            { "SubmitButtonText", Localizer["Dialog.LoginButton"].ToString() },
+            { "SubmitButtonColor", Color.Primary },
+            { "DialogText", Localizer["Dialog.NotLoggedIn.Message"].ToString() },
         };
         var options = new DialogOptions
         {
@@ -391,7 +397,38 @@
             CloseOnEscapeKey = true,
             BackdropClick = true,
         };
-        await DialogService.ShowAsync<GenericInfoDialog>(Localizer["DialogService.NotLoggedIn.Title"].ToString(), parameters, options);
+        
+        var dialog = await DialogService.ShowAsync<GenericCancellationConfirmationDialog>(Localizer["DialogService.NotLoggedIn.Title"].ToString(), parameters, options);
+        
+        var result = await dialog.Result;
+        if (result is { Data: true })
+        {
+            OpenAdministrationDialog();
+        }
+    }
+    
+    private async Task ShowBackendInvalidTokenDialog()
+    {
+        var parameters = new DialogParameters
+        {
+            { "SubmitButtonText", Localizer["Dialog.LoginButton"].ToString() },
+            { "SubmitButtonColor", Color.Primary },
+            { "DialogText", Localizer["Dialog.BackendInvalidToken.Message"].ToString() },
+        };
+        var options = new DialogOptions
+        {
+            CloseButton = true,
+            CloseOnEscapeKey = true,
+            BackdropClick = true,
+        };
+        
+        var dialog = await DialogService.ShowAsync<GenericCancellationConfirmationDialog>(Localizer["DialogService.BackendInvalidToken.Title"].ToString(), parameters, options);
+        
+        var result = await dialog.Result;
+        if (result is { Data: true })
+        {
+            OpenAdministrationDialog();
+        }
     }
 
     private void OnClickUndo()

@@ -57,9 +57,6 @@
     <data name="Dialog.UploadLearningWorld.DialogText" xml:space="preserve">
         <value>Möchten Sie wirklich die Lernwelt &lt;b&gt;{0}&lt;/b&gt; hochladen?</value>
     </data>
-    <data name="ShowNotLoggedInDialog.OkButtonText" xml:space="preserve">
-        <value>Ok</value>
-    </data>
     <data name="UploadLearningWorld.SubmitButtonText" xml:space="preserve">
         <value>Veröffentlichen</value>
     </data>
@@ -73,7 +70,7 @@
         <value>Lernwelt ist ungültig</value>
     </data>
     <data name="DialogService.NotLoggedIn.Title" xml:space="preserve">
-        <value>Du bist nicht angemeldet</value>
+        <value>Sie sind nicht angemeldet</value>
     </data>
     <data name="DialogService.UploadLearningWorld.Dialog" xml:space="preserve">
         <value>Lernwelt veröffentlichen</value>
@@ -113,5 +110,14 @@
     </data>
     <data name="LMS.Login.Hover" xml:space="preserve">
         <value>Administration</value>
+    </data>
+    <data name="Dialog.LoginButton" xml:space="preserve">
+        <value>Anmelden</value>
+    </data>
+    <data name="Dialog.BackendInvalidToken.Message" xml:space="preserve">
+        <value>Ihr Anmelde-Token ist abgelaufen. Bitte melden Sie sich erneut an, um Lernwelten hochzuladen.</value>
+    </data>
+    <data name="DialogService.BackendInvalidToken.Title" xml:space="preserve">
+        <value>Ungültiger Anmelde-Token</value>
     </data>
 </root>
