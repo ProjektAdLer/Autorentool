@@ -2,7 +2,6 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Bunit;
-using Bunit.TestDoubles;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,7 +21,6 @@ using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Question;
 using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Trigger;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningWorld;
-using Presentation.PresentationLogic.Mediator;
 using Presentation.PresentationLogic.SelectedViewModels;
 using Presentation.View.LearningElement;
 using Shared.Adaptivity;
@@ -80,7 +78,7 @@ public class CreateEditReferenceActionDialogIt : MudDialogTestFixture<CreateEdit
     private ILearningWorldPresenter LearningWorldPresenter { get; set; }
     private ILearningWorldViewModel World { get; set; }
     private ILearningContentViewModel[] Contents { get; set; }
-    
+
     private ISelectedViewModelsProvider _selectedViewModelsProvider;
     private IElementModelHandler _elementModelHandler;
     private IStringLocalizer<DragDropLearningElement> _stringLocalizer;
@@ -96,6 +94,7 @@ public class CreateEditReferenceActionDialogIt : MudDialogTestFixture<CreateEdit
             dialogParameters.Add(nameof(CreateEditReferenceActionDialog.ExistingAction), ExistingAction);
             //dialogParameters.Add(nameof(CreateEditReferenceActionDialog.ExistingRule), ExistingRule);
         }
+
         Dialog = await OpenDialogAndGetDialogReferenceAsync("title", new DialogOptions(),
             dialogParameters);
     }
@@ -105,7 +104,7 @@ public class CreateEditReferenceActionDialogIt : MudDialogTestFixture<CreateEdit
     public async Task NoExistingAction_ContentSelected_CallsCreateAdaptivityRuleWithContentReferenceAction()
     {
         await DialogProvider.Find("div.panel-content").ClickAsync(new MouseEventArgs());
-        
+
         var componentUnderTest = DialogProvider.FindComponent<CreateEditReferenceActionDialog>();
         componentUnderTest.Instance.LearningContent = Contents[0];
         componentUnderTest.Instance.Comment = "foo";
@@ -201,7 +200,7 @@ public class CreateEditReferenceActionDialogIt : MudDialogTestFixture<CreateEdit
 
         PresentationLogic.DidNotReceiveWithAnyArgs().EditElementReferenceAction(eravm, eravm.ElementId, "foo");
     }
-    
+
     [Test]
     // ANF-ID: [AWA0027]
     public async Task ExistingAction_ElementSelected_CallsReplaceElementReferenceActionByContentReferenceAction()
@@ -214,9 +213,9 @@ public class CreateEditReferenceActionDialogIt : MudDialogTestFixture<CreateEdit
 
         await DialogProvider.FindComponent<MudTextField<string>>().Find("textarea")
             .ChangeAsync(new ChangeEventArgs { Value = "foo" });
-        
+
         await DialogProvider.Find("div.panel-content").ClickAsync(new MouseEventArgs());
-        
+
         var componentUnderTest = DialogProvider.FindComponent<CreateEditReferenceActionDialog>();
         componentUnderTest.Instance.LearningContent = Contents[0];
 
@@ -228,7 +227,7 @@ public class CreateEditReferenceActionDialogIt : MudDialogTestFixture<CreateEdit
             Arg.Any<ContentReferenceActionViewModel>(),
             Arg.Any<CorrectnessTriggerViewModel>());
     }
-    
+
     [Test]
     // ANF-ID: [AWA0027]
     public async Task ExistingAction_ContentSelected_CallsReplaceContentReferenceActionByElementReferenceAction()
@@ -241,9 +240,9 @@ public class CreateEditReferenceActionDialogIt : MudDialogTestFixture<CreateEdit
 
         await DialogProvider.FindComponent<MudTextField<string>>().Find("textarea")
             .ChangeAsync(new ChangeEventArgs { Value = "foo" });
-        
+
         await DialogProvider.Find("div.panel-element").ClickAsync(new MouseEventArgs());
-        
+
         await DialogProvider.Find("div.mud-paper").ClickAsync(new MouseEventArgs());
 
         await DialogProvider.FindComponent<MudButton>().Find("button").ClickAsync(new MouseEventArgs());

@@ -3,6 +3,7 @@
 @using Microsoft.Extensions.Localization
 @using MudBlazor.Extensions
 @using Presentation.Components.Dialogues
+@using Presentation.H5P
 @using Presentation.PresentationLogic.API
 @using Presentation.PresentationLogic.AuthoringToolWorkspace
 @using Presentation.PresentationLogic.LearningContent
@@ -11,7 +12,6 @@
 @using Presentation.PresentationLogic.LearningElement
 @using Presentation.PresentationLogic.LearningWorld
 @using Presentation.PresentationLogic.Mediator
-@using Presentation.H5P
 @using Presentation.PresentationLogic.SelectedViewModels
 @using Shared.H5P
 @inject ISnackbar Snackbar
@@ -239,36 +239,25 @@
                 @if (ShowContentState)
                 {
                     <MudTd DataLabel="State" Class="p-0 cursor-default">
-                        @if (context is FileContentViewModel fileContentContext)
-                        {
+                        @{
                             var fileContent = context as IFileContentViewModel;
-                            <div class="flex flex-row items-center justify-start">
-                                @if (fileContentContext.Type == "h5p")
-                                {
-                                    <H5PStateIcon FileContentVm="@fileContent"/>
-                                }
-                                else
-                                {
-                                    <MudTooltip>
-                                        <div class="flex flex-row items-center justify-start gap-1">
-                                            @((MarkupString)H5PStateIcon.InlineSvg(H5PStateIcon.Svg.Lockable))
-                                            <p class="text-xs text-adlergrey">nutzbar</p>
-                                        </div>
-                                    </MudTooltip>
-                                }
-                            </div>
+                            var isH5P = context is FileContentViewModel { Type: "h5p" };
                         }
-                        else
-                        {
-                            <div class="flex flex-row items-center justify-start">
+                        <div class="flex flex-row items-center justify-start">
+                            @if (isH5P)
+                            {
+                                <H5PStateIcon FileContentVm="@fileContent"/>
+                            }
+                            else
+                            {
                                 <MudTooltip>
                                     <div class="flex flex-row items-center justify-start gap-1">
                                         @((MarkupString)H5PStateIcon.InlineSvg(H5PStateIcon.Svg.Lockable))
-                                        <p class="text-xs text-adlergrey">nutzbar</p>
+                                        <p class="text-xs text-adlergrey">@Localizer["ContentFilesView.H5P.Usable"]</p>
                                     </div>
                                 </MudTooltip>
-                            </div>
-                        }
+                            }
+                        </div>
                     </MudTd>
                 }
 
