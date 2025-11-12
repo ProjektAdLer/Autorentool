@@ -14,8 +14,8 @@
             <div class="flex flex-row items-center justify-start gap-1">
                 <button type="button" class="p-0 bg-transparent border-0" @onclick="() => ShowH5PContent()">
                     @((MarkupString)InlineSvg(Svg.Unchecked))
+                    <p class="text-xs text-adlergrey">@Localizer["H5PState.NotValidated"]</p>
                 </button>
-                <p class="text-xs text-adlergrey">@Localizer["H5PState.NotValidated"]</p>
             </div>
         </MudTooltip>
         break;
@@ -25,8 +25,8 @@
             <div class="flex flex-row items-center justify-start gap-1">
                 <button type="button" class="p-0 bg-transparent border-0" @onclick="() => ShowH5PContent()">
                     @((MarkupString)InlineSvg(Svg.Lockable))
+                    <p class="text-xs text-adlergrey">@Localizer["H5PState.Usable"]</p>
                 </button>
-                <p class="text-xs text-adlergrey">@Localizer["H5PState.Usable"]</p>
             </div>
         </MudTooltip>
         break;
@@ -35,8 +35,8 @@
             <div class="flex flex-row items-center justify-start gap-1">
                 <button type="button" class="p-0 bg-transparent border-0" @onclick="() => ShowH5PContent()">
                     @((MarkupString)InlineSvg(Svg.NotLockable))
+                    <p class="text-xs text-adlergrey" style="white-space: nowrap;">@Localizer["H5PState.NotUsable"]</p>
                 </button>
-                <p class="text-xs text-adlergrey" style="white-space: nowrap;">@Localizer["H5PState.NotUsable"]</p>
             </div>
         </MudTooltip>
         break;
