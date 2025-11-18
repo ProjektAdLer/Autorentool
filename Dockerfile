@@ -6,7 +6,7 @@ WORKDIR /src
 
 # Install Node.js for npm dependencies
 RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash - && \
-    apt-get install -y nodejs
+    apt-get install -y nodejs --no-install-recommends && apt-get clean
 
 # Copy project files
 COPY . .
@@ -36,7 +36,8 @@ RUN apt-get update && \
     # zlib1g-dev is required for arm64
     zlib1g-dev \
     --no-install-recommends && \
-    rm -rf /var/lib/apt/lists/*
+    rm -rf /var/lib/apt/lists/* &&  \
+    apt-get clean
 
 WORKDIR /app
 
