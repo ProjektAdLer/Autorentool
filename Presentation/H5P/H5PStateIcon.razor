@@ -1,10 +1,10 @@
 ﻿@using System.ComponentModel.DataAnnotations
 @using System.Diagnostics.CodeAnalysis
+@using Microsoft.Extensions.Localization
 @using Presentation.Components.ContentFiles
 @using Presentation.PresentationLogic.API
 @using Presentation.PresentationLogic.LearningContent.FileContent
 @using Shared.H5P
-
 @inject NavigationManager Navigation
 
 @switch (FileContentVm.H5PState)
@@ -14,29 +14,29 @@
             <div class="flex flex-row items-center justify-start gap-1">
                 <button type="button" class="p-0 bg-transparent border-0" @onclick="() => ShowH5PContent()">
                     @((MarkupString)InlineSvg(Svg.Unchecked))
+                    <p class="text-xs text-adlergrey">@Localizer["H5PState.NotValidated"]</p>
                 </button>
-<p class="text-xs text-adlergrey">ungeprüft</p>
             </div>
         </MudTooltip>
-    break;
+        break;
     case H5PContentState.Primitive:
     case H5PContentState.Completable:
         <MudTooltip Text="H5P-Validator öffnen">
             <div class="flex flex-row items-center justify-start gap-1">
                 <button type="button" class="p-0 bg-transparent border-0" @onclick="() => ShowH5PContent()">
                     @((MarkupString)InlineSvg(Svg.Lockable))
+                    <p class="text-xs text-adlergrey">@Localizer["H5PState.Usable"]</p>
                 </button>
-                <p class="text-xs text-adlergrey">nutzbar</p>
             </div>
         </MudTooltip>
         break;
-case H5PContentState.NotUsable:
+    case H5PContentState.NotUsable:
         <MudTooltip Text="H5P-Validator öffnen">
             <div class="flex flex-row items-center justify-start gap-1">
                 <button type="button" class="p-0 bg-transparent border-0" @onclick="() => ShowH5PContent()">
                     @((MarkupString)InlineSvg(Svg.NotLockable))
+                    <p class="text-xs text-adlergrey" style="white-space: nowrap;">@Localizer["H5PState.NotUsable"]</p>
                 </button>
-                <p class="text-xs text-adlergrey" style="white-space: nowrap;">nicht nutzbar</p>
             </div>
         </MudTooltip>
         break;
@@ -46,12 +46,15 @@ case H5PContentState.NotUsable:
 @code {
 
     [Parameter, Required] public required IFileContentViewModel FileContentVm { get; set; }
-    
+
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
-    internal  IH5PPlayerPluginManager H5PPlayerPluginManager { get; set; }
-    
+    internal IH5PPlayerPluginManager H5PPlayerPluginManager { get; set; }
+
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal IPresentationLogic PresentationLogic { get; set; }
+
+    [Inject, AllowNull] internal IStringLocalizer<H5PStateIcon> Localizer { get; set; }
+
     private async Task ShowH5PContent()
     {
         if (FileContentVm.Type == "h5p")
@@ -70,11 +73,13 @@ case H5PContentState.NotUsable:
   <path d=""M1819.26,679.85c39.2,99.44,60.74,207.78,60.74,321.15,0,483.8-392.2,876-876,876S128,1484.8,128,1001,520.2,125,1004,125c175.78,0,339.47,51.78,476.65,140.91"" style=""fill: none; fill-rule: evenodd; stroke: #66c166; stroke-miterlimit: 10; stroke-width: 220px;""/>
   <polyline points=""537.4 951.67 991.4 1460.67 1867 149"" style=""fill: none; fill-rule: evenodd; stroke: #66c166; stroke-linecap: round; stroke-linejoin: round; stroke-width: 220px;""/>
 </svg>";
+
         public static readonly string NotLockable = @"<?xml version=""1.0"" encoding=""UTF-8""?>
 <svg id=""uuid-78b1e168-2a2d-4642-b432-e54c1200487e"" data-name=""R-NotLockable"" xmlns=""http://www.w3.org/2000/svg"" viewBox=""0 0 2000 2000"">
   <circle cx=""1004"" cy=""1001"" r=""876"" style=""fill: none; stroke: #f44336; stroke-miterlimit: 10; stroke-width: 220px;""/>
   <line x1=""451"" y1=""1632"" x2=""1554"" y2=""370"" style=""fill: none; stroke: #f44336; stroke-linecap: round; stroke-linejoin: round; stroke-width: 220px;""/>
 </svg>";
+
         public static readonly string Unchecked = @"<?xml version=""1.0"" encoding=""UTF-8""?>
 <svg id=""uuid-39f00979-81a1-48d3-a56b-45a5408612dc"" data-name=""R-NotLockable"" xmlns=""http://www.w3.org/2000/svg"" viewBox=""0 0 2000 2000"">
   <circle cx=""1004"" cy=""1001"" r=""878"" style=""fill: none; stroke: #999; stroke-miterlimit: 10; stroke-width: 220px;""/>
@@ -100,5 +105,8 @@ case H5PContentState.NotUsable:
                 return before + after;
             }
         }
+
         return raw;
-    }}
+    }
+
+}

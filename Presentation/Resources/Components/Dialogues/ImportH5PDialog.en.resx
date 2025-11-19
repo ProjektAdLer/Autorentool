@@ -31,10 +31,10 @@ You can find out more &lt;a href="https://projektadler.github.io/Documentation/m
     <value>Validate later</value>
   </data>
   <data name="Dialog.H5P.StateUsable" xml:space="preserve">
-    <value>useable</value>
+    <value>usable</value>
   </data>
   <data name="Dialog.H5P.StateNotUsable" xml:space="preserve">
-    <value>not useable</value>
+    <value>not usable</value>
   </data>
   <data name="Dialog.H5P.StateUnchecked" xml:space="preserve">
     <value>unchecked</value>

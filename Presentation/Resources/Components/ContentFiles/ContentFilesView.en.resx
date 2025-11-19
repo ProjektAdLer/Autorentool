@@ -96,4 +96,7 @@
     <data name="ContentFilesView.ErrorMessage.MaterialInUse" xml:space="preserve">
         <value>Error deleting external learning material: File in use</value>
     </data>
+    <data name="ContentFilesView.H5P.Usable" xml:space="preserve">
+        <value>usable</value>
+    </data>
 </root>

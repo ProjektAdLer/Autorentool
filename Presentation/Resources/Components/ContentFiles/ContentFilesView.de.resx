@@ -105,4 +105,7 @@
     <data name="ContentFilesView.ErrorMessage.MaterialInUse" xml:space="preserve">
         <value>Fehler beim Löschen von externem Lernmaterial: Datei in Gebrauch</value>
     </data>
+    <data name="ContentFilesView.H5P.Usable" xml:space="preserve">
+        <value>nutzbar</value>
+    </data>
 </root>
