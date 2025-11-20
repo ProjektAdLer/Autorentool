@@ -28,7 +28,7 @@
                           Required="false"/>
         </div>
 
-        <MudTabs Class="pt-3" HideSlider="true" @ref="_tabs">
+        <MudTabs Class="pt-3" HideSlider="true" @ref="_tabs" ActivePanelIndexChanged="OnActivePanelChanged">
             <MudTabPanel @ref="_elementPanel" Text="@Localizer["Element.Text"]"
                          Class="@GetTabPanelClass(_elementPanel)">
                 <!-- Element reference -->
@@ -100,7 +100,9 @@
                                           DeleteButtonVisible="false"
                                           ShowPreviewButton="true"
                                           ShowHoverMenu="false"
-                                          FocusSearch="true"></ContentFilesView>
+                                          FocusSearch="true"
+                                          Error="!_hideError && LearningContent == null"
+                                          ErrorText="@Localizer["Content.RequiredError.Text"]"></ContentFilesView>
                     </div>
                 </MudForm>
             </MudTabPanel>
@@ -144,6 +146,7 @@
     private MudTabPanel _contentPanel = null!;
     private MudTabPanel _elementPanel = null!;
     private ILearningContentViewModel? _learningContent;
+    private bool _hideError = true;
 
     internal ILearningContentViewModel? LearningContent
     {
@@ -176,6 +179,9 @@
     internal string Comment = "";
 
     private bool _initialized;
+
+    private void OnActivePanelChanged(int index) => _hideError = true;
+
 
     private string GetTabPanelClass(MudTabPanel panel)
     {
@@ -242,6 +248,7 @@
         {
             await _form.Validate();
             if (!_form.IsValid) return;
+            if (IsContentOrElementSet()) return;
         }
 
         try
@@ -281,6 +288,13 @@
         {
             DialogInstance.Close();
         }
+    }
+
+    private bool IsContentOrElementSet()
+    {
+        if (LearningContent != null || LearningElement != null) return false;
+        _hideError = false;
+        return true;
     }
 
     private void CreateAdaptivityRuleFromSelected()
