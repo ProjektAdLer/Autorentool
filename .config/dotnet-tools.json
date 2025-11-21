@@ -3,14 +3,14 @@
   "isRoot": true,
   "tools": {
     "electronnet.cli": {
-      "version": "23.6.1",
+      "version": "23.6.2",
       "commands": [
         "electronize"
       ],
       "rollForward": false
     },
     "electronsharp.cli": {
-      "version": "35.0.2.56759",
+      "version": "36.2.0.59099",
       "commands": [
         "electron-sharp"
       ],
