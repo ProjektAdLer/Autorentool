@@ -289,7 +289,7 @@
         Stream stream;
         try
         {
-            stream = file.OpenReadStream(1_000_000_000);
+            stream = file.OpenReadStream(52_428_800);
             Logger.LogTrace("BrowserFileStream opened");
         }
         catch (IOException)

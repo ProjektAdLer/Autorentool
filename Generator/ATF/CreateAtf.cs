@@ -523,6 +523,7 @@ public class CreateAtf : ICreateAtf
         {
             { } type when FileContentIsTextType(type) => "text",
             { } type when FileContentIsImageType(type) => "image",
+            { } type when FileContentIsVideoType(type) => "video",
             "h5p" => fileContent.IsH5P ? "primitiveH5P" : "h5p",
             "pdf" => "pdf",
             _ => throw new ArgumentOutOfRangeException(nameof(fileContent.Type),
@@ -557,6 +558,12 @@ public class CreateAtf : ICreateAtf
     /// </summary>
     private static bool FileContentIsTextType(string type) =>
         new[] { "txt", "c", "h", "cpp", "cc", "c++", "py", "js", "php", "html", "css" }.Contains(type);
+
+    /// <summary>
+    /// Determines whether a given file content type is video.
+    /// </summary>
+    private static bool FileContentIsVideoType(string type) =>
+        new[] { "avi", "mp4", "mov", "webm" }.Contains(type);
 
     /// <summary>
     /// Maps an adaptivity content object to its corresponding JSON representation in the ATF.

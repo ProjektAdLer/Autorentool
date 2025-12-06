@@ -11,7 +11,7 @@ public static class ContentTypeHelper
                 ContentTypeEnum.Text,
             "jpg" or "png" or "webp" or "bmp" => ContentTypeEnum.Image,
             "pdf" => ContentTypeEnum.Text,
-            "video" => ContentTypeEnum.Video,
+            "video" or "avi" or "mp4" or "mov" or "webm" => ContentTypeEnum.Video,
             _ => throw new ArgumentOutOfRangeException(nameof(type), type,
                 $"Type {type} is not in the list of supported types.")
         };

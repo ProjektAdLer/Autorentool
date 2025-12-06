@@ -207,16 +207,24 @@ public class ContentFileHandlerUt
     
     [Test]
     // ANF-ID: [ASE7]
-    public async Task LoadContentAsync_WithStream_GeneratePersistFileForFileContent()
+    [TestCase("foobar.h5p", true)]
+    [TestCase("foobar.png", false)]
+    public async Task LoadContentAsync_WithStream_GeneratePersistFileOnlyForH5PFileContent(string filepath, bool shouldGeneratePersistFile)
     {
         var stream = new MemoryStream(new byte[] { 0x42, 0x24, 0x53, 0x54 });
-        const string filepath = "foobar.png";
         var mockFileSystem = CreateFileSystemWithByteFileData(filepath);
         var systemUnderTest = CreateTestableContentFileHandler(fileSystem: mockFileSystem);
 
         await systemUnderTest.LoadContentAsync(filepath, stream);
-        
-        systemUnderTest.XmlFileHandlerFileContent!.Received().SaveToDisk(Arg.Any<FileContentPe>(), Arg.Any<string>());
+
+        if (shouldGeneratePersistFile)
+        { 
+            systemUnderTest.XmlFileHandlerFileContent!.Received().SaveToDisk(Arg.Any<FileContentPe>(), Arg.Any<string>());
+        }
+        else
+        {
+            systemUnderTest.XmlFileHandlerFileContent!.DidNotReceive().SaveToDisk(Arg.Any<FileContentPe>(), Arg.Any<string>());
+        }
     }
 
     

@@ -95,6 +95,18 @@
         <div class="bg-none w-60 flex flex-row justify-center items-center cursor-pointer">
             <MudButton
                 Class="h-6 rounded-lg my-1 p-1 drop-shadow disabled:bg-adlerbggradientto text-adlerdarkblue bg-adlergold-400 hover:bg-adlergold-600"
+                id="HeaderBar.ExportMBZ.Button" OnClick="ExportLearningWorld"
+                title=@Localizer["3DWorld.ExportMBZ.Hover"].Value
+                Disabled="@(SelectedViewModelsProvider.LearningWorld == null)">
+                <MudIcon Icon="@Icons.Material.Filled.Upload" Title="@Localizer["3DWorld.ExportMBZ.Hover"].Value"
+                         Size="Size.Small"></MudIcon>
+                <p class="text-xs font-bold uppercase pl-2">@Localizer["3DWorld.ExportMBZ.Button.Title"]</p>
+            </MudButton>
+        </div>
+
+        <div class="bg-none w-60 flex flex-row justify-center items-center cursor-pointer">
+            <MudButton
+                Class="h-6 rounded-lg my-1 p-1 drop-shadow disabled:bg-adlerbggradientto text-adlerdarkblue bg-adlergold-400 hover:bg-adlergold-600"
                 id="HeaderBar.GenerateLearningWorld.Button" OnClick="GenerateLearningWorld"
                 title=@Localizer["3DWorld.Generate.Hover"].Value
                 Disabled="@(SelectedViewModelsProvider.LearningWorld == null)">
@@ -338,6 +350,30 @@
         return true;
     }
 
+    private async void ExportLearningWorld()
+    {
+        var world = SelectedViewModelsProvider.LearningWorld;
+        if (world == null) return;
+        if (!IsLearningWorldValidForGeneration(world)) return;
+        try
+        {
+            await PresentationLogic.ExportLearningWorldToMoodleArchiveAsync(world);
+            Snackbar.Add(@Localizer["ArchiveLearningWorld.Success.Snackbar"], Severity.Success);    
+        }
+        catch (OperationCanceledException)
+        {
+            Snackbar.Add(@Localizer["ArchiveLearningWorld.Canceled.Snackbar"], Severity.Warning);  
+        }
+        catch (GeneratorException e)
+        {
+            ErrorService.SetError("An Error has occured during creation of a Backup File", e.Message);
+        }
+        catch (Exception ex)
+        {
+            ErrorService.SetError(ex);
+        }
+    }
+
     private static DialogOptions CreateUnskippableDialogOptions()
     {
         var options = new DialogOptions
@@ -397,16 +433,16 @@
             CloseOnEscapeKey = true,
             BackdropClick = true,
         };
-        
+
         var dialog = await DialogService.ShowAsync<GenericCancellationConfirmationDialog>(Localizer["DialogService.NotLoggedIn.Title"].ToString(), parameters, options);
-        
+
         var result = await dialog.Result;
         if (result is { Data: true })
         {
             OpenAdministrationDialog();
         }
     }
-    
+
     private async Task ShowBackendInvalidTokenDialog()
     {
         var parameters = new DialogParameters
@@ -421,9 +457,9 @@
             CloseOnEscapeKey = true,
             BackdropClick = true,
         };
-        
+
         var dialog = await DialogService.ShowAsync<GenericCancellationConfirmationDialog>(Localizer["DialogService.BackendInvalidToken.Title"].ToString(), parameters, options);
-        
+
         var result = await dialog.Result;
         if (result is { Data: true })
         {

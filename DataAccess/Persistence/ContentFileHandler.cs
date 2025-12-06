@@ -65,18 +65,21 @@ public class ContentFileHandler : IContentFileHandler
         _logger.LogInformation("File {FileName} of type {FileType} loaded", fileName, fileType);
         if (duplicatePath == null)
             SaveHashForFileAsync(finalPath, hash);
-        
+
         var fileContentPe = new FileContentPe(fileName, fileType, finalPath);
-        GeneratePersistFileForH5pFileContent(fileContentPe);
+        if (fileType == "h5p")
+        {
+            GeneratePersistFileForH5pFileContent(fileContentPe);
+        }
+
         return fileContentPe;
     }
 
-   
 
     public void SaveLink(LinkContentPe linkContent)
     {
         var links = GetAllLinks();
-        if(AddLinkInternal(linkContent, links))
+        if (AddLinkInternal(linkContent, links))
             OverwriteLinksFile(links);
     }
 
@@ -90,7 +93,6 @@ public class ContentFileHandler : IContentFileHandler
         OverwriteLinksFile(existingLinks);
     }
 
- 
 
     private static bool AddLinkInternal(LinkContentPe linkContent, ICollection<LinkContentPe> links)
     {
@@ -99,15 +101,15 @@ public class ContentFileHandler : IContentFileHandler
         links.Add(linkContent);
         return true;
     }
-    
-    
+
+
     public IEnumerable<ILearningContentPe> GetAllContent()
     {
         var learningContents = _fileSystem.Directory
             .EnumerateFiles(ContentFilesFolderPath)
             .Select(ParseFileName)
             .Where(FilterContent)
-            .ToList(); 
+            .ToList();
         return LoadH5PFilesFromXmlPersistence(learningContents);
     }
 
@@ -125,6 +127,7 @@ public class ContentFileHandler : IContentFileHandler
                 updatedContents.Add(file);
             }
         }
+
         return updatedContents.Union(GetAllLinks());
     }
 
@@ -135,13 +138,13 @@ public class ContentFileHandler : IContentFileHandler
 
         if (_fileSystem.File.Exists(pathToXmlFile))
         {
-            var fileContentPe =  XmlFileHandlerFileContent!.LoadFromDisk(pathToXmlFile);
+            var fileContentPe = XmlFileHandlerFileContent!.LoadFromDisk(pathToXmlFile);
             updatedContents.Add(fileContentPe);
         }
         else
         {
             GeneratePersistFileForH5pFileContent(h5pContent);
-            var fileContentPe =  XmlFileHandlerFileContent!.LoadFromDisk(pathToXmlFile);
+            var fileContentPe = XmlFileHandlerFileContent!.LoadFromDisk(pathToXmlFile);
             updatedContents.Add(fileContentPe);
         }
     }
@@ -160,20 +163,21 @@ public class ContentFileHandler : IContentFileHandler
                 throw new ArgumentOutOfRangeException(nameof(content), content, null);
         }
     }
-    
-  
+
+
     public void EditH5PFileContent(IFileContentPe fileContentPe)
     {
         GeneratePersistFileForH5pFileContent(fileContentPe: fileContentPe);
     }
-    
+
     /// <summary>
     /// Writes fileContent to xml file in ContentFiles-Folder
     /// Existing files will be overwritten.
     /// </summary>
     private void GeneratePersistFileForH5pFileContent(IFileContentPe fileContentPe)
     {
-            XmlFileHandlerFileContent!.SaveToDisk((fileContentPe as FileContentPe)!, Path.ChangeExtension(fileContentPe.Filepath, ".xml"));
+        XmlFileHandlerFileContent!.SaveToDisk((fileContentPe as FileContentPe)!,
+            Path.ChangeExtension(fileContentPe.Filepath, ".xml"));
     }
 
     private ILearningContentPe LoadContentAsyncInternal(string filepath, string? duplicatePath, byte[] hash)
@@ -194,8 +198,8 @@ public class ContentFileHandler : IContentFileHandler
         _logger.LogInformation("File {FileName} of type {FileType} loaded", fileName, fileType);
         if (duplicatePath == null)
             SaveHashForFileAsync(finalPath, hash);
-        
-        
+
+
         var fileContentPe = new FileContentPe(fileName, fileType, finalPath);
         GeneratePersistFileForH5pFileContent(fileContentPe);
         return fileContentPe;

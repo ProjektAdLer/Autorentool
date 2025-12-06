@@ -6,6 +6,7 @@ public static class AllowedFileEndings
     {
         ".txt", ".c", ".h", ".cpp", ".cc", ".c++", ".py", ".cs", ".js", ".php", ".html", ".css",
         ".jpg", ".jpeg", ".png", ".webp", ".bmp",
+        ".avi", ".mp4", ".mov", ".webm",
         ".h5p",
         ".pdf"
     };

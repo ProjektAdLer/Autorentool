@@ -29,4 +29,19 @@
     <data name="DialogService.BackendInvalidToken.Title" xml:space="preserve">
         <value />
     </data>
+    <data name="3DWorld.ExportMBZ.Button.Title" xml:space="preserve">
+        <value />
+    </data>
+    <data name="3DWorld.ExportMBZ.Hover" xml:space="preserve">
+        <value />
+    </data>
+    <data name="ArchiveLearningWorld.Success.Snackbar" xml:space="preserve">
+        <value />
+    </data>
+    <data name="ArchiveLearningWorld.Canceled.Snackbar" xml:space="preserve">
+        <value />
+    </data>
+    <data name="ExportArchive.Hover" xml:space="preserve">
+        <value />
+    </data>
 </root>

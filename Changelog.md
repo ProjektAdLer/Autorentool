@@ -19,6 +19,26 @@
 
 </details>
 
+## [3.1.0] - 2025-12-06
+
+### Added
+
+- Added support for video files with a maximum size of 50 MB of the type avi, mp4, mov and webm.
+- Added Export MBZ button to header bar.
+- Added size limit of 950 MB for all contained files in MBZ.
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+- Generate internal persist files only for h5p content.
+
+### Security
+
 ## [3.0.2] - 2025-11-03
 
 ### Added

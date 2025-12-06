@@ -1,3 +1,4 @@
+using System.IO.Abstractions;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent;
 using BusinessLogic.Entities.LearningContent.Adaptivity;
@@ -13,16 +14,19 @@ namespace BusinessLogic.Validation.Validators;
 public class LearningWorldStructureValidator : ILearningWorldStructureValidator
 {
     private readonly IStringLocalizer<LearningWorldStructureValidator> _localizer;
+    private readonly IFileSystem _fileSystem;
 
     public LearningWorldStructureValidator(
-        IStringLocalizer<LearningWorldStructureValidator> localizer)
+        IStringLocalizer<LearningWorldStructureValidator> localizer, IFileSystem fileSystem)
     {
         _localizer = localizer;
+        _fileSystem = fileSystem;
     }
 
     public ValidationResult ValidateForExport(ILearningWorld world, List<ILearningContent> listLearningContent)
     {
         var result = new ValidationResult();
+        var contentsSize = 0L;
 
         foreach (var element in world.LearningSpaces.SelectMany(space => space.ContainedLearningElements))
         {
@@ -33,7 +37,19 @@ public class LearningWorldStructureValidator : ILearningWorldStructureValidator
             {
                 result.Errors.Add(
                     $"<li>{_localizer["ErrorString.Missing.LearningContent.Message", element.Name]}</li>");
+                continue;
             }
+
+            if (element.LearningContent is IFileContent fileContent)
+            {
+                using var file = _fileSystem.File.OpenRead(fileContent.Filepath);
+                contentsSize += file.Length;
+            }
+        }
+        
+        if (contentsSize > 945_000_000)
+        {
+            result.Errors.Add($"<li>{_localizer["ErrorString.TooLarge.Contents.Message"]}</li>");
         }
 
         foreach (var (adaptivityContent, learningElement) in world.AllLearningElements

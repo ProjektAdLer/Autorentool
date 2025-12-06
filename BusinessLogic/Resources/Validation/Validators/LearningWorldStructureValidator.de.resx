@@ -51,4 +51,7 @@
     <data name="3DWorld.Generate.Button.Title" xml:space="preserve">
         <value>Lernwelt hochladen</value>
     </data>
+    <data name="ErrorString.TooLarge.Contents.Message" xml:space="preserve">
+        <value>Die enthaltenen Lerninhaltsdateien überschreiten die maximale Größenbeschränkung von 950 MB.</value>
+    </data>
 </root>

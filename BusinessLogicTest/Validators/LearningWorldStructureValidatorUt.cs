@@ -1,3 +1,5 @@
+using System.IO.Abstractions;
+using System.IO.Abstractions.TestingHelpers;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent;
 using BusinessLogic.Entities.LearningContent.Adaptivity;
@@ -16,6 +18,7 @@ namespace BusinessLogicTest.Validators;
 public class LearningWorldStructureValidatorUt
 {
     private IStringLocalizer<LearningWorldStructureValidator> _localizer;
+    private IFileSystem _fileSystem;
     private LearningWorldStructureValidator _validator;
 
     [SetUp]
@@ -38,7 +41,17 @@ public class LearningWorldStructureValidatorUt
                 return new LocalizedString(key, $"{key}: a");
             });
 
-        _validator = new LearningWorldStructureValidator(_localizer);
+        var fileData = new MockFileData(new byte[1024]);
+        var bigFileData = new MockFileData(new byte[500_000_000]);
+
+        _fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+        {
+            { "a filepath", fileData },
+            { "text/plain", fileData },
+            { "big file", bigFileData }
+        });
+
+        _validator = new LearningWorldStructureValidator(_localizer, _fileSystem);
     }
 
 
@@ -233,8 +246,8 @@ public class LearningWorldStructureValidatorUt
 
         adaptivityElement.LearningContent = adaptivityContent;
 
-        space1.LearningSpaceLayout.LearningElements.Add(0,adaptivityElement);
-        space3.LearningSpaceLayout.LearningElements.Add(0,targetElement);
+        space1.LearningSpaceLayout.LearningElements.Add(0, adaptivityElement);
+        space3.LearningSpaceLayout.LearningElements.Add(0, targetElement);
 
         world.LearningSpaces.Add(space1);
         world.LearningSpaces.Add(space2);
@@ -245,23 +258,23 @@ public class LearningWorldStructureValidatorUt
         Assert.That(result.Errors.Any(e => e.Contains("TaskReferencesElementInSpaceAfterOwnSpace")), Is.True);
         Assert.That(result.IsValid, Is.False);
     }
-    
+
     // ANF-ID: [AHO22]
     [Test]
     public void ValidateForGeneration_AdaptivityReferencesUnplacedElement_ReturnsError()
     {
         var world = EntityProvider.GetLearningWorld();
-    
+
         var space = EntityProvider.GetLearningSpace();
-    
+
         var unplacedElement = EntityProvider.GetLearningElement();
         world.UnplacedLearningElements.Add(unplacedElement);
-    
+
         var adaptivityElement = EntityProvider.GetLearningElement();
         var adaptivityContent = EntityProvider.GetAdaptivityContent();
-    
+
         var eleRefAction = new ElementReferenceAction(unplacedElement.Id, "Reference to unplaced element");
-    
+
         adaptivityContent.Tasks = new List<IAdaptivityTask>
         {
             EntityProvider.GetAdaptivityTask()
@@ -270,9 +283,9 @@ public class LearningWorldStructureValidatorUt
         {
             EntityProvider.GetAdaptivityRule(null, eleRefAction)
         };
-    
+
         adaptivityElement.LearningContent = adaptivityContent;
-        space.LearningSpaceLayout.LearningElements.Add(0,adaptivityElement);
+        space.LearningSpaceLayout.LearningElements.Add(0, adaptivityElement);
         world.LearningSpaces.Add(space);
 
         var result = _validator.ValidateForGeneration(world, new List<ILearningContent>());
@@ -280,9 +293,8 @@ public class LearningWorldStructureValidatorUt
         Assert.That(result.Errors.Any(e => e.Contains("TaskReferencesUnplacedElement")), Is.True);
         Assert.That(result.IsValid, Is.False);
     }
-    
-    
-  
+
+
     // ANF-ID: [AHO22]
     [TestCase(H5PContentState.NotUsable)]
     [TestCase(H5PContentState.NotValidated)]
@@ -299,7 +311,7 @@ public class LearningWorldStructureValidatorUt
 
         Assert.That(result.IsValid, Is.False);
     }
-    
+
     // ANF-ID: [AHO22]
     [TestCase(H5PContentState.Completable)]
     [TestCase(H5PContentState.Primitive)]
@@ -316,6 +328,27 @@ public class LearningWorldStructureValidatorUt
 
         Assert.That(result.IsValid, Is.True);
     }
+    
+    [Test]
+    public void ValidateForExport_ContentsSizeExceedsLimit_ReturnsError()
+    {
+        var fileContent = new FileContent("name", "txt", "big file");
+        var learningElement1 = CreateLearningElementWith(fileContent);
+        var space1 = CreateValideLearningSpaceWith(learningElement1);
+        var learningElement2 = CreateLearningElementWith(fileContent);
+        var space2 = CreateValideLearningSpaceWith(learningElement2);
+        var world = EntityProvider.GetLearningWorld();
+        world.LearningSpaces.Add(space1);
+        world.LearningSpaces.Add(space2);
+        var contentFilesFromDataAccess = CreateContentFilesFromDataAccess(fileContent);
+
+        var result = _validator.ValidateForGeneration(world, contentFilesFromDataAccess);
+
+        Assert.That(result.Errors.Count, Is.EqualTo(1));
+        Assert.That(result.Errors[0], Is.EqualTo("<li>ErrorString.TooLarge.Contents.Message: a</li>"));
+
+        Assert.That(result.IsValid, Is.False);
+    }
 
 
     private static ILearningSpace CreateValideLearningSpaceWith(LearningElement learningElement)
@@ -329,7 +362,7 @@ public class LearningWorldStructureValidatorUt
     private static ILearningSpace CreateValideLearningSpace()
     {
         var space = Substitute.For<ILearningSpace>();
-        space.Points.Returns(5); 
+        space.Points.Returns(5);
         space.RequiredPoints.Returns(3);
         return space;
     }

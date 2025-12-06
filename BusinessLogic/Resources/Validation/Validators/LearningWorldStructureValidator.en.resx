@@ -51,4 +51,7 @@
     <data name="ErrorString.TaskReferencesNonexistantContent.Message" xml:space="preserve">
         <value>Element &lt;b&gt;{0}&lt;/b&gt; contains a reference to a non-existant external learning material. Plase check the element references you have set in this element.</value>
     </data>
+    <data name="ErrorString.TooLarge.Contents.Message" xml:space="preserve">
+        <value>The learning content files contained exceed the maximum size limit of 950 MB.</value>
+    </data>
 </root>

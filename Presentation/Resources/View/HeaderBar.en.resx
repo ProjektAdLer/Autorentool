@@ -90,9 +90,6 @@
     <data name="ExportArchive.Text" xml:space="preserve">
         <value>Export learning world (ZIP)</value>
     </data>
-    <data name="ExportArchive.Hover" xml:space="preserve">
-        <value>Export the learning world as ZIP file (e.g. to send to another computer or as a backup)</value>
-    </data>
     <data name="ConfirmReplaceOrCreateCopyDialog.Title" xml:space="preserve">
         <value>Learning world already exists</value>
     </data>
@@ -119,5 +116,17 @@
     </data>
     <data name="DialogService.BackendInvalidToken.Title" xml:space="preserve">
         <value>Invalid login token</value>
+    </data>
+    <data name="ArchiveLearningWorld.Success.Snackbar" xml:space="preserve">
+        <value>Learning world successfully archived</value>
+    </data>
+    <data name="ArchiveLearningWorld.Canceled.Snackbar" xml:space="preserve">
+        <value>Export canceled</value>
+    </data>
+    <data name="3DWorld.ExportMBZ.Button.Title" xml:space="preserve">
+        <value>Export as MBZ</value>
+    </data>
+    <data name="3DWorld.ExportMBZ.Hover" xml:space="preserve">
+        <value>Generates an MBZ file that can be used with Stripped-AdLer</value>
     </data>
 </root>
